@@ -11,7 +11,8 @@ from typing import List, Dict, Iterable
 
 def get_genenamesorg_ensg_aliases_map(ensgs_to_consider: Iterable[str]) -> Dict[str, List[str]]:
     ensgs_to_consider = set(ensgs_to_consider)
-    r = urllib.request.urlopen('http://ftp.ebi.ac.uk/pub/databases/genenames/new/json/non_alt_loci_set.json')
+    #r = urllib.request.urlopen('http://ftp.ebi.ac.uk/pub/databases/genenames/new/json/non_alt_loci_set.json') # old url. see https://www.genenames.org/download/
+    r = urllib.request.urlopen('https://storage.googleapis.com/public-download-files/hgnc/json/json/non_alt_loci_set.json')
     data = r.read().decode('utf-8')
     ensg_to_aliases = {}
     for row in json.loads(data)['response']['docs']:
