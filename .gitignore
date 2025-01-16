@@ -5,3 +5,7 @@ build
 dist
 pheweb/load/cffi/_x*
 .eggs
+data/
+test-data-backup/
+venv/
+txt
