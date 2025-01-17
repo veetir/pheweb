@@ -1,5 +1,3 @@
-
-
 '''
 This script annotates `sites/sites-unannotated.tsv` with rsids (comma-separated) from `resources/rsids-*.tsv.gz`.  It prints output to `sites-rsids.tsv`.
 
@@ -115,13 +113,20 @@ def run(argv:List[str]) -> None:
         cp_group_reader = get_one_chr_pos_at_a_time(in_reader)
 
         debugging_limit_num_variants = conf.get_debugging_limit_num_variants()
-        if debugging_limit_num_variants: rsid_group_reader = itertools.islice(rsid_group_reader, 0, debugging_limit_num_variants)
+        if debugging_limit_num_variants:
+            rsid_group_reader = itertools.islice(rsid_group_reader, 0, debugging_limit_num_variants)
 
-        rsid_group = next(rsid_group_reader)
+        rsid_group = next(rsid_group_reader, None)
+        count = 0  # Initialize a counter for progress reporting
+
         for cp_group in cp_group_reader:
+            count += 1  # Increment the counter for each position group
+
+            # Progress reporting
+            print(f"Processed {count} positions...")
 
             # Advance rsid_group until it is up to/past cp_group
-            while True:
+            while rsid_group is not None:
                 if rsid_group[0]['chrom'] == cp_group[0]['chrom']:
                     rsid_is_not_behind = rsid_group[0]['pos'] >= cp_group[0]['pos']
                 else:
@@ -132,9 +137,10 @@ def run(argv:List[str]) -> None:
                     try:
                         rsid_group = next(rsid_group_reader)
                     except StopIteration:
+                        rsid_group = None
                         break
 
-            if rsid_group[0]['chrom'] == cp_group[0]['chrom'] and rsid_group[0]['pos'] == cp_group[0]['pos']:
+            if rsid_group and rsid_group[0]['chrom'] == cp_group[0]['chrom'] and rsid_group[0]['pos'] == cp_group[0]['pos']:
                 # we have rsids at this position!  will they match on ref/alt?
                 for cpra in cp_group:
                     rsids = [rsid['rsid'] for rsid in rsid_group if cpra['ref'] == rsid['ref'] and are_match(cpra['alt'], rsid['alt'])]
@@ -147,3 +153,5 @@ def run(argv:List[str]) -> None:
                 for cpra in cp_group:
                     cpra['rsids'] = ''
                     writer.write(cpra)
+
+        print(f"Annotation completed. Total positions processed: {count}")
