@@ -11,22 +11,40 @@ from typing import List, Dict, Iterable
 
 def get_genenamesorg_ensg_aliases_map(ensgs_to_consider: Iterable[str]) -> Dict[str, List[str]]:
     ensgs_to_consider = set(ensgs_to_consider)
-    #r = urllib.request.urlopen('http://ftp.ebi.ac.uk/pub/databases/genenames/new/json/non_alt_loci_set.json') # old url. see https://www.genenames.org/download/
-    r = urllib.request.urlopen('https://storage.googleapis.com/public-download-files/hgnc/json/json/non_alt_loci_set.json')
-    data = r.read().decode('utf-8')
+    
+    # Define the local cache file path
+    cache_file_path = Path(get_tmp_path('non_alt_loci_set.json'))
+    
+    # Check if the file exists locally
+    if cache_file_path.exists():
+        print(f"Using cached file at {cache_file_path}")
+        with open(cache_file_path, 'r') as f:
+            data = f.read()
+    else:
+        # Download the file if it doesn't exist
+        print("Downloading 'non_alt_loci_set.json'...")
+        r = urllib.request.urlopen('https://storage.googleapis.com/public-download-files/hgnc/json/json/non_alt_loci_set.json')
+        data = r.read().decode('utf-8')
+        
+        # Save the file to the cache
+        with open(cache_file_path, 'w') as f:
+            f.write(data)
+        print(f"File saved to {cache_file_path}")
+
     ensg_to_aliases = {}
     for row in json.loads(data)['response']['docs']:
         try:
-            if not row.get('ensembl_gene_id',None) or row['ensembl_gene_id'] not in ensgs_to_consider: continue
+            if not row.get('ensembl_gene_id', None) or row['ensembl_gene_id'] not in ensgs_to_consider:
+                continue
             assert re.match(r'^ENSG[R0-9\.]+$', row['ensembl_gene_id']), row
-            aliases = [row['symbol']] + row.get('prev_symbol',[]) + row.get('alias_symbol',[])
+            aliases = [row['symbol']] + row.get('prev_symbol', []) + row.get('alias_symbol', [])
             aliases = [alias for alias in aliases if alias != '']
             aliases = [alias for alias in aliases if re.match(r'^[-\._a-zA-Z0-9]+$', alias)]
-            # for alias in aliases: assert re.match(r'^[-\._a-zA-Z0-9]+$', alias), (alias, [ord(c) for c in alias], row)
             ensg_to_aliases[row['ensembl_gene_id']] = aliases
         except Exception:
             raise PheWebError('Cannot handle genenames row: {}'.format(row))
     return ensg_to_aliases
+
 
 def get_gene_aliases() -> Dict[str, str]:
     # NOTE: "canonical" refers to the canonical symbol for a gene
