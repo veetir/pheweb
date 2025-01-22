@@ -283,12 +283,15 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
                            y_scale(-Math.log10(d.pval))-5);
             })
             .text(function(d) {
-                if (d.nearest_genes.split(',').length <= 2) {
+                if (d.metabolite) {
+                    return d.metabolite;
+                } else if (d.nearest_genes.split(',').length <= 2) {
                     return d.nearest_genes;
                 } else {
                     return d.nearest_genes.split(',').slice(0,2).join(',')+',...';
                 }
             });
+        
 
         function pp1() {
         gwas_plot.append('g')
