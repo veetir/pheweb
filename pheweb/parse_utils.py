@@ -71,6 +71,15 @@ per_variant_fields: Dict[str,Dict[str,Any]] = {
     'consequence': {
         'from_assoc_files': False,
     },
+    'metabolite': {
+        'aliases': ['Metabolite'],
+        'required': False,
+        'type': str,
+        'nullable': True,
+        'tooltip_underscoretemplate': 'Metabolite: <b><%= d.metabolite %></b><br>',
+        'tooltip_lztemplate': False,
+        'from_assoc_files': True,
+    }
 }
 
 per_assoc_fields: Dict[str,Dict[str,Any]] = {
