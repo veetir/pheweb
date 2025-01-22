@@ -23,6 +23,7 @@ from .. import conf
 from .load_utils import mtime
 
 import os
+import sys
 import itertools
 from typing import Iterator,Dict,Any,List
 
@@ -123,7 +124,8 @@ def run(argv:List[str]) -> None:
             count += 1  # Increment the counter for each position group
 
             # Progress reporting
-            print(f"Processed {count} positions...")
+            sys.stdout.write(f"\rProcessed {count} positions...")
+            sys.stdout.flush()
 
             # Advance rsid_group until it is up to/past cp_group
             while rsid_group is not None:
