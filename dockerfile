@@ -1,4 +1,3 @@
-# Use the official Python 3.8 image as the base
 FROM python:3.8-slim
 
 # Set environment variables
@@ -35,11 +34,9 @@ COPY . /app
 RUN pip install --upgrade pip setuptools wheel \
     && pip install -e .
 
-# Expose the port that PheWeb will run on
+# Expose the default port (5000)
 EXPOSE 5000
 
-# Set the entry point to run PheWeb
+# Entry point
 ENTRYPOINT ["pheweb"]
-
-# Default command to serve the application
-CMD ["serve", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["serve", "--host", "0.0.0.0"]
