@@ -38,6 +38,7 @@
   gtag('config', "{{config['GOOGLE_ANALYTICS_TRACKING_ID']}}");
 {% endif %}
 {% block in_head %}{% endblock %}
+<link rel="icon" href="{{ url_for('bp.static', filename='favicon.ico') }}" />
 </head>
 
 <body>
