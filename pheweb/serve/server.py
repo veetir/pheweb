@@ -430,6 +430,11 @@ else:
 def homepage():
     return render_template('index.html')
 
+@bp.route("/favicon.ico")
+def favicon():
+    return send_from_directory(app.static_folder, "favicon.ico")
+
+
 @bp.route('/about')
 def about_page():
     return render_template('about.html')
