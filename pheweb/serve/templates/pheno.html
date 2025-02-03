@@ -189,6 +189,7 @@
       <thead>
         <tr>
           <th>Variant</th>
+          <th>Metabolite</th>
           <th>Nearest Gene(s)</th>
           <th>MAF</th>
           <th>P-value</th>
@@ -211,6 +212,7 @@
     </div>
 </div>
 
+
 {% if show_correlations %}
   <div class="row" id="correlations">
     <div class="col-md-12">
@@ -230,6 +232,7 @@
     <%= v.chrom %>:<%= v.pos.toLocaleString() %> <%= v.ref %> / <%= v.alt %>
     <% if (v.rsids) { %>(<%= v.rsids.replace(/,/g, ', ') %>)<% } %>
 </a></td>
+<td><%= v.metabolite ? v.metabolite : "N/A" %></td> 
 <td><i><%= v.nearest_genes.replace(/,/g, ', ') %></i></td>
 <td><%= (v.maf)? v.maf.toPrecision(2) : (v.af)? Math.min(v.af, 1-v.af).toPrecision(2) : (v.ac)? v.ac : "" %></td>
 <td><%= (v.pval==0) ? '≤1e-320' : v.pval.toExponential(1) %></td>
