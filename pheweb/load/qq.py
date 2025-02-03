@@ -54,13 +54,24 @@ def make_json_file(pheno:Dict[str,Any]) -> None:
         pheno
     )
 
-def make_json_file_explicit(in_filepath:str, out_filepath:str, pheno:Dict[str,Any]) -> None:
-    # Store all variants in a dataframe with columns (qval, maf) or just (qval)
+def make_json_file_explicit(in_filepath: str, out_filepath: str, pheno: Dict[str, Any]) -> None:
+    # Load the variants (either with or without MAF)
     variants = get_variants_df(in_filepath, pheno)
-    rv: Dict[str,Any] = {}
-    if 'maf' in variants.dtype.fields:  # type:ignore
+    
+    # Check for sufficient number of variants. Adjust the threshold as needed.
+    if len(variants) < 2:
+        print(f"Skipping QQ plot for phenotype {pheno['phenocode']}: insufficient variants (n={len(variants)})")
+        # Option 1: Write an empty JSON object so that the front-end can detect it.
+        write_json(filepath=out_filepath, data={})
+        return
+        # Option 2: Alternatively, you could decide not to write a file at all,
+        # but then ensure that the front-end handles the missing file appropriately.
+    
+    # Otherwise, proceed to build the QQ JSON structure.
+    rv: Dict[str, Any] = {}
+    if 'maf' in variants.dtype.fields:  # type: ignore
         rv['by_maf'] = make_qq_stratified(variants)
-        rv['overall'] = make_qq_unstratified(variants, include_qq=False)  # Must run AFTER `_stratified()`, because it sorts by qval, which could bias the maf_range strata.
+        rv['overall'] = make_qq_unstratified(variants, include_qq=False)
         rv['ci'] = list(get_confidence_intervals(len(variants) / len(rv['by_maf'])))
     else:
         rv['overall'] = make_qq_unstratified(variants, include_qq=True)
@@ -194,21 +205,32 @@ assert approx_equal(gc_value(0.6123), 0.5645607)
 
 
 
-def get_confidence_intervals(num_variants:float, confidence:float = 0.95) -> Iterator[Dict[str,float]]:
-    one_sided_doubt = (1-confidence) / 2
+def get_confidence_intervals(num_variants: float, confidence: float = 0.95) -> Iterator[Dict[str, float]]:
+    # If the effective number of variants is too low, return an empty iterator.
+    if num_variants < 2:
+        return iter([])
+    
+    one_sided_doubt = (1 - confidence) / 2
 
-    # `variant_counts` are the numbers of variants at which we'll calculate the confidence intervals
-    # any `1 <= variant_count <= num_variants-1` could be used, but we scale in powers of 2 to make the CI visually pretty smooth.
+    # Calculate variant_counts in powers of 2 up to num_variants, then add num_variants-1.
     variant_counts = []
-    for x in range(0, int(math.ceil(math.log2(num_variants)))):
+    # Use math.log2(num_variants) only if num_variants >= 1.
+    max_exponent = int(math.ceil(math.log2(num_variants))) if num_variants >= 1 else 0
+    for x in range(0, max_exponent):
         variant_counts.append(2**x)
-    variant_counts.append(num_variants-1)
+    variant_counts.append(num_variants - 1)
     variant_counts.reverse()
 
     for variant_count in variant_counts:
-        rv = scipy.stats.beta(variant_count, num_variants-variant_count)
+        # Here we need to ensure that (variant_count - 0.5)/num_variants is positive.
+        # In pathological cases this might not be true, so you could either skip such counts
+        # or set a lower bound.
+        ratio = (variant_count - 0.5) / num_variants
+        if ratio <= 0:
+            continue
+        ci_beta = scipy.stats.beta(variant_count, num_variants - variant_count)
         yield {
-            'x': round(-math.log10((variant_count-0.5)/num_variants),2),
-            'y_min': round(-math.log10(rv.ppf(1-one_sided_doubt)),2),
-            'y_max': round(-math.log10(rv.ppf(one_sided_doubt)),2),
+            'x': round(-math.log10(ratio), 2),
+            'y_min': round(-math.log10(ci_beta.ppf(1 - one_sided_doubt)), 2),
+            'y_max': round(-math.log10(ci_beta.ppf(one_sided_doubt)), 2),
         }
