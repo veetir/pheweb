@@ -28,23 +28,6 @@
   .fail(function() {
     console.log("Manhattan XHR failed");
   });
-  $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
-  .done(function(data) {
-    window.debug.qq = data;
-    _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-      var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-      if (i === 0) { text = '<b>' + text + '</b>'; }
-      text = '<br>' + text;
-      $('.gc-control').append(text);
-    });
-  if (data.by_maf)
-    create_qq_plot(data.by_maf, data.ci);
-  else
-    create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci);
-  })
-  .fail(function() {
-    console.log("QQ XHR failed");
-  });
 </script>
 <style type="text/css">
 .d3-tip {
@@ -84,15 +67,6 @@
 }
 #manhattan_plot_container .axis g.tick line {
   stroke: #666;
-}
-
-#qq_plot_container .axis path.domain {
-  stroke: black;
-  fill: none;
-}
-#qq_plot_container .axis g.tick line {
-  stroke: #666;
-  opacity: 0.3;
 }
 
 .pheno-info > p {
@@ -144,7 +118,17 @@
     <div class="pheno-info col-xs-12 col-sm-4">
       {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
       <span class="pull-right">
-        <a class="btn btn-default" href="{{ url_for('.download_pheno', phenocode=phenocode) }}">Download summary statistics</a>
+        <a class="btn" href="{{ url_for('.download_pheno', phenocode=phenocode) }}"
+           title="Download summary statistics"
+           style="display: inline-block;
+                  background-color: transparent;
+                  border: none;
+                  text-decoration: none;">
+          <img src="{{ url_for('static', filename='images/download.svg') }}"
+               alt="Download"
+               style="height: 48px; vertical-align: middle;">
+          <span style="display: none;">Download</span>
+        </a>
       </span>
       {% endif %}
       {% if show_manhattan_filter_button %}
@@ -157,8 +141,6 @@
 <div class="row">
   <div class="col-xs-12">
     <ul>
-      <li class="section-link"><a href="#manhattan">Manhattan</a></li>
-      <li class="section-link"><a href="#qq">QQ</a></li>
       {% if show_correlations %}<li class="section-link"><a href="#correlations">Correlated phenotypes</a></li>{% endif %}
     </ul>
   </div>
@@ -172,16 +154,16 @@
 
 <div class="row">
   <div class="col-xs-12 col-md-8">
-    <h3>Top Loci:</h3>
+    <h3>Top Loci</h3>
   </div>
 </div>
 <div class="row">
   <div class="col-xs-12 col-sm-8 col-md-6">
     <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
   </div>
-  <div class="col-xs-12 col-sm-4 col-sm-6">
-    <h5 class="pull-right"><div id="streamtable-found" class="label label-primary"></div></h5>
-  </div>
+  <div id="streamtable-found" class="label label-primary" 
+  style="font-size: 14px; padding: 8px 12px; position: relative; top: 6px;">
+</div>
 </div>
 <div class="row stream_table_row">
   <div class="col-xs-12">
@@ -201,17 +183,6 @@
     </table>
   </div>
 </div>
-
-<div class="row">
-    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-      <h3 id="qq">QQ plot:</h3>
-      <div id="qq_plot_container"></div>
-      <p class="gc-control"></p>
-      <i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
-      <br><br><br>
-    </div>
-</div>
-
 
 {% if show_correlations %}
   <div class="row" id="correlations">
