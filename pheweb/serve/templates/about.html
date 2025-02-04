@@ -2,8 +2,12 @@
 
 {% block contained %}
 <div class="row">
-    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-8 col-lg-6">
-      {% include 'about/content.html' %}
-    </div>
+  <div class="col-xs-12 col-sm-8">
+    <h1 style="margin-top: 0;">About This PheWeb</h1>
+    <br>
+    <p>This site was built with <a href="https://github.com/veetir/pheweb/">PheWeb</a> version {{ config.PHEWEB_VERSION }}.</p>
+    <br>
+    <p>All positions are on GRCh{{ config.GRCH_BUILD_NUMBER }}.</p>
+  </div>
 </div>
 {% endblock %}
