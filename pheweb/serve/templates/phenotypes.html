@@ -32,7 +32,19 @@
     </div>
     <div class="col-xs-12 col-sm-4">
       {% if config.DOWNLOAD_PHENOTYPES_BUTTON %}
-        <span class="pull-right"><a class="btn btn-default" href="{{ url_for('.download_phenotypes') }}">Download</a></span>
+      <span class="pull-right">
+        <a class="btn" href="{{ url_for('.download_phenotypes') }}"
+           title="Download all phenotypes"
+           style="display: inline-block;
+                  background-color: transparent;
+                  border: none;
+                  text-decoration: none;">
+          <img src="{{ url_for('static', filename='images/download.svg') }}"
+               alt="Download"
+               style="height: 48px; vertical-align: middle;">
+          <span style="display: none;">Download</span>
+        </a>
+      </span>
       {% endif %}
   </div>
 </div>
