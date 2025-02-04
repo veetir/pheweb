@@ -10,15 +10,18 @@ function populate_streamtable(phenotypes) {
             return template({h: pheno});
         };
         var $found = $('#streamtable-found');
-        $found.text(data.length + " phenotypes");
+        var count = data.length;
+        $found.text(count + (count === 1 ? " phenotype" : " phenotypes"));
 
         var callbacks = {
             pagination: function(summary){
+                var text;
                 if ($.trim($('#search').val()).length > 0){
-                    $found.text(summary.total + " matching phenotypes");
+                    text = summary.total + (summary.total === 1 ? " matching phenotype" : " matching phenotypes");
                 } else {
-                    $found.text(data.length + " phenotypes");
+                    text = count + (count === 1 ? " phenotype" : " phenotypes");
                 }
+                $found.text(text);
             }
         }
 
@@ -31,11 +34,11 @@ function populate_streamtable(phenotypes) {
                 next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
                 prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
                 per_page_select: false,
-                per_page_opts: [100], // this is the best way I've found to control the number of rows
+                per_page_opts: [100] // this is the best way I've found to control the number of rows
             }
         }
 
         $('#stream_table').stream_table(options, data);
-
     });
 }
+

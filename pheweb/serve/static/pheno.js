@@ -621,14 +621,20 @@ function populate_streamtable(variants) {
             return template({v: variant});
         };
         var $found = $('#streamtable-found');
-        $found.text(data.length + " total variants");
+        
+        // Function to handle singular/plural display
+        var formatVariantCount = function(count) {
+            return count + " " + (count === 1 ? "variant" : "variants");
+        };
+
+        $found.text(formatVariantCount(data.length));
 
         var callbacks = {
             pagination: function(summary){
                 if ($.trim($('#search').val()).length > 0){
-                    $found.text(summary.total + " matching variants");
+                    $found.text(formatVariantCount(summary.total));
                 } else {
-                    $found.text(data.length + " total variants");
+                    $found.text(formatVariantCount(data.length));
                 }
             }
         }
@@ -648,7 +654,6 @@ function populate_streamtable(variants) {
         }
 
         $('#stream_table').stream_table(options, data);
-
     });
 }
 
