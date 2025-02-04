@@ -27,43 +27,44 @@
 
 {% block contained %}
 <div class="row">
-    <div class="col-xs-12 col-sm-8">
-        <h1 style="margin-top:0">Top Hits</h1>
-    </div>
-    <div class="col-xs-12 col-sm-4">
-      {% if config.DOWNLOAD_TOP_HITS_BUTTON %}
-              <span class="pull-right">
-        <a class="btn" href="{{ url_for('.download_top_hits') }}"
-           title="Download top hits"
-           style="display: inline-block;
-                  background-color: transparent;
-                  border: none;
-                  text-decoration: none;">
-          <img src="{{ url_for('static', filename='images/download.svg') }}"
-               alt="Download"
-               style="height: 48px; vertical-align: middle;">
-          <span style="display: none;">Download</span>
-        </a>
-      </span>
-      {% endif %}
+  <div class="col-xs-12 col-sm-8">
+    <h1 style="margin-top:0">
+      Top Hits 
+      <img src="{{ url_for('static', filename='images/info.svg') }}" 
+           alt="Info" 
+           style="height: 24px; vertical-align: middle; cursor: pointer;"
+           title="This page shows only the peaks with a p-value &lt; 10⁻⁶. 
+           Variants are hidden if any variant within 500kb in the same phenotype 
+           has a smaller p-value. Only the top 2000 variants of each phenotype 
+           are considered. This table is limited to the top 1000 hits, but the 
+           download button includes all hits.">
+    </h1>
+  </div>
+  <div class="col-xs-12 col-sm-4">
+    {% if config.DOWNLOAD_TOP_HITS_BUTTON %}
+    <span class="pull-right">
+      <a class="btn" href="{{ url_for('.download_top_hits') }}"
+         title="Download top hits"
+         style="display: inline-block;
+                background-color: transparent;
+                border: none;
+                text-decoration: none;">
+        <img src="{{ url_for('static', filename='images/download.svg') }}"
+             alt="Download"
+             style="height: 48px; vertical-align: middle;">
+        <span style="display: none;">Download</span>
+      </a>
+    </span>
+    {% endif %}
   </div>
 </div>
-<div class="row">
-    <div class="col-xs-12">
-        <p>This page shows only the peaks with a p-value &lt; 10<span style="vertical-align:super">-6</span>.
-          Variants are hidden if any variant within 500kb in the same phenotype has a smaller p-value.
-          Only the top 2000 variants of each phenotype are considered.
-          This table is limited to the top 1000 hits, but the download button includes all hits.</p>
-    </div>
-</div>
-<br>
 
 <div class="row" style="margin-bottom: 0.5em">
   <div class="col-xs-12 col-sm-8 col-md-6">
         <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
   </div>
-  <div class="col-xs-12 col-sm-4 col-md-6">
-    <h5 class="pull-right"><div id="streamtable-found" class="label label-primary"></div></h5>
+  <div id="streamtable-found" class="label label-primary" 
+  style="font-size: 14px; padding: 8px 12px; position: relative; top: 6px;">
   </div>
 </div>
 <div class="row stream_table_row">
