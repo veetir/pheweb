@@ -25,7 +25,7 @@ from typing import Dict,Tuple,List,Any,Optional
 
 
 bp = Blueprint('bp', __name__, template_folder='templates', static_folder='static')
-app = Flask(__name__)
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 Compress(app)
 app.config['COMPRESS_LEVEL'] = 2 # Since we don't cache, faster=better
 app.config['SECRET_KEY'] = conf.get_secret_key()

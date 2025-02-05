@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block in_head %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('bp.static', filename='custom.css') }}">
 <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
 <script src="https://unpkg.com/d3-tip@0.9.1"></script>
 <script src="{{ url_for('.static', filename='vendor/stream_table-1.1.1.min.js') }}" type="text/javascript"></script>
@@ -153,7 +153,7 @@
     {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
       <span class="download-button">
         <a href="{{ url_for('.download_pheno', phenocode=phenocode) }}" title="Download summary statistics">
-          <img src="{{ url_for('static', filename='images/download.svg') }}" alt="Download">
+          <img src="{{ url_for('bp.static', filename='images/download.svg') }}" alt="Download">
           <span style="display: none;">Download</span>
         </a>
       </span>

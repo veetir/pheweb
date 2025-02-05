@@ -31,7 +31,7 @@
     {% if config.DOWNLOAD_PHENOTYPES_BUTTON %}
     <span class="download-button">
       <a href="{{ url_for('.download_phenotypes') }}" title="Download all phenotypes">
-        <img src="{{ url_for('static', filename='images/download.svg') }}" alt="Download">
+        <img src="{{ url_for('bp.static', filename='images/download.svg') }}" alt="Download">
         <span style="display: none;">Download</span>
       </a>
     </span>

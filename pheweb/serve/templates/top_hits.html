@@ -51,7 +51,7 @@
   {% if config.DOWNLOAD_TOP_HITS_BUTTON %}
   <span class="download-button">
     <a href="{{ url_for('.download_top_hits') }}" title="Download top hits">
-      <img src="{{ url_for('static', filename='images/download.svg') }}" alt="Download">
+      <img src="{{ url_for('bp.static', filename='images/download.svg') }}" alt="Download">
       <span style="display: none;">Download</span>
     </a>
   </span>
