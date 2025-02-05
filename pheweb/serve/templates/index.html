@@ -41,31 +41,34 @@ $(function() { $('.typeahead').focus(); }); // autofocus attribute doesn't work 
 <br style="margin-top: 3em">
 {% endif %}
 
+<!-- Centered "PheWeb" header -->
 <div class="row">
-    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-        <h1>{% include 'index/h1.html' %}</h1>
-        {% include 'index/below-h1.html' ignore missing %}
-    </div>
+  <div class="col-xs-12">
+    <h1 style="text-align: center; margin-bottom: 1em;">PheWeb</h1>
+  </div>
 </div>
+
+<!-- Centered, narrower search bar -->
 <div class="row">
-  <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-      <div id="home-searchbox">
-          <form action="{{ url_for('.go') }}">
-             <fieldset>
-                <div class="form-group" style="position: relative; width: 100%;">
-                  <input name="query" class="form-control typeahead" 
-                         autocomplete="off" 
-                         type="text" 
-                         placeholder="Search for a variant, gene, or phenotype" 
-                         style="width: 100%; font-size: 16px; padding-right: 40px; padding-left: 12px;">
-                  <img src="{{ url_for('static', filename='images/search.svg') }}" 
-                       alt="Search" 
-                       style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); height: 24px; width: 24px; cursor: pointer;">
-                </div>
-             </fieldset>
-          </form>
-          {% include 'index/below-query.html' ignore missing %}
-      </div>
+  <div class="col-xs-12">
+    <div id="home-searchbox" style="margin: 0 auto; width: 30%;">
+      <form action="{{ url_for('.go') }}">
+         <fieldset>
+            <div class="form-group" style="position: relative; width: 100%;">
+              <!-- Search icon moved to the left with a higher z-index -->
+              <img src="{{ url_for('.static', filename='images/search.svg') }}" 
+                   alt="Search" 
+                   style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); height: 24px; width: 24px; cursor: pointer; z-index: 10;">
+              <input name="query" class="form-control typeahead" 
+                     autocomplete="off" 
+                     type="text" 
+                     placeholder="Search for a variant, gene, or phenotype" 
+                     style="width: 100%; font-size: 16px; padding-left: 40px;">
+            </div>
+         </fieldset>
+      </form>
+      {% include 'index/below-query.html' ignore missing %}
+    </div>
   </div>
 </div>
 {% endblock %}
