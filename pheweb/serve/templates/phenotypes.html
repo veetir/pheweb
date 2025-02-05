@@ -10,35 +10,6 @@
       populate_streamtable(data);
   });
 </script>
-<style type="text/css">
-  #stream_table td {
-    padding: 4px;
-    padding-left: 6px;
-    padding-bottom: 3px;
-    font-size: 90%;
-  }
-  .nearest_genes_col {
-    max-width: 15em;
-  }
-  
-  #alignment-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  #streamtable-found {
-    font-size: 14px;
-    padding: 8px 12px;
-  }
-  
-  .download-button img {
-    height: 31px;
-    vertical-align: middle;
-    border-radius: 4px;
-    border: 1px solid #7ab733;
-  }
-</style>
 {% endblock %}
 
 {% block contained %}
@@ -59,15 +30,12 @@
 
     {% if config.DOWNLOAD_PHENOTYPES_BUTTON %}
     <span class="download-button">
-      <a href="{{ url_for('.download_phenotypes') }}"
-         title="Download all phenotypes"
-         style="display: inline-block; background-color: transparent; border: none; text-decoration: none;">
-        <img src="{{ url_for('static', filename='images/download.svg') }}"
-             alt="Download">
+      <a href="{{ url_for('.download_phenotypes') }}" title="Download all phenotypes">
+        <img src="{{ url_for('static', filename='images/download.svg') }}" alt="Download">
         <span style="display: none;">Download</span>
       </a>
     </span>
-    {% endif %}
+    {% endif %}    
   </div>
 </div>
 

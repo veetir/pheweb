@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-
 {% block in_head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
 <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
 <script src="https://unpkg.com/d3-tip@0.9.1"></script>
 <script src="{{ url_for('.static', filename='vendor/stream_table-1.1.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ url_for('.static', filename='pheno.js') }}" type="text/javascript"></script>
+
 {% if show_correlations %}
-  {#  TODO: Better dependency management #}
   <link href="https://unpkg.com/tabulator-tables@4.2.2/dist/css/bootstrap/tabulator_bootstrap.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.2/dist/js/tabulator.min.js"></script>
 {% endif %}
@@ -29,6 +29,7 @@
     console.log("Manhattan XHR failed");
   });
 </script>
+
 <style type="text/css">
 .d3-tip {
   line-height: 1.4;
@@ -116,21 +117,6 @@
         {% include "pheno/info.html" %}
     </div>
     <div class="pheno-info col-xs-12 col-sm-4">
-      {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
-      <span class="pull-right">
-        <a class="btn" href="{{ url_for('.download_pheno', phenocode=phenocode) }}"
-           title="Download summary statistics"
-           style="display: inline-block;
-                  background-color: transparent;
-                  border: none;
-                  text-decoration: none;">
-          <img src="{{ url_for('static', filename='images/download.svg') }}"
-               alt="Download"
-               style="height: 48px; vertical-align: middle;">
-          <span style="display: none;">Download</span>
-        </a>
-      </span>
-      {% endif %}
       {% if show_manhattan_filter_button %}
       <span class="pull-right" style="margin-left:1em;margin-right:1em">
         <a class="btn btn-default" href="{{ url_for('.pheno_filter_page', phenocode=phenocode) }}">Filter Variants</a>
@@ -161,9 +147,18 @@
   <div class="col-xs-12 col-sm-8 col-md-6">
     <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
   </div>
-  <div id="streamtable-found" class="label label-primary" 
-  style="font-size: 14px; padding: 8px 12px; position: relative; top: 6px;">
-</div>
+  <div id="alignment-container" style="display: flex; align-items: center; gap: 10px;">
+    <div id="streamtable-found" class="label label-primary">
+    </div>
+    {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
+      <span class="download-button">
+        <a href="{{ url_for('.download_pheno', phenocode=phenocode) }}" title="Download summary statistics">
+          <img src="{{ url_for('static', filename='images/download.svg') }}" alt="Download">
+          <span style="display: none;">Download</span>
+        </a>
+      </span>
+    {% endif %}
+  </div>
 </div>
 <div class="row stream_table_row">
   <div class="col-xs-12">

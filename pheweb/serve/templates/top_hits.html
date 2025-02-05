@@ -40,32 +40,23 @@
            download button includes all hits.">
     </h1>
   </div>
-  <div class="col-xs-12 col-sm-4">
-    {% if config.DOWNLOAD_TOP_HITS_BUTTON %}
-    <span class="pull-right">
-      <a class="btn" href="{{ url_for('.download_top_hits') }}"
-         title="Download top hits"
-         style="display: inline-block;
-                background-color: transparent;
-                border: none;
-                text-decoration: none;">
-        <img src="{{ url_for('static', filename='images/download.svg') }}"
-             alt="Download"
-             style="height: 48px; vertical-align: middle;">
-        <span style="display: none;">Download</span>
-      </a>
-    </span>
-    {% endif %}
-  </div>
 </div>
 
 <div class="row" style="margin-bottom: 0.5em">
   <div class="col-xs-12 col-sm-8 col-md-6">
         <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
   </div>
-  <div id="streamtable-found" class="label label-primary" 
-  style="font-size: 14px; padding: 8px 12px; position: relative; top: 6px;">
+  <div id="streamtable-found" class="label label-primary">
   </div>
+  {% if config.DOWNLOAD_TOP_HITS_BUTTON %}
+  <span class="download-button">
+    <a href="{{ url_for('.download_top_hits') }}" title="Download top hits">
+      <img src="{{ url_for('static', filename='images/download.svg') }}" alt="Download">
+      <span style="display: none;">Download</span>
+    </a>
+  </span>
+  {% endif %}
+  
 </div>
 <div class="row stream_table_row">
   <div class="col-xs-12">
