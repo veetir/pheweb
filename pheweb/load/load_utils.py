@@ -214,12 +214,19 @@ class Parallelizer:
         for ret in self.run_multiple_tasks(tasks, do_multiple_tasks, cmd=cmd):
             yield ret
     def _update_progressbar(self, progressbar, n_tasks_complete, n_procs, num_tasks):
+    # If everything is finished, show a completion message.
         if n_procs == 0 and num_tasks == n_tasks_complete:
             progressbar.set_message('Completed {:4} tasks in {}'.format(
                 n_tasks_complete, progressbar.fmt_elapsed()))
         else:
-            progressbar.set_message('Completed {:4} tasks in {} ({} currently in progress, {} queued)'.format(
-                n_tasks_complete, progressbar.fmt_elapsed(), n_procs, num_tasks-n_tasks_complete-n_procs))
+            # A combined message showing both a simple count and detailed state.
+            progressbar.set_message(
+                'Processed {} of {} phenotypes; '
+                'Completed {:4} tasks in {} ({} in progress, {} queued)'.format(
+                    n_tasks_complete, num_tasks,
+                    n_tasks_complete, progressbar.fmt_elapsed(),
+                    n_procs, num_tasks - n_tasks_complete - n_procs)
+            )
 
     @staticmethod
     def _make_multiple_tasks_doer(do_single_task):
