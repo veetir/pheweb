@@ -9,3 +9,4 @@ data/
 test-data-backup/
 venv/
 txt
+ansible
