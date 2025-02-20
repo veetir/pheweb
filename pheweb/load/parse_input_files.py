@@ -10,7 +10,6 @@ from ..file_utils import (
 from .read_input_file import PhenoReader
 from .load_utils import parallelize_per_pheno, indent, get_phenos_subset
 
-import itertools
 import argparse
 from typing import List, Dict, Any, Iterator
 
@@ -115,9 +114,6 @@ def convert(pheno: Dict[str, Any]) -> Iterator[Dict[str, Any]]:
         ) as writer:
             pheno_reader = PhenoReader(pheno, minimum_maf=conf.get_assoc_min_maf())
             variants = pheno_reader.get_variants()
-            debugging_limit_num_variants = conf.get_debugging_limit_num_variants()
-            if debugging_limit_num_variants:
-                variants = itertools.islice(variants, 0, debugging_limit_num_variants)
             writer.write_all(variants)
     except Exception as exc:
         import traceback
