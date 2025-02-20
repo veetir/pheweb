@@ -48,33 +48,46 @@ class PhenoReader:
                 )
         return infos[0]
 
+    def _validate_chrom_and_position_order(
+        self,
+        chrom_index: int,
+        prev_chrom_index: int,
+        chrom: str,
+        pos: int,
+        prev_pos: int,
+        chrom_order_list: list,
+    ):
+        if chrom_index < prev_chrom_index:
+            raise PheWebError(
+                "The chromosomes in your file appear to be in the wrong order.\n"
+                + "The required order is: {!r}\n".format(chrom_order_list)
+                + "But in your file, the chromosome {!r} came after the chromosome {!r}\n".format(
+                    chrom, chrom_order_list[prev_chrom_index]
+                )
+            )
+
+        if chrom_index == prev_chrom_index and pos < prev_pos:
+            raise PheWebError(
+                "The positions in your file appear to be in the wrong order.\n"
+                + "In your file, the position {!r} came after the position {!r} on chromosome {!r}\n".format(
+                    pos, prev_pos, chrom
+                )
+            )
+
     def _order_refalt_lexicographically(self, variants):
-        # Also assert that chrom and pos are in order
         cp_groups = itertools.groupby(variants, key=lambda v: (v["chrom"], v["pos"]))
         prev_chrom_index, prev_pos = -1, -1
         for cp, tied_variants in cp_groups:
             chrom_index = self._get_chrom_index(cp[0])
-            if chrom_index < prev_chrom_index:
-                raise PheWebError(
-                    "The chromosomes in your file appear to be in the wrong order.\n"
-                    + "The required order is: {!r}\n".format(chrom_order_list)
-                    + "But in your file, the chromosome {!r} came after the chromosome {!r}\n".format(
-                        cp[0], chrom_order_list[prev_chrom_index]
-                    )
-                )
-            if chrom_index == prev_chrom_index and cp[1] < prev_pos:
-                raise PheWebError(
-                    "The positions in your file appear to be in the wrong order.\n"
-                    + "In your file, the position {!r} came after the position {!r} on chromsome {!r}\n".format(
-                        cp[1], prev_pos, cp[0]
-                    )
-                )
+
+            self._validate_chrom_and_position_order(
+                chrom_index, prev_chrom_index, cp[0], cp[1], prev_pos, chrom_order_list
+            )
+
             prev_chrom_index, prev_pos = chrom_index, cp[1]
-            for v in sorted(tied_variants, key=lambda v: (v["ref"], v["alt"])):
-                yield v
+            yield from sorted(tied_variants, key=lambda v: (v["ref"], v["alt"]))
 
     def _get_fields_and_filepaths(self, filepaths):
-        # also sets `self._fields`
         assoc_files = [{"filepath": filepath} for filepath in filepaths]
         for assoc_file in assoc_files:
             ar = AssocFileReader(assoc_file["filepath"], self._pheno)
