@@ -3,6 +3,7 @@ from .. import parse_utils
 from .. import conf
 from ..file_utils import read_maybe_gzip
 from .load_utils import get_maf
+from operator import itemgetter
 
 import itertools
 import re
@@ -59,19 +60,15 @@ class PhenoReader:
     ):
         if chrom_index < prev_chrom_index:
             raise PheWebError(
-                "The chromosomes in your file appear to be in the wrong order.\n"
-                + "The required order is: {!r}\n".format(chrom_order_list)
-                + "But in your file, the chromosome {!r} came after the chromosome {!r}\n".format(
-                    chrom, chrom_order_list[prev_chrom_index]
-                )
+                f"The chromosomes in your file appear to be in the wrong order.\n"
+                f"The required order is: {chrom_order_list!r}\n"
+                f"But in your file, the chromosome {chrom!r} came after the chromosome {chrom_order_list[prev_chrom_index]!r}\n"
             )
 
         if chrom_index == prev_chrom_index and pos < prev_pos:
             raise PheWebError(
-                "The positions in your file appear to be in the wrong order.\n"
-                + "In your file, the position {!r} came after the position {!r} on chromosome {!r}\n".format(
-                    pos, prev_pos, chrom
-                )
+                f"The positions in your file appear to be in the wrong order.\n"
+                f"In your file, the position {pos!r} came after the position {prev_pos!r} on chromosome {chrom!r}\n"
             )
 
     def _order_refalt_lexicographically(self, variants):
@@ -85,7 +82,7 @@ class PhenoReader:
             )
 
             prev_chrom_index, prev_pos = chrom_index, cp[1]
-            yield from sorted(tied_variants, key=lambda v: (v["ref"], v["alt"]))
+            yield from sorted(tied_variants, key=itemgetter("ref", "alt"))
 
     def _get_fields_and_filepaths(self, filepaths):
         assoc_files = [{"filepath": filepath} for filepath in filepaths]
