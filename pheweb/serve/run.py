@@ -1,38 +1,43 @@
-
 import argparse
 from typing import List
 from flask import Flask
 
 
-def run_flask_dev_server(app:Flask, args:argparse.Namespace) -> None:
+def run_flask_dev_server(app: Flask, args: argparse.Namespace) -> None:
     app.run(
-        host=args.host, port=args.port,
-        debug=True, use_evalex=False,
+        host=args.host,
+        port=args.port,
+        debug=True,
+        use_evalex=False,
         use_reloader=args.use_reloader,
     )
 
-def run_gunicorn(app:Flask, args:argparse.Namespace) -> None:
+
+def run_gunicorn(app: Flask, args: argparse.Namespace) -> None:
     import gunicorn.app.base
+
     class StandaloneGunicornApplication(gunicorn.app.base.BaseApplication):
         # from <http://docs.gunicorn.org/en/stable/custom.html>
         def __init__(self, app, opts=None):
             self.application = app
             self.options = opts or {}
             super().__init__()
+
         def load_config(self):
             for key, val in self.options.items():
                 self.cfg.set(key, val)
+
         def load(self):
             return self.application
 
     options = {
-        'bind': '{}:{}'.format(args.host, args.port),
-        'reload': args.use_reloader,
-        'workers': args.num_workers,
-        'accesslog': args.accesslog,
-        'access_log_format': '%(t)s | %(s)s | %(L)ss | %(m)s %(U)s | resp_len:%(B)s | referrer:"%(f)s" | ip:%(h)s | agent:%(a)s',
+        "bind": "{}:{}".format(args.host, args.port),
+        "reload": args.use_reloader,
+        "workers": args.num_workers,
+        "accesslog": args.accesslog,
+        "access_log_format": '%(t)s | %(s)s | %(L)ss | %(m)s %(U)s | resp_len:%(B)s | referrer:"%(f)s" | ip:%(h)s | agent:%(a)s',
         # docs @ <http://docs.gunicorn.org/en/stable/settings.html#access-log-format>
-        'worker_class': 'gevent',
+        "worker_class": "gevent",
     }
     sga = StandaloneGunicornApplication(app, options)
     # for skey,sval in sorted(sga.cfg.settings.items()):
@@ -45,38 +50,64 @@ def run_gunicorn(app:Flask, args:argparse.Namespace) -> None:
     #         print(f'             desc: <<\n{sval.desc}\n>>')
     sga.run()
 
+
 def gunicorn_is_broken() -> bool:
     try:
-        import gunicorn.app.base # noqa: F401
+        import gunicorn.app.base  # noqa: F401
     except Exception:
         try:
-            import inotify # noqa: F401
+            import inotify  # noqa: F401
         except ImportError:
             raise
         else:
             # `import gunicorn` is failing because `inotify` is installed.
             # see <https://github.com/benoitc/gunicorn/issues/1477>
-            print("On python3 gunicorn is incompatible with inotify, so PheWeb will use the less-secure, slower Flask development server while inotify is installed.\n")
+            print(
+                "On python3 gunicorn is incompatible with inotify, so PheWeb will use the less-secure, slower Flask development server while inotify is installed.\n"
+            )
             return True
     return False
 
-def print_ip(port:int, urlprefix:str) -> None:
+
+def print_ip(port: int, urlprefix: str) -> None:
     ip = get_ip()
-    print('If you can open a web browser on this computer (ie, the one running PheWeb), open http://localhost:{}/{} .'.format(port, urlprefix))
-    print('')
-    print('If not, maybe http://{}:{}/{} will work.'.format(ip, port, urlprefix))
+    print(
+        "If you can open a web browser on this computer (ie, the one running PheWeb), open http://localhost:{}/{} .".format(
+            port, urlprefix
+        )
+    )
+    print("")
+    print("If not, maybe http://{}:{}/{} will work.".format(ip, port, urlprefix))
     print("If that link doesn't work, it's either because:")
-    print("  - the IP {} is failing to route to this computer (eg, this computer is inside a NAT), or".format(ip))
+    print(
+        "  - the IP {} is failing to route to this computer (eg, this computer is inside a NAT), or".format(
+            ip
+        )
+    )
     print("  - a firewall is blocking port {}.".format(port))
     print("In that case, you can view the site using an ssh tunnel:")
-    print("  - If you use Mac/Linux, run `ssh -N -L {}:localhost:{} <username>@<server>`, similar to your usual `ssh <username>@<server>`".format(port, port))
-    print("  - If you use PuTTY on Windows, follow https://stackoverflow.com/a/29168936/1166306")
+    print(
+        "  - If you use Mac/Linux, run `ssh -N -L {}:localhost:{} <username>@<server>`, similar to your usual `ssh <username>@<server>`".format(
+            port, port
+        )
+    )
+    print(
+        "  - If you use PuTTY on Windows, follow https://stackoverflow.com/a/29168936/1166306"
+    )
     print("  - Either way, open http://localhost:5000 in your web browser")
-    print('')
+    print("")
+
 
 def get_ip() -> str:
     import subprocess
-    return subprocess.check_output('dig +short myip.opendns.com @resolver1.opendns.com'.split()).strip().decode('ascii')
+
+    return (
+        subprocess.check_output(
+            "dig +short myip.opendns.com @resolver1.opendns.com".split()
+        )
+        .strip()
+        .decode("ascii")
+    )
     # import socket
     # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # sock.connect(('resolver1.opendns.com', 53))
@@ -87,13 +118,19 @@ def get_ip() -> str:
     # data = requests.get('http://checkip.dyndns.com/').text
     # return re.compile(r'Address: (\d+\.\d+\.\d+\.\d+)').search(data).group(1)
 
-def attempt_open(url:str) -> bool:
+
+def attempt_open(url: str) -> bool:
     import os
     import webbrowser
-    if 'DISPLAY' not in os.environ:
-        print('The DISPLAY variable is not set, so not attempting to open a web browser\n')
+
+    if "DISPLAY" not in os.environ:
+        print(
+            "The DISPLAY variable is not set, so not attempting to open a web browser\n"
+        )
         return False
-    for name in 'windows-default macosx chrome chromium mozilla firefox opera safari'.split():
+    for (
+        name
+    ) in "windows-default macosx chrome chromium mozilla firefox opera safari".split():
         # Note: `macosx` fails on macOS 10.12.5 due to <http://bugs.python.org/issue30392>.
         try:
             b = webbrowser.get(name)
@@ -104,35 +141,53 @@ def attempt_open(url:str) -> bool:
     return False
 
 
-def run(argv:List[str]) -> None:
+def run(argv: List[str]) -> None:
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', default='0.0.0.0', help='the hostname to use to access this server')
-    parser.add_argument('--port', type=int, default=5000)
-    parser.add_argument('--accesslog', default='-', help='the file to write the access log')
-    parser.add_argument('--no-reloader', action='store_false', dest='use_reloader')
-    parser.add_argument('--num-workers', type=int, default=8, help='number of worker threads')
-    parser.add_argument('--guess-address', action='store_true', help='guess the IP address')
-    parser.add_argument('--open', action='store_true', help='try to open a web browser')
-    parser.add_argument('--urlprefix', default='', help='sub-path at which to host this server')
+    parser.add_argument(
+        "--host", default="0.0.0.0", help="the hostname to use to access this server"
+    )
+    parser.add_argument("--port", type=int, default=5000)
+    parser.add_argument(
+        "--accesslog", default="-", help="the file to write the access log"
+    )
+    parser.add_argument("--no-reloader", action="store_false", dest="use_reloader")
+    parser.add_argument(
+        "--num-workers", type=int, default=8, help="number of worker threads"
+    )
+    parser.add_argument(
+        "--guess-address", action="store_true", help="guess the IP address"
+    )
+    parser.add_argument("--open", action="store_true", help="try to open a web browser")
+    parser.add_argument(
+        "--urlprefix", default="", help="sub-path at which to host this server"
+    )
     args = parser.parse_args(argv)
 
     from .. import conf
-    conf.set_override('urlprefix', args.urlprefix.rstrip('/'))
+
+    conf.set_override("urlprefix", args.urlprefix.rstrip("/"))
 
     if args.open:
-        if not attempt_open('http://localhost:{}/{}'.format(args.port, conf.get_urlprefix())) and not args.guess_address:
+        if (
+            not attempt_open(
+                "http://localhost:{}/{}".format(args.port, conf.get_urlprefix())
+            )
+            and not args.guess_address
+        ):
             print_ip(args.port, conf.get_urlprefix())
 
-    if args.host != '0.0.0.0':
-        print('http://{}:{}/{}'.format(args.host, args.port, conf.get_urlprefix()))
+    if args.host != "0.0.0.0":
+        print("http://{}:{}/{}".format(args.host, args.port, conf.get_urlprefix()))
 
     if args.guess_address:
         print_ip(args.port, conf.get_urlprefix())
 
     import gevent.monkey
-    gevent.monkey.patch_all() # this must happen before `import requests`.
+
+    gevent.monkey.patch_all()  # this must happen before `import requests`.
     from .server import app
+
     if gunicorn_is_broken():
         run_flask_dev_server(app, args)
     else:
