@@ -1,6 +1,6 @@
 # this file will be interpreted as python3
 
-urlprefix = '/test'
+urlprefix = "/test"
 
 
 # Minor allele frequency (MAF) filters:
@@ -22,5 +22,5 @@ variant_inclusion_maf = 0.01
 
 
 # directory for caching large (~1GB) common files like dbsnp
-cache_dir = './fake-cache'
+cache_dir = "./fake-cache"
 disallow_downloads = True
