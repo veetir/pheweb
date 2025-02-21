@@ -117,16 +117,75 @@ class PhenoReader:
 
 
 class AssocFileReader:
-    """Has no concern for ordering, only in charge of parsing one associations file."""
-
-    # TODO: use `pandas.read_csv(src_filepath, usecols=[...], converters={...}, iterator=True, verbose=True, na_values='.', sep=None)
-    #   - first without `usecols`, to parse the column names, and then a second time with `usecols`.
+    """
+    Responsible for reading a single association file (e.g. .tsv/.txt/.csv).
+    No concern for ordering across multiple files, that's PhenoReader's job.
+    """
 
     def __init__(self, filepath, pheno):
         self.filepath = filepath
         self._pheno = pheno
 
     def get_variants(self, minimum_maf=0, use_per_pheno_fields=False):
+        """
+        Yields variants from a single association file, filtering out lines with
+        no pval or with MAF < minimum_maf. If 'use_per_pheno_fields' is True,
+        we parse only the per-phenotype fields from parse_utils.
+        """
+        with read_maybe_gzip(self.filepath) as f:
+            header_line = self._read_first_line_or_fail(f)
+            delimiter = self._guess_delimiter(header_line)
+
+            colnames = self._parse_colnames(header_line, delimiter)
+            colidx_for_field, marker_id_col = self._map_fields(
+                colnames, use_per_pheno_fields
+            )
+
+            if use_per_pheno_fields:
+                yield from self._yield_info_variants(
+                    f, delimiter, colnames, colidx_for_field
+                )
+            else:
+                yield from self._yield_main_variants(
+                    f, delimiter, colnames, colidx_for_field, marker_id_col, minimum_maf
+                )
+
+    def _read_first_line_or_fail(self, f):
+        """Reads the first line from file or raises a PheWebError if empty."""
+        try:
+            return next(f)
+        except StopIteration:
+            raise PheWebError(
+                f"Failed to read from file {self.filepath} - is it empty?"
+            )
+
+    def _guess_delimiter(self, header_line: str) -> str:
+        """Guess the delimiter from the header line based on heuristics."""
+        if header_line.count("\t") >= 4:
+            return "\t"
+        elif header_line.count(" ") >= 4:
+            return " "
+        elif header_line.count(",") >= 4:
+            return ","
+        else:
+            raise PheWebError(
+                f"Cannot guess what delimiter to use to parse the header line {header_line!r} "
+                f"in file {self.filepath!r}"
+            )
+
+    def _parse_colnames(self, header_line: str, delimiter: str):
+        """Split the header line by delimiter, normalize column names to lower case."""
+        # e.g. "chrom", "pos", "pval", ...
+        return [
+            colname.strip("\"' ").lower()
+            for colname in header_line.rstrip("\n\r").split(delimiter)
+        ]
+
+    def _map_fields(self, colnames, use_per_pheno_fields: bool):
+        """
+        Create a colidx_for_field mapping from fieldname -> column_index,
+        plus handle marker_id special case.
+        """
         if use_per_pheno_fields:
             fieldnames_to_check = [
                 fieldname
@@ -143,154 +202,99 @@ class AssocFileReader:
                 if fieldval["from_assoc_files"]
             ]
 
-        with read_maybe_gzip(self.filepath) as f:
+        colidx_for_field = self._parse_header(colnames, fieldnames_to_check)
 
-            try:
-                header_line = next(f)
-            except Exception as exc:
-                raise PheWebError(
-                    "Failed to read from file {} - is it empty?".format(self.filepath)
-                ) from exc
+        # Handle `MARKER_ID` special case
+        marker_id_col = None
+        if "marker_id" in colnames:
+            marker_id_col = colnames.index("marker_id")
+            # We artificially set ref/alt colidx to None so we do not parse them from columns
+            colidx_for_field["ref"] = None
+            colidx_for_field["alt"] = None
 
-            if header_line.count("\t") >= 4:
-                delimiter = "\t"
-            elif header_line.count(" ") >= 4:
-                delimiter = " "
-            elif header_line.count(",") >= 4:
-                delimiter = ","
-            else:
-                raise PheWebError(
-                    "Cannot guess what delimiter to use to parse the header line {!r} in file {!r}".format(
-                        header_line, self.filepath
-                    )
-                )
+        self._assert_all_fields_mapped(colnames, fieldnames_to_check, colidx_for_field)
 
-            colnames = [
-                colname.strip("\"' ").lower()
-                for colname in header_line.rstrip("\n\r").split(delimiter)
-            ]
-            colidx_for_field = self._parse_header(colnames, fieldnames_to_check)
-            # Special case for `MARKER_ID`
-            if "marker_id" not in colnames:
-                marker_id_col = None
-            else:
-                marker_id_col = colnames.index("marker_id")
-                colidx_for_field["ref"] = (
-                    None  # This is just to mark that we have 'ref', but it doesn't come from a column.
-                )
-                colidx_for_field["alt"] = None
-                # TODO: this sort of provides a mapping for chrom and pos, but those are usually doubled anyways.
-                # TODO: maybe we should allow multiple columns to map to each key, and then just assert that they all agree.
-            self._assert_all_fields_mapped(
-                colnames, fieldnames_to_check, colidx_for_field
-            )
+        return colidx_for_field, marker_id_col
 
-            if use_per_pheno_fields:
-                for line in f:
-                    values = line.rstrip("\n\r").split(delimiter)
-                    variant = self._parse_variant(values, colnames, colidx_for_field)
-                    yield variant
+    def _yield_info_variants(self, f, delimiter, colnames, colidx_for_field):
+        """
+        This yields 'info' lines for the 'use_per_pheno_fields' path.
+        We don't filter or skip lines, so we parse each line as a variant dict.
+        """
+        for line in f:
+            values = line.rstrip("\n\r").split(delimiter)
+            yield self._parse_variant(values, colnames, colidx_for_field)
 
-            else:
-                for line in f:
-                    values = line.rstrip("\n\r").split(delimiter)
-                    variant = self._parse_variant(values, colnames, colidx_for_field)
+    def _yield_main_variants(
+        self, f, delimiter, colnames, colidx_for_field, marker_id_col, minimum_maf
+    ):
+        """
+        Main path for actual variant data. Skips lines with no pval,
+        or MAF < minimum_maf, or modifies chrom/ref/alt from marker_id.
+        """
+        for line in f:
+            values = line.rstrip("\n\r").split(delimiter)
+            variant = self._parse_variant(values, colnames, colidx_for_field)
 
-                    if variant["pval"] == "":
-                        continue
+            if variant["pval"] == "":
+                continue
 
-                    maf = get_maf(variant, self._pheno)  # checks for agreement
-                    if maf is not None and maf < minimum_maf:
-                        continue
+            maf = get_maf(variant, self._pheno)  # checks for agreement
+            if maf is not None and maf < minimum_maf:
+                continue
 
-                    if marker_id_col is not None:
-                        chrom2, pos2, variant["ref"], variant["alt"] = (
-                            AssocFileReader.parse_marker_id(values[marker_id_col])
-                        )
-                        assert variant["chrom"] == chrom2, (values, variant, chrom2)
-                        assert variant["pos"] == pos2, (values, variant, pos2)
+            if marker_id_col is not None:
+                chrom2, pos2, ref2, alt2 = self.parse_marker_id(values[marker_id_col])
+                assert variant["chrom"] == chrom2, (values, variant, chrom2)
+                assert variant["pos"] == pos2, (values, variant, pos2)
+                variant["ref"] = ref2
+                variant["alt"] = alt2
 
-                    if variant["chrom"] in chrom_aliases:
-                        variant["chrom"] = chrom_aliases[variant["chrom"]]
+            if variant["chrom"] in chrom_aliases:
+                variant["chrom"] = chrom_aliases[variant["chrom"]]
 
-                    yield variant
-
-    def get_info(self):
-        infos = []
-        for linenum, variant in enumerate(
-            itertools.islice(self.get_variants(use_per_pheno_fields=True), 0, 1000)
-        ):
-            # Check that num_cases + num_controls == num_samples
-            if all(
-                key in variant for key in ["num_cases", "num_controls", "num_samples"]
-            ):
-                if (
-                    variant["num_cases"] + variant["num_controls"]
-                    != variant["num_samples"]
-                ):
-                    raise PheWebError(
-                        "The number of cases and controls don't add up to the number of samples on one line in one of your association files.\n"
-                        + "- the filepath: {!r}\n".format(self.filepath)
-                        + "- the line number: {}".format(linenum + 1)
-                        + "- parsed line: [{!r}]\n".format(variant)
-                    )
-                del variant["num_samples"]  # don't need it.
-            infos.append(variant)
-        for info in infos[1:]:
-            if info != infos[0]:
-                raise PheWebError(
-                    "The pheno info parsed from some lines disagrees.\n"
-                    + "- in the file {}".format(self.filepath)
-                    + "- parsed from first line:\n    {}".format(infos[0])
-                    + "- parsed from a later line:\n    {}".format(info)
-                )
-        return infos[0]
+            yield variant
 
     def _parse_variant(self, values, colnames, colidx_for_field):
-        # `values`: [str]
-
+        """
+        Create a dictionary of field -> parsed_value for one line.
+        """
         if len(values) != len(colnames):
-            repr_values = repr(values)
-            if len(repr_values) > 5000:
-                repr_values = (
-                    repr_values[:200] + " ... " + repr_values[-200:]
-                )  # sometimes we get VERY long strings of nulls.
-            raise PheWebError(
-                "ERROR: A line has {!r} values, but we expected {!r}.\n".format(
-                    len(values), len(colnames)
-                )
-                + "- The line: {}\n".format(repr_values)
-                + "- The header: {!r}\n".format(colnames)
-                + "- In file: {!r}\n".format(self.filepath)
-            )
+            raise self._raise_bad_line_error(values, colnames)
 
         variant = {}
         for field, colidx in colidx_for_field.items():
             if colidx is not None:
                 parse = parse_utils.parser_for_field[field]
-                value = values[colidx]
+                raw_val = values[colidx]
                 try:
-                    variant[field] = parse(value)
+                    variant[field] = parse(raw_val)
                 except Exception as exc:
                     raise PheWebError(
-                        "failed on field {!r} attempting to convert value {!r} to type {!r} with constraints {!r} in {!r} on line with values {!r} given colnames {!r} and field mapping {!r}".format(
-                            field,
-                            values[colidx],
-                            parse_utils.fields[field]["type"],
-                            parse_utils.fields[field],
-                            self.filepath,
-                            values,
-                            colnames,
-                            colidx_for_field,
-                        )
+                        f"failed on field {field!r} attempting to convert value {raw_val!r} to "
+                        f"type {parse_utils.fields[field]['type']!r} with constraints {parse_utils.fields[field]!r} "
+                        f"in {self.filepath!r} on line with values {values!r} given colnames {colnames!r} "
+                        f"and field mapping {colidx_for_field!r}"
                     ) from exc
 
         return variant
 
+    def _raise_bad_line_error(self, values, colnames):
+        """
+        Helper to raise a PheWebError with a truncated message if lines are huge.
+        """
+        repr_values = repr(values)
+        if len(repr_values) > 5000:
+            repr_values = f"{repr_values[:200]} ... {repr_values[-200:]}"
+        return PheWebError(
+            f"ERROR: A line has {len(values)!r} values, but we expected {len(colnames)!r}.\n"
+            f"- The line: {repr_values}\n"
+            f"- The header: {colnames!r}\n"
+            f"- In file: {self.filepath!r}\n"
+        )
+
     def _parse_header(self, colnames, fieldnames_to_check):
-        colidx_for_field = (
-            {}
-        )  # which column (by number, not name) holds the value for the field (the key)
+        colidx_for_field = {}
         field_aliases = conf.get_field_aliases()  # {alias: field_name}
         for colidx, colname in enumerate(colnames):
             if (
@@ -300,11 +304,9 @@ class AssocFileReader:
                 field_name = field_aliases[colname]
                 if field_name in colidx_for_field:
                     raise PheWebError(
-                        "PheWeb found two different ways of mapping the field_name {!r} to the columns {!r}.\n".format(
-                            field_name, colnames
-                        )
-                        + "field_aliases = {!r}.\n".format(field_aliases)
-                        + "File = {}\n".format(self.filepath)
+                        f"PheWeb found two ways of mapping the field_name {field_name!r} "
+                        f"to columns {colnames!r}.\nfield_aliases = {field_aliases!r}.\n"
+                        f"File = {self.filepath}\n"
                     )
                 colidx_for_field[field_name] = colidx
         return colidx_for_field
@@ -314,35 +316,24 @@ class AssocFileReader:
     ):
         fields = parse_utils.fields
         required_fieldnames = [
-            fieldname
-            for fieldname in fieldnames_to_check
-            if fields[fieldname]["required"]
+            fn for fn in fieldnames_to_check if fields[fn]["required"]
         ]
         missing_required_fieldnames = [
-            fieldname
-            for fieldname in required_fieldnames
-            if fieldname not in colidx_for_field
+            fn for fn in required_fieldnames if fn not in colidx_for_field
         ]
         if missing_required_fieldnames:
             err_message = (
-                "Some required fields weren't successfully mapped to the columns of an input file.\n"
-                + "The file is {!r}.\n".format(self.filepath)
-                + "The fields that were required but not present are: {!r}\n".format(
-                    missing_required_fieldnames
-                )
-                + "field_aliases = {}:\n".format(conf.get_field_aliases())
-                + "Here are all the column names from that file: {!r}\n".format(
-                    colnames
-                )
+                f"Some required fields weren't mapped to columns in file {self.filepath!r}.\n"
+                f"The fields that were required but not present are: {missing_required_fieldnames!r}\n"
+                f"field_aliases = {conf.get_field_aliases()}:\n"
+                f"Here are all the column names from that file: {colnames!r}\n"
             )
             if colidx_for_field:
                 err_message += (
-                    "Here are the fields that successfully mapped to columns of the file:\n"
+                    "Here are the fields that successfully mapped:\n"
                     + "".join(
-                        "- {}: {} (column #{})\n".format(
-                            field, colnames[colidx], colidx
-                        )
-                        for field, colidx in colidx_for_field.items()
+                        f"- {field}: {colnames[idx]} (column #{idx})\n"
+                        for field, idx in colidx_for_field.items()
                     )
                 )
             else:
@@ -355,9 +346,7 @@ class AssocFileReader:
         match = AssocFileReader.parse_marker_id_regex.match(marker_id)
         if match is None:
             raise PheWebError(
-                "ERROR: MARKER_ID didn't match our MARKER_ID pattern: {!r}".format(
-                    marker_id
-                )
+                f"ERROR: MARKER_ID didn't match our MARKER_ID pattern: {marker_id!r}"
             )
         chrom, pos, ref, alt = match.groups()
         return chrom, int(pos), ref, alt
