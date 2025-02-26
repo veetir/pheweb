@@ -12,7 +12,7 @@ from .load_utils import parallelize_per_pheno, indent, get_phenos_subset
 
 import argparse
 from typing import List, Dict, Any, Iterator
-
+import traceback
 
 def handle_failed_results(failed_results: dict, phenos: List[Dict[str, Any]]):
     if failed_results:
@@ -98,16 +98,15 @@ def get_output_filepaths(pheno: dict) -> List[str]:
 
 def write_failures(filepath: str, failed_results: Dict[str, Any]):
     with open(filepath, "w") as f:
-        for phenocode, d in failed_results.items():
+        for phenocode, error_details in failed_results.items():
             f.write(
                 "=== Error for phenocode {} ===\n{}\n\n".format(
-                    phenocode, d["exception_tb"]
+                    phenocode, error_details["exception_tb"]
                 )
             )
 
 
 def convert(pheno: Dict[str, Any]) -> Iterator[Dict[str, Any]]:
-    # suppress Exceptions so that we can report back on which phenotypes succeeded and which didn't.
     try:
         with VariantFileWriter(
             get_pheno_filepath("parsed", pheno["phenocode"], must_exist=False)
@@ -116,10 +115,8 @@ def convert(pheno: Dict[str, Any]) -> Iterator[Dict[str, Any]]:
             variants = pheno_reader.get_variants()
             writer.write_all(variants)
     except Exception as exc:
-        import traceback
-
         yield {
-            "type": "warning",  # TODO: make PerPhenoParallelizer print this.
+            "type": "warning",
             "warning_str": "Exception:\n"
             + indent(str(exc))
             + "\nTraceback:\n"
