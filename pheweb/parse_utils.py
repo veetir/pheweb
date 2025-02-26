@@ -135,6 +135,7 @@ per_assoc_fields: Dict[str, Dict[str, Any]] = {
         "display": "Odds Ratio",
     },
     "maf": {
+        "aliases": ["A1_FREQ"],
         "type": float,
         "range": [0, 0.5],
         "sigfigs": 2,
@@ -142,7 +143,7 @@ per_assoc_fields: Dict[str, Dict[str, Any]] = {
         "display": "MAF",
     },
     "af": {
-        "aliases": ["A1FREQ", "FRQ"],
+        "aliases": ["FRQ"],
         "type": float,
         "range": [0, 1],
         "proportion_sigfigs": 2,
