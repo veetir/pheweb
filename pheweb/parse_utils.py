@@ -137,7 +137,7 @@ per_assoc_fields: Dict[str, Dict[str, Any]] = {
     "maf": {
         "aliases": ["A1_FREQ"],
         "type": float,
-        "range": [0, 0.5],
+        "range": [0, 1],
         "sigfigs": 2,
         "tooltip_lztemplate": {"transform": "|percent"},
         "display": "MAF",
