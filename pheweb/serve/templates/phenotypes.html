@@ -46,7 +46,6 @@
         <tr>
           <th>Category</th>
           <th>Phenotype</th>
-          <th>#Samples</th>
           <th>GCλ0.01</th>
           <th>#Loci&lt;5e-8</th>
           <th>Top variant in pheno</th>
@@ -66,12 +65,6 @@
     <td><a style="color:black" href="{{ url_for('.pheno_page', phenocode='').rstrip('/') }}/<%= h.phenocode %>">
         <%= h.phenostring || h.phenocode %>
     </a></td>
-    <td>
-      <% if (h.num_cases && h.num_controls) { %>
-        <%= h.num_cases.toLocaleString() %> + <%= h.num_controls.toLocaleString() %>
-      <% } else if (h.num_samples) { %>
-        <%= h.num_samples.toLocaleString() %>
-      <% } %>
     <td><%= (h.gc_lambda_hundred !== null) ? h.gc_lambda_hundred.toFixed(2) : '' %></td>
     <td><%= h.num_peaks %></td>
     <td><a style="color:black" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= h.chrom %>-<%= h.pos %>-<%= h.ref %>-<%= h.alt %>">
