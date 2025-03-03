@@ -13,7 +13,7 @@ header_template = {
 #!/bin/bash
 #SBATCH --array=0-{n_jobs_m1}
 #SBATCH --mem=4G
-#SBATCH --time=5-0:0
+#SBATCH --time=2-0:0
 #SBATCH --output={tmp_path}/slurm-%j.out
 #SBATCH --error={tmp_path}/slurm-%j.out
 """,
