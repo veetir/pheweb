@@ -280,7 +280,7 @@ def get_pheno_correlations_pvalue_threshold() -> float:
 
 ## Serving config
 def get_lzjs_version() -> str:
-    return _get_config_str("lzjs_version", "0.13.4")
+    return _get_config_str("lzjs_version", "0.14.0")
 
 
 def should_allow_variant_json_cors() -> bool:
