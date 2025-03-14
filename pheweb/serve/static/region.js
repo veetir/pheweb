@@ -353,7 +353,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     show: { or: ["highlighted", "selected"] },
                     hide: { and: ["unhighlighted", "unselected"] },
                     html: `
-                      <div style="border: 1px solid #ccc; background-color: #f7f7f7; border-radius: 4px; padding: 10px; font-family: Arial, sans-serif;">
+                      <div>
                         <style>
                           .custom-link {
                             text-decoration: underline;
