@@ -349,7 +349,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     },
                 };
                 anno_layer.tooltip = {
-                    closable: false,
+                    closable: true,
                     show: { or: ["highlighted", "selected"] },
                     hide: { and: ["unhighlighted", "unselected"] },
                     html: `
