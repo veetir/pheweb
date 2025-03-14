@@ -354,6 +354,17 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     hide: { and: ["unhighlighted", "unselected"] },
                     html: `
                       <div style="border: 1px solid #ccc; background-color: #f7f7f7; border-radius: 4px; padding: 10px; font-family: Arial, sans-serif;">
+                        <style>
+                          .custom-link {
+                            text-decoration: underline;
+                            color: blue;
+                            margin: 0 5px;
+                          }
+                          .custom-link:hover,
+                          .custom-link:focus {
+                            text-decoration: underline;
+                          }
+                        </style>
                         <h3 style="margin: 0 0 5px 0; font-size: 16px;">
                           <span style="display:inline-block; width:60ch; white-space: normal;">
                             {{{{namespace[catalog]}}study}} (PMID: {{{{namespace[catalog]}}pmid}})
@@ -363,17 +374,15 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                         <p style="margin: 5px 0;"><strong>Log p-value:</strong> {{{{namespace[catalog]}}log_pvalue}}</p>
                         <p style="margin: 5px 0;"><strong>Risk freq:</strong> {{{{namespace[catalog]}}risk_frq}}</p>
                         <div style="border-top: 1px solid #ccc; margin-top: 10px; padding-top: 10px; text-align: center; font-size: 14px;">
-                          <a href="https://pubmed.ncbi.nlm.nih.gov/{{{{namespace[catalog]}}pmid}}/" target="_blank" style="text-decoration: none; color: blue; margin: 0 5px;">PubMed</a>
+                          <a href="https://pubmed.ncbi.nlm.nih.gov/{{{{namespace[catalog]}}pmid}}/" target="_blank" class="custom-link">PubMed</a>
                           |
-                          <a href="https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}/" target="_blank" style="text-decoration: none; color: blue; margin: 0 5px;">GWAS Catalog</a>
+                          <a href="https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">GWAS Catalog</a>
                           |
-                          <a href="https://www.ncbi.nlm.nih.gov/snp/{{{{namespace[catalog]}}rsid}}/" target="_blank" style="text-decoration: none; color: blue; margin: 0 5px;">dbSNP</a>
+                          <a href="https://www.ncbi.nlm.nih.gov/snp/{{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">dbSNP</a>
                         </div>
                       </div>
                     `
-                  };
-                  
-                                   
+                };       
                 anno_layer.fill_opacity = 0.7;
                 anno_layer.hit_area_width = 50;
                 return base;
