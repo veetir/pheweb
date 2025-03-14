@@ -302,7 +302,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                           },
                           y1: {
                             label: "-log10 p-value",
-                            label_offset: 28,
+                            label_offset: 34,
                             render: true,
                             label_function: null,
                           },
