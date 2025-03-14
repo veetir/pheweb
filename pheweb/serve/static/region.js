@@ -163,37 +163,11 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
         },
         panels: [
             function() {
-                var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
-                    unnamespaced: true,
-                    height: 52, min_height: 52,
-                    margin: { top: 30, bottom: 13 },
-                    toolbar: { widgets: [] },
-                    axes: {
-                        // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
-                        x: { render: false, extent: 'state' }
-                    },
-                    title: {
-                        text: 'Hits in GWAS Catalog',
-                        style: {'font-size': '14px'},
-                        x: 50,
-                    },
-                });
-                var anno_layer = base.data_layers[0];
-                anno_layer.id_field = "{{namespace[assoc]}}id";
-                anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
-                    "{{namespace[assoc]}}id",
-                    "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position",
-                    "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
-                ];
-                anno_layer.hit_area_width = 50;
-                return base;
-            }(),
-            function() {
                 // FIXME: The only customization here is to make the legend button green and hide the "move panel" buttons; displayn options doesn't need to be copy-pasted
                 var base = LocusZoom.Layouts.get("panel", "association_catalog", {
                     unnamespaced: true,
-                    height: 200, min_height: 200,
-                    margin: { top: 10 },
+                    height: 300, min_height: 200,
+                    margin: { top: 10, left: 20, right: 20 },
                     toolbar: {
                         widgets: [
                             {
@@ -306,6 +280,102 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     ],
                 });
                 base.legend.origin.y = 15;
+                return base;
+            }(),
+            // Using logic from https://github.com/FINNGEN/pheweb
+            // to make the Hits in GWAS Catalog plot similar to their 
+            // GWAS catalog + UKBB plot
+            function() {
+                var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
+                    unnamespaced: true,
+                    height: 200, min_height: 100,
+                    margin: { top: 10, bottom: 20},
+                    toolbar: { widgets: [] },
+                    axes: {
+                        x: {
+                            label_function: "chromosome",
+                            label_offset: 32,
+                            tick_format: "region",
+                            extent: "state",
+                            render: true,
+                            label: "Chromosome {{chr}} (Mb)",
+                          },
+                          y1: {
+                            label: "-log10 p-value",
+                            label_offset: 28,
+                            render: true,
+                            label_function: null,
+                          },
+                    },
+                    title: {
+                        text: 'Hits in GWAS Catalog',
+                        style: {'font-size': '14px'},
+                        x: 60,
+                    },
+                });
+                var anno_layer = base.data_layers[0];
+                anno_layer.type = "scatter";
+                anno_layer.id_field = "{{namespace[assoc]}}id";
+                anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
+                    "{{namespace[assoc]}}id", "{{namespace[catalog]}}study", "{{namespace[catalog]}}pmid",
+                    "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position", "{{namespace[catalog]}}risk_frq",
+                    "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}id",
+                    "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                ];
+                anno_layer.x_axis = { field: "{{namespace[assoc]}}position", axis: 1 };
+                anno_layer.y_axis = { 
+                    field: "{{namespace[catalog]}}log_pvalue", 
+                    axis: 1, 
+                    floor: 0, 
+                    upper_buffer: 0.1, 
+                    min_extent: [0, 10] 
+                };
+                anno_layer.point_shape = {
+                    scale_function: "if",
+                    field: "{{namespace[catalog]}}study",
+                    parameters: {
+                      field_value: "UKBB",
+                      then: "circle",
+                      else: "diamond",
+                    },
+                  };
+                  anno_layer.color = {
+                    scale_function: "if",
+                    field: "{{namespace[catalog]}}id",
+                    parameters: {
+                      field_value: "4",
+                      then: "#9632b8",
+                      else: "#d43f3a",
+                    },
+                };
+                anno_layer.tooltip = {
+                    closable: false,
+                    show: { or: ["highlighted", "selected"] },
+                    hide: { and: ["unhighlighted", "unselected"] },
+                    html: `
+                      <div style="border: 1px solid #ccc; background-color: #f7f7f7; border-radius: 4px; padding: 10px; font-family: Arial, sans-serif;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 16px;">
+                          <span style="display:inline-block; width:60ch; white-space: normal;">
+                            {{{{namespace[catalog]}}study}} (PMID: {{{{namespace[catalog]}}pmid}})
+                          </span>
+                        </h3>
+                        <p style="margin: 5px 0;"><strong>Top trait:</strong> {{{{namespace[catalog]}}trait}}</p>
+                        <p style="margin: 5px 0;"><strong>Log p-value:</strong> {{{{namespace[catalog]}}log_pvalue}}</p>
+                        <p style="margin: 5px 0;"><strong>Risk freq:</strong> {{{{namespace[catalog]}}risk_frq}}</p>
+                        <div style="border-top: 1px solid #ccc; margin-top: 10px; padding-top: 10px; text-align: center; font-size: 14px;">
+                          <a href="https://pubmed.ncbi.nlm.nih.gov/{{{{namespace[catalog]}}pmid}}/" target="_blank" style="text-decoration: none; color: blue; margin: 0 5px;">PubMed</a>
+                          |
+                          <a href="https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}/" target="_blank" style="text-decoration: none; color: blue; margin: 0 5px;">GWAS Catalog</a>
+                          |
+                          <a href="https://www.ncbi.nlm.nih.gov/snp/{{{{namespace[catalog]}}rsid}}/" target="_blank" style="text-decoration: none; color: blue; margin: 0 5px;">dbSNP</a>
+                        </div>
+                      </div>
+                    `
+                  };
+                  
+                                   
+                anno_layer.fill_opacity = 0.7;
+                anno_layer.hit_area_width = 50;
                 return base;
             }(),
             LocusZoom.Layouts.get("panel", "genes", {
