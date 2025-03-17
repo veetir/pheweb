@@ -302,9 +302,6 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     height: 200, min_height: 100,
                     margin: { top: 10, bottom: 20},
                     toolbar: { widgets: [] },
-                    dashboard: { "components": [{ "type": "toggle_legend",
-						        "position": "right",
-						        "color": "green" }]},
                     axes: {
                         x: {
                             label_function: "chromosome",
@@ -320,13 +317,6 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                             render: true,
                             label_function: null,
                           },
-                        legend: { orientation: "vertical",
-                            origin: { "x": 55, "y": 40 },
-                            hidden: false,
-                            width: 91.66200256347656,
-                            height: 138,
-                            padding: 5,
-                            label_size: 12 },
                     },
                     title: {
                         text: 'Hits in GWAS Catalog',
