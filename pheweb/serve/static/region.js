@@ -1,5 +1,16 @@
 'use strict';
 
+LocusZoom.Adapters.extend("GwasCatalogLZ", "CustomGwasCatalogLZ", {
+    getURL: function(state, chain, fields) {
+        var build38ids = "1,4,7";
+        var filter = "id in " + build38ids +
+                     " and chrom eq '" + state.chr + "'" +
+                     " and pos ge " + state.start +
+                     " and pos le " + state.end;
+        return this.url + "?format=objects&filter=" + encodeURIComponent(filter);
+    }
+});
+
 LocusZoom.Adapters.extend("AssociationLZ", "AssociationPheWeb", {
     getURL: function (state, chain, fields) {
         return this.url + "results/?filter=chromosome in  '" + state.chr + "'" +
@@ -58,7 +69,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
     var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
     var data_sources = new LocusZoom.DataSources()
         .add("assoc", ["AssociationPheWeb", {url: localBase }])
-        .add("catalog", ["GwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/', params: { build: "GRCh"+window.model.grch_build_number }}])
+        .add("catalog", ["CustomGwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/'}])
         .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
             params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
         }])
@@ -291,6 +302,9 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     height: 200, min_height: 100,
                     margin: { top: 10, bottom: 20},
                     toolbar: { widgets: [] },
+                    dashboard: { "components": [{ "type": "toggle_legend",
+						        "position": "right",
+						        "color": "green" }]},
                     axes: {
                         x: {
                             label_function: "chromosome",
@@ -306,6 +320,13 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                             render: true,
                             label_function: null,
                           },
+                        legend: { orientation: "vertical",
+                            origin: { "x": 55, "y": 40 },
+                            hidden: false,
+                            width: 91.66200256347656,
+                            height: 138,
+                            padding: 5,
+                            label_size: 12 },
                     },
                     title: {
                         text: 'Hits in GWAS Catalog',
@@ -315,15 +336,19 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 });
                 var anno_layer = base.data_layers[0];
                 anno_layer.type = "scatter";
-                anno_layer.id_field = "{{namespace[assoc]}}id";
                 anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
-                    "{{namespace[assoc]}}id", "{{namespace[catalog]}}study", "{{namespace[catalog]}}pmid",
-                    "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position", "{{namespace[catalog]}}risk_frq",
-                    "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}id",
-                    "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                    "{{namespace[assoc]}}id", "{{namespace[catalog]}}study",
+                    "{{namespace[catalog]}}pmid", "{{namespace[assoc]}}chr",
+                    "{{namespace[assoc]}}position", "{{namespace[catalog]}}risk_frq",
+                    "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid",
+                    "{{namespace[catalog]}}id", "{{namespace[catalog]}}trait",
+                    "{{namespace[catalog]}}log_pvalue",
+                    "{{namespace[catalog]}}risk_allele",
+                    "{{namespace[catalog]}}or_beta", "{{namespace[catalog]}}pos"
                 ];
-                anno_layer.x_axis = { field: "{{namespace[assoc]}}position", axis: 1 };
-                anno_layer.y_axis = { 
+                anno_layer.id_field = "{{namespace[assoc]}}id";
+                anno_layer.x_axis = { field: "{{namespace[catalog]}}pos", axis: 1 };
+                anno_layer.y_axis = {
                     field: "{{namespace[catalog]}}log_pvalue", 
                     axis: 1, 
                     floor: 0, 
@@ -341,9 +366,9 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                   };
                   anno_layer.color = {
                     scale_function: "if",
-                    field: "{{namespace[catalog]}}id",
+                    field: "{{namespace[catalog]}}study",
                     parameters: {
-                      field_value: "4",
+                      field_value: "UKBB",
                       then: "#9632b8",
                       else: "#d43f3a",
                     },
@@ -367,24 +392,27 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                         </style>
                         <h3 style="margin: 0 0 5px 0; font-size: 16px;">
                           <span style="display:inline-block; width:60ch; white-space: normal;">
-                            {{{{namespace[catalog]}}study}} (PMID: {{{{namespace[catalog]}}pmid}})
+                            {{{{namespace[catalog]}}study}} {{#if {{namespace[catalog]}}pmid}}(PMID: {{{{namespace[catalog]}}pmid}}){{/if}}
                           </span>
                         </h3>
                         <p style="margin: 5px 0;"><strong>Top trait:</strong> {{{{namespace[catalog]}}trait}}</p>
                         <p style="margin: 5px 0;"><strong>Log p-value:</strong> {{{{namespace[catalog]}}log_pvalue}}</p>
                         <p style="margin: 5px 0;"><strong>Risk freq:</strong> {{{{namespace[catalog]}}risk_frq}}</p>
+                        <p style="margin: 5px 0;"><strong>Effect size:</strong> {{{{namespace[catalog]}}or_beta}}</p>
+                        <p style="margin: 5px 0;"><strong>Risk allele:</strong> {{{{namespace[catalog]}}risk_allele}}</p>
                         <div style="border-top: 1px solid #ccc; margin-top: 10px; padding-top: 10px; text-align: center; font-size: 14px;">
+                        {{#if {{namespace[catalog]}}pmid}}
                           <a href="https://pubmed.ncbi.nlm.nih.gov/{{{{namespace[catalog]}}pmid}}/" target="_blank" class="custom-link">PubMed</a>
                           |
+                        {{/if}}
                           <a href="https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">GWAS Catalog</a>
                           |
                           <a href="https://www.ncbi.nlm.nih.gov/snp/{{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">dbSNP</a>
                         </div>
                       </div>
                     `
-                };       
+                };
                 anno_layer.fill_opacity = 0.7;
-                anno_layer.hit_area_width = 50;
                 return base;
             }(),
             LocusZoom.Layouts.get("panel", "genes", {
