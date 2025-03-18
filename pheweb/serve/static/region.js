@@ -140,7 +140,8 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
             params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
         }])
         .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
-        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
+        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }])
+        .add("constraint", ["GeneConstraintLZ", { url: "https://gnomad.broadinstitute.org/api/", params: {build:'GRCh'+window.model.grch_build_number} }]);
 
     LocusZoom.TransformationFunctions.add("neglog10_or_323", function(x) {
         if (x === 0) return 323;
@@ -269,7 +270,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                                         display_name: "Label catalog traits",  // Human readable representation of field name
                                         display: {  // Specify layout directives that control display of the plot for this option
                                             label: {
-                                                text: "{{{{namespace[catalog]}}trait}}",
+                                                text: "{{catalog:trait}}",
                                                 spacing: 6,
                                                 lines: {
                                                     style: {
@@ -282,17 +283,17 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                                                     // Only label points if they are significant for some trait in the catalog, AND in high LD
                                                     //  with the top hit of interest
                                                     {
-                                                        field: "{{namespace[catalog]}}trait",
+                                                        field: "catalog:trait",
                                                         operator: "!=",
                                                         value: null
                                                     },
                                                     {
-                                                        field: "{{namespace[catalog]}}log_pvalue",
+                                                        field: "catalog:log_pvalue",
                                                         operator: ">",
                                                         value: 7.301
                                                     },
                                                     {
-                                                        field: "{{namespace[ld]}}state",
+                                                        field: "ld:state",
                                                         operator: ">",
                                                         value: 0.4
                                                     },
@@ -316,14 +317,14 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                             var l = LocusZoom.Layouts.get("data_layer", "association_pvalues_catalog", {
                                 unnamespaced: true,
                                 fields: [
-                                    "{{namespace[assoc]}}all", // special mock value for the custom source
-                                    "{{namespace[assoc]}}id",
-                                    "{{namespace[assoc]}}position",
-                                    "{{namespace[assoc]}}pvalue|neglog10_or_323",
-                                    "{{namespace[ld]}}state", "{{namespace[ld]}}isrefvar",
-                                    "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                                    "assoc:all", // special mock value for the custom source
+                                    "assoc:id",
+                                    "assoc:position",
+                                    "assoc:pvalue|neglog10_or_323",
+                                    "ld:state", "ld:isrefvar",
+                                    "catalog:rsid", "catalog:trait", "catalog:log_pvalue"
                                 ],
-                                id_field: "{{namespace[assoc]}}id",
+                                id_field: "assoc:id",
                                 tooltip: {
                                     closable: true,
                                     show: {
@@ -333,7 +334,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                                       "and": ["unhighlighted", "unselected"]
                                     },
                                     html:
-                                      "<strong>{{{{namespace[assoc]}}id}}</strong><br><br>" +
+                                      "<strong>{{assoc:id}}</strong><br><br>" +
                                       window.model.tooltip_lztemplate
                                         .replace(/{{/g, "{{assoc:")
                                         .replace(/{{assoc:#if /g, "{{#if assoc:")
@@ -341,26 +342,26 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                                       "<br>" +
                                       "<a href=\"" +
                                         window.model.urlprefix +
-                                        "/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}\"" +
+                                        "/variant/{{assoc:chr}}-{{assoc:position}}-{{assoc:ref}}-{{assoc:alt}}\"" +
                                       ">Go to PheWAS</a>" +
-                                      "<br>{{#if {{namespace[ld]}}isrefvar}}" +
+                                      "<br>{{#if ld:isrefvar}}" +
                                         "<strong>LD Reference Variant</strong>" +
                                       "{{#else}}" +
                                         "<a href=\"javascript:void(0);\" onclick=\"var data = this.parentNode.__data__;data.getDataLayer().makeLDReference(data);\">Make LD Reference</a>" +
                                       "{{/if}}<br>" +
-                                      "{{#if {{namespace[catalog]}}rsid}}" +
+                                      "{{#if catalog:rsid}}" +
                                       "<p class=\"tooltip-paragraph\">" +
-                                        "<button class=\"json-toggle-btn\" onclick=\"toggleFormattedJsonDisplay('{{{{namespace[catalog]}}rsid}}')\">" +
+                                        "<button class=\"json-toggle-btn\" onclick=\"toggleFormattedJsonDisplay('{{catalog:rsid}}')\">" +
                                           "All studies for this rsid [GWAS Catalog]" +
                                         "</button>" +
                                       "</p>" +
-                                      "<div id=\"json-display-{{{{namespace[catalog]}}rsid}}\" class=\"json-container\"></div>" +
+                                      "<div id=\"json-display-{{catalog:rsid}}\" class=\"json-container\"></div>" +
                                     "{{/if}}"
                                   },
-                                x_axis: { field: "{{namespace[assoc]}}position" },
+                                x_axis: { field: "assoc:position" },
                                 y_axis: {
                                     axis: 1,
-                                    field: "{{namespace[assoc]}}pvalue|neglog10_or_323",
+                                    field: "assoc:pvalue|neglog10_or_323",
                                     floor: 0,
                                     upper_buffer: 0.1,
                                     min_extent: [0, 10]
@@ -368,7 +369,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                             });
                             l.behaviors.onctrlclick = [{
                                 action: "link",
-                                href: window.model.urlprefix+"/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}"
+                                href: window.model.urlprefix+"/variant/{{assoc:chr}}-{{assoc:position}}-{{assoc:ref}}-{{assoc:alt}}"
                             }];
                             return l;
                         }()
@@ -411,19 +412,19 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 var anno_layer = base.data_layers[0];
                 anno_layer.type = "scatter";
                 anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
-                    "{{namespace[assoc]}}id", "{{namespace[catalog]}}study",
-                    "{{namespace[catalog]}}pmid", "{{namespace[assoc]}}chr",
-                    "{{namespace[assoc]}}position", "{{namespace[catalog]}}risk_frq",
-                    "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid",
-                    "{{namespace[catalog]}}id", "{{namespace[catalog]}}trait",
-                    "{{namespace[catalog]}}log_pvalue",
-                    "{{namespace[catalog]}}risk_allele",
-                    "{{namespace[catalog]}}or_beta", "{{namespace[catalog]}}pos"
+                    "assoc:id", "catalog:study",
+                    "catalog:pmid", "assoc:chr",
+                    "assoc:position", "catalog:risk_frq",
+                    "catalog:variant", "catalog:rsid",
+                    "catalog:id", "catalog:trait",
+                    "catalog:log_pvalue",
+                    "catalog:risk_allele",
+                    "catalog:or_beta", "catalog:pos"
                 ];
-                anno_layer.id_field = "{{namespace[assoc]}}id";
-                anno_layer.x_axis = { field: "{{namespace[catalog]}}pos", axis: 1 };
+                anno_layer.id_field = "assoc:id";
+                anno_layer.x_axis = { field: "catalog:pos", axis: 1 };
                 anno_layer.y_axis = {
-                    field: "{{namespace[catalog]}}log_pvalue", 
+                    field: "catalog:log_pvalue", 
                     axis: 1, 
                     floor: 0, 
                     upper_buffer: 0.1, 
@@ -431,7 +432,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 };
                 anno_layer.point_shape = {
                     scale_function: "if",
-                    field: "{{namespace[catalog]}}study",
+                    field: "catalog:study",
                     parameters: {
                       field_value: "UKBB",
                       then: "circle",
@@ -440,7 +441,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                   };
                   anno_layer.color = {
                     scale_function: "if",
-                    field: "{{namespace[catalog]}}study",
+                    field: "catalog:study",
                     parameters: {
                       field_value: "UKBB",
                       then: "#9632b8",
@@ -455,33 +456,33 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                         <div>
                         <h3 class="tooltip-heading">
                             <span>
-                            {{{{namespace[catalog]}}study}} {{#if {{namespace[catalog]}}pmid}}(PMID: {{{{namespace[catalog]}}pmid}}){{/if}}
+                            {{catalog:study}} {{#if catalog:pmid}}(PMID: {{catalog:pmid}}){{/if}}
                             </span>
                         </h3>
-                        <p class="tooltip-paragraph"><strong>Top trait:</strong> {{{{namespace[catalog]}}trait}}</p>
-                        <p class="tooltip-paragraph"><strong>Log p-value:</strong> {{{{namespace[catalog]}}log_pvalue}}</p>
-                        <p class="tooltip-paragraph"><strong>Risk freq:</strong> {{{{namespace[catalog]}}risk_frq}}</p>
-                        <p class="tooltip-paragraph"><strong>Effect size:</strong> {{{{namespace[catalog]}}or_beta}}</p>
+                        <p class="tooltip-paragraph"><strong>Top trait:</strong> {{catalog:trait}}</p>
+                        <p class="tooltip-paragraph"><strong>Log p-value:</strong> {{catalog:log_pvalue}}</p>
+                        <p class="tooltip-paragraph"><strong>Risk freq:</strong> {{catalog:risk_frq}}</p>
+                        <p class="tooltip-paragraph"><strong>Effect size:</strong> {{catalog:or_beta}}</p>
                         <p class="tooltip-paragraph">
-                            <strong>Risk allele:</strong> {{{{namespace[catalog]}}risk_allele}}
+                            <strong>Risk allele:</strong> {{catalog:risk_allele}}
                         </p>
                         <p class="tooltip-paragraph">
-                            <strong>rsid:</strong> {{{{namespace[catalog]}}rsid}}
-                            <button class="json-toggle-btn" onclick="toggleFormattedJsonDisplay('{{{{namespace[catalog]}}rsid}}')">
+                            <strong>rsid:</strong> {{catalog:rsid}}
+                            <button class="json-toggle-btn" onclick="toggleFormattedJsonDisplay('{{catalog:rsid}}')">
                             All studies for this rsid [GWAS Catalog]
                             </button>
                         </p>
-                        <div id="json-display-{{{{namespace[catalog]}}rsid}}"
+                        <div id="json-display-{{catalog:rsid}}"
                             class="json-container">
                         </div>
                         <div class="tooltip-footer">
-                            {{#if {{namespace[catalog]}}pmid}}
-                            <a href="https://pubmed.ncbi.nlm.nih.gov/{{{{namespace[catalog]}}pmid}}/" target="_blank" class="custom-link">PubMed</a>
+                            {{#if catalog:pmid}}
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/{{catalog:pmid}}/" target="_blank" class="custom-link">PubMed</a>
                             |
                             {{/if}}
-                            <a href="https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">GWAS Catalog</a>
+                            <a href="https://www.ebi.ac.uk/gwas/search?query={{catalog:rsid}}/" target="_blank" class="custom-link">GWAS Catalog</a>
                             |
-                            <a href="https://www.ncbi.nlm.nih.gov/snp/{{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">dbSNP</a>
+                            <a href="https://www.ncbi.nlm.nih.gov/snp/{{catalog:rsid}}/" target="_blank" class="custom-link">dbSNP</a>
                         </div>
                         </div>
                     `
@@ -502,7 +503,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 data_layers: [
                     LocusZoom.Layouts.get("data_layer", "genes_filtered", {
                         unnamespaced: true,
-                        fields: ["{{namespace[gene]}}all"],
+                        fields: ["gene:all"],
                         tooltip: {
                             html: ("<h4><strong><i>{{gene_name}}</i></strong></h4>" +
                                    "<div>Gene ID: <strong>{{gene_id}}</strong></div>" +
