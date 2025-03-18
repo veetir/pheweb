@@ -22,26 +22,37 @@ function toggleFormattedJsonDisplay(rsid) {
       return;
     }
     
-    // If container is empty, fetch the data and format it
     if (!container.innerHTML.trim()) {
       var url = "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/" + rsid + "/studies";
       fetch(url)
         .then(function(response) {
-          return response.json();
+          return response.text();
+        })
+        .then(function(text) {
+          // If the response is empty or only whitespace, treat it as an empty object.
+          if (!text.trim()) {
+            return {};
+          }
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            // If JSON parsing fails, return an empty object.
+            return {};
+          }
         })
         .then(function(data) {
           container.innerHTML = formatStudyData(data);
           container.style.display = "block";
         })
         .catch(function(error) {
-          container.textContent = "Error fetching JSON: " + error;
+          container.textContent = "No study data available.";
           container.style.display = "block";
         });
     } else {
       container.style.display = "block";
     }
-}
-
+  }
+  
 function formatStudyData(data) {
     var html = "";
     if (data._embedded && data._embedded.studies && data._embedded.studies.length > 0) {
@@ -64,8 +75,7 @@ function formatStudyData(data) {
       html = "No study data available.";
     }
     return html;
-  }
-  
+}
 
 LocusZoom.Adapters.extend("AssociationLZ", "AssociationPheWeb", {
     getURL: function (state, chain, fields) {
