@@ -327,18 +327,36 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                                 tooltip: {
                                     closable: true,
                                     show: {
-                                        "or": ["highlighted", "selected"]
+                                      "or": ["highlighted", "selected"]
                                     },
                                     hide: {
-                                        "and": ["unhighlighted", "unselected"]
+                                      "and": ["unhighlighted", "unselected"]
                                     },
-                                    html: "<strong>{{{{namespace[assoc]}}id}}</strong><br><br>" +
-                                        window.model.tooltip_lztemplate.replace(/{{/g, "{{assoc:").replace(/{{assoc:#if /g, "{{#if assoc:").replace(/{{assoc:\/if}}/g, "{{/if}}") +
-                                        "<br>" +
-                                        "<a href=\"" + window.model.urlprefix+ "/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}\"" + ">Go to PheWAS</a>" +
-                                        "{{#if {{namespace[catalog]}}rsid}}<br><a href=\"https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}\" target=\"_new\">See hits in GWAS catalog</a>{{/if}}" +
-                                        "<br>{{#if {{namespace[ld]}}isrefvar}}<strong>LD Reference Variant</strong>{{#else}}<a href=\"javascript:void(0);\" onclick=\"var data = this.parentNode.__data__;data.getDataLayer().makeLDReference(data);\">Make LD Reference</a>{{/if}}<br>"
-                                },
+                                    html:
+                                      "<strong>{{{{namespace[assoc]}}id}}</strong><br><br>" +
+                                      window.model.tooltip_lztemplate
+                                        .replace(/{{/g, "{{assoc:")
+                                        .replace(/{{assoc:#if /g, "{{#if assoc:")
+                                        .replace(/{{assoc:\/if}}/g, "{{/if}}") +
+                                      "<br>" +
+                                      "<a href=\"" +
+                                        window.model.urlprefix +
+                                        "/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}\"" +
+                                      ">Go to PheWAS</a>" +
+                                      "<br>{{#if {{namespace[ld]}}isrefvar}}" +
+                                        "<strong>LD Reference Variant</strong>" +
+                                      "{{#else}}" +
+                                        "<a href=\"javascript:void(0);\" onclick=\"var data = this.parentNode.__data__;data.getDataLayer().makeLDReference(data);\">Make LD Reference</a>" +
+                                      "{{/if}}<br>" +
+                                      "{{#if {{namespace[catalog]}}rsid}}" +
+                                      "<p class=\"tooltip-paragraph\">" +
+                                        "<button class=\"json-toggle-btn\" onclick=\"toggleFormattedJsonDisplay('{{{{namespace[catalog]}}rsid}}')\">" +
+                                          "All studies for this rsid [GWAS Catalog]" +
+                                        "</button>" +
+                                      "</p>" +
+                                      "<div id=\"json-display-{{{{namespace[catalog]}}rsid}}\" class=\"json-container\"></div>" +
+                                    "{{/if}}"
+                                  },
                                 x_axis: { field: "{{namespace[assoc]}}position" },
                                 y_axis: {
                                     axis: 1,
