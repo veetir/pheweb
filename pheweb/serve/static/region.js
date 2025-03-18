@@ -11,6 +11,62 @@ LocusZoom.Adapters.extend("GwasCatalogLZ", "CustomGwasCatalogLZ", {
     }
 });
 
+function toggleFormattedJsonDisplay(rsid) {
+    var containerId = "json-display-" + rsid;
+    var container = document.getElementById(containerId);
+    
+    if (!container) return;
+    
+    if (container.style.display === "block") {
+      container.style.display = "none";
+      return;
+    }
+    
+    // If container is empty, fetch the data and format it
+    if (!container.innerHTML.trim()) {
+      var url = "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/" + rsid + "/studies";
+      fetch(url)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          container.innerHTML = formatStudyData(data);
+          container.style.display = "block";
+        })
+        .catch(function(error) {
+          container.textContent = "Error fetching JSON: " + error;
+          container.style.display = "block";
+        });
+    } else {
+      container.style.display = "block";
+    }
+}
+
+function formatStudyData(data) {
+    var html = "";
+    if (data._embedded && data._embedded.studies && data._embedded.studies.length > 0) {
+      data._embedded.studies.forEach(function(study) {
+        html += "<div class='study-container'>";
+        html += "<p class='study-paragraph'><strong>Accession ID:</strong> " +
+                "<a class='custom-link' href='https://www.ebi.ac.uk/gwas/studies/" + study.accessionId +
+                "' target='_blank'>" + study.accessionId + " (GWAS Catalog)" + "</a></p>";
+        html += "<p class='study-paragraph'><strong>Initial Sample Size:</strong> " + study.initialSampleSize + "</p>";
+        html += "<p class='study-paragraph'><strong>Trait:</strong> " +
+                (study.diseaseTrait && study.diseaseTrait.trait ? study.diseaseTrait.trait : "N/A") + "</p>";
+        html += "<p class='study-paragraph'><strong>Publication Title:</strong> " +
+                (study.publicationInfo && study.publicationInfo.title ? study.publicationInfo.title : "N/A") + "</p>";
+        if (study.platforms && study.platforms.length > 0) {
+          html += "<p class='study-paragraph'><strong>Platform:</strong> " + study.platforms[0].manufacturer + "</p>";
+        }
+        html += "</div>";
+      });
+    } else {
+      html = "No study data available.";
+    }
+    return html;
+  }
+  
+
 LocusZoom.Adapters.extend("AssociationLZ", "AssociationPheWeb", {
     getURL: function (state, chain, fields) {
         return this.url + "results/?filter=chromosome in  '" + state.chr + "'" +
@@ -368,38 +424,38 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     show: { or: ["highlighted", "selected"] },
                     hide: { and: ["unhighlighted", "unselected"] },
                     html: `
-                      <div>
-                        <style>
-                          .custom-link {
-                            text-decoration: underline;
-                            color: blue;
-                            margin: 0 5px;
-                          }
-                          .custom-link:hover,
-                          .custom-link:focus {
-                            text-decoration: underline;
-                          }
-                        </style>
-                        <h3 style="margin: 0 0 5px 0; font-size: 16px;">
-                          <span style="display:inline-block; width:60ch; white-space: normal;">
+                        <div>
+                        <h3 class="tooltip-heading">
+                            <span>
                             {{{{namespace[catalog]}}study}} {{#if {{namespace[catalog]}}pmid}}(PMID: {{{{namespace[catalog]}}pmid}}){{/if}}
-                          </span>
+                            </span>
                         </h3>
-                        <p style="margin: 5px 0;"><strong>Top trait:</strong> {{{{namespace[catalog]}}trait}}</p>
-                        <p style="margin: 5px 0;"><strong>Log p-value:</strong> {{{{namespace[catalog]}}log_pvalue}}</p>
-                        <p style="margin: 5px 0;"><strong>Risk freq:</strong> {{{{namespace[catalog]}}risk_frq}}</p>
-                        <p style="margin: 5px 0;"><strong>Effect size:</strong> {{{{namespace[catalog]}}or_beta}}</p>
-                        <p style="margin: 5px 0;"><strong>Risk allele:</strong> {{{{namespace[catalog]}}risk_allele}}</p>
-                        <div style="border-top: 1px solid #ccc; margin-top: 10px; padding-top: 10px; text-align: center; font-size: 14px;">
-                        {{#if {{namespace[catalog]}}pmid}}
-                          <a href="https://pubmed.ncbi.nlm.nih.gov/{{{{namespace[catalog]}}pmid}}/" target="_blank" class="custom-link">PubMed</a>
-                          |
-                        {{/if}}
-                          <a href="https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">GWAS Catalog</a>
-                          |
-                          <a href="https://www.ncbi.nlm.nih.gov/snp/{{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">dbSNP</a>
+                        <p class="tooltip-paragraph"><strong>Top trait:</strong> {{{{namespace[catalog]}}trait}}</p>
+                        <p class="tooltip-paragraph"><strong>Log p-value:</strong> {{{{namespace[catalog]}}log_pvalue}}</p>
+                        <p class="tooltip-paragraph"><strong>Risk freq:</strong> {{{{namespace[catalog]}}risk_frq}}</p>
+                        <p class="tooltip-paragraph"><strong>Effect size:</strong> {{{{namespace[catalog]}}or_beta}}</p>
+                        <p class="tooltip-paragraph">
+                            <strong>Risk allele:</strong> {{{{namespace[catalog]}}risk_allele}}
+                        </p>
+                        <p class="tooltip-paragraph">
+                            <strong>rsid:</strong> {{{{namespace[catalog]}}rsid}}
+                            <button class="json-toggle-btn" onclick="toggleFormattedJsonDisplay('{{{{namespace[catalog]}}rsid}}')">
+                            All studies for this rsid [GWAS Catalog]
+                            </button>
+                        </p>
+                        <div id="json-display-{{{{namespace[catalog]}}rsid}}"
+                            class="json-container">
                         </div>
-                      </div>
+                        <div class="tooltip-footer">
+                            {{#if {{namespace[catalog]}}pmid}}
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/{{{{namespace[catalog]}}pmid}}/" target="_blank" class="custom-link">PubMed</a>
+                            |
+                            {{/if}}
+                            <a href="https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">GWAS Catalog</a>
+                            |
+                            <a href="https://www.ncbi.nlm.nih.gov/snp/{{{{namespace[catalog]}}rsid}}/" target="_blank" class="custom-link">dbSNP</a>
+                        </div>
+                        </div>
                     `
                 };
                 anno_layer.fill_opacity = 0.7;
