@@ -2,7 +2,7 @@
 
 LocusZoom.Adapters.extend("GwasCatalogLZ", "CustomGwasCatalogLZ", {
     getURL: function(state, chain, fields) {
-        var build38ids = "1,4,7";
+        var build38ids = "7";
         var filter = "id in " + build38ids +
                      " and chrom eq '" + state.chr + "'" +
                      " and pos ge " + state.start +
@@ -10,6 +10,19 @@ LocusZoom.Adapters.extend("GwasCatalogLZ", "CustomGwasCatalogLZ", {
         return this.url + "?format=objects&filter=" + encodeURIComponent(filter);
     }
 });
+
+LocusZoom.Adapters.extend("GwasCatalogLZ", "UKBBGwasCatalogLZ", {
+    source_id: "ukbb",
+    getURL: function(state, chain, fields) {
+        var build38ids = "7";
+        var filter = "id in " + build38ids +
+                     " and chrom eq '" + state.chr + "'" +
+                     " and pos ge " + state.start +
+                     " and pos le " + state.end;
+        return this.url + "?format=objects&filter=" + encodeURIComponent(filter);
+    }
+});
+
 
 function toggleFormattedJsonDisplay(rsid) {
     var containerId = "json-display-" + rsid;
@@ -136,12 +149,12 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
     var data_sources = new LocusZoom.DataSources()
         .add("assoc", ["AssociationPheWeb", {url: localBase }])
         .add("catalog", ["CustomGwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/'}])
+        .add("ukbb", ["UKBBGwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/'}])
         .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
             params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
         }])
         .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
-        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }])
-        .add("constraint", ["GeneConstraintLZ", { url: "https://gnomad.broadinstitute.org/api/", params: {build:'GRCh'+window.model.grch_build_number} }]);
+        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
 
     LocusZoom.TransformationFunctions.add("neglog10_or_323", function(x) {
         if (x === 0) return 323;
@@ -185,7 +198,6 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
     var layout = LocusZoom.Layouts.get("plot", "association_catalog", {
         unnamespaced: true,
         width: 800,
-        // height: 550,
         responsive_resize: true,
         max_region_scale: 500e3,
         toolbar: {
@@ -380,10 +392,11 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
             }(),
             // Using logic from https://github.com/FINNGEN/pheweb
             // to make the Hits in GWAS Catalog plot similar to their 
-            // GWAS catalog + UKBB plot
+            // GWAS catalog plot
             function() {
                 var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
-                    unnamespaced: true,
+                    id: "catalog1",
+                    unnamespaced: false,
                     height: 200, min_height: 100,
                     margin: { top: 10, bottom: 20},
                     toolbar: { widgets: [] },
@@ -488,6 +501,72 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     `
                 };
                 anno_layer.fill_opacity = 0.7;
+                return base;
+            }(),
+            function() {
+                var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
+                    id: "catalog2",
+                    unnamespaced: true,
+                    height: 200, min_height: 100,
+                    margin: { top: 10, bottom: 20},
+                    toolbar: { widgets: [] },
+                    axes: {
+                        x: {
+                            label_function: "chromosome",
+                            label_offset: 32,
+                            tick_format: "region",
+                            extent: "state",
+                            render: true,
+                            label: "Chromosome {{chr}} (Mb)",
+                          },
+                          y1: {
+                            label: "-log10 p-value",
+                            label_offset: 34,
+                            render: true,
+                            label_function: null,
+                          },
+                    },
+                    title: {
+                        text: 'UKBB Hits in GWAS Catalog',
+                        style: {'font-size': '14px'},
+                        x: 60,
+                    },
+                });
+                var anno_layer = base.data_layers[0];
+                anno_layer.type = "scatter";
+                anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
+                    "assoc:id", "assoc:chr",
+                    "assoc:position",
+                    "ukbb:variant", "ukbb:study", "ukbb:rsid",
+                    "ukbb:id", "ukbb:log_pvalue", "ukbb:pos"
+                ];
+                anno_layer.id_field = "assoc:id";
+                anno_layer.x_axis = { field: "ukbb:pos", axis: 1 };
+                anno_layer.y_axis = {
+                    field: "ukbb:log_pvalue", 
+                    axis: 1, 
+                    floor: 0, 
+                    upper_buffer: 0.1, 
+                    min_extent: [0, 10] 
+                };
+                anno_layer.point_shape = {
+                    scale_function: "if",
+                    field: "ukbb:study",
+                    parameters: {
+                      field_value: "UKBB",
+                      then: "circle",
+                      else: "diamond",
+                    },
+                  };
+                  anno_layer.color = {
+                    scale_function: "if",
+                    field: "ukbb:study",
+                    parameters: {
+                      field_value: "UKBB",
+                      then: "#9632b8",
+                      else: "#d43f3a",
+                    },
+                };
                 return base;
             }(),
             LocusZoom.Layouts.get("panel", "genes", {
