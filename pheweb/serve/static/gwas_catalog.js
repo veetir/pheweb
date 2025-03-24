@@ -105,7 +105,7 @@ function renderPlotlyCatalogPlot() {
           y: ebiY,
           mode: 'markers',
           type: 'scatter',
-          name: 'EBI',
+          name: 'GWAS Catalog',
           marker: { symbol: 'diamond', color: '#d43f3a', opacity: 0.7 },
           customdata: ebiCustom,
           hovertemplate: tooltipTemplate
