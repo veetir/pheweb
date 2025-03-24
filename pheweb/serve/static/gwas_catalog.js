@@ -126,7 +126,7 @@ function renderPlotlyCatalogPlot() {
             rangemode: "tozero"
           },
           height: 500,
-          margin: { t: 20, b: 32, l: 50, r: 20 },
+          margin: { t: 34, b: 34, l: 50, r: 20 },
           plot_bgcolor: "white"
         };
     
