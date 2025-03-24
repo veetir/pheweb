@@ -140,8 +140,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
             params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
         }])
         .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
-        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }])
-        .add("constraint", ["GeneConstraintLZ", { url: "https://gnomad.broadinstitute.org/api/", params: {build:'GRCh'+window.model.grch_build_number} }]);
+        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
 
     LocusZoom.TransformationFunctions.add("neglog10_or_323", function(x) {
         if (x === 0) return 323;
@@ -378,118 +377,6 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 base.legend.origin.y = 15;
                 return base;
             }(),
-            // Using logic from https://github.com/FINNGEN/pheweb
-            // to make the Hits in GWAS Catalog plot similar to their 
-            // GWAS catalog + UKBB plot
-            function() {
-                var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
-                    unnamespaced: true,
-                    height: 200, min_height: 100,
-                    margin: { top: 10, bottom: 20},
-                    toolbar: { widgets: [] },
-                    axes: {
-                        x: {
-                            label_function: "chromosome",
-                            label_offset: 32,
-                            tick_format: "region",
-                            extent: "state",
-                            render: true,
-                            label: "Chromosome {{chr}} (Mb)",
-                          },
-                          y1: {
-                            label: "-log10 p-value",
-                            label_offset: 34,
-                            render: true,
-                            label_function: null,
-                          },
-                    },
-                    title: {
-                        text: 'Hits in GWAS Catalog',
-                        style: {'font-size': '14px'},
-                        x: 60,
-                    },
-                });
-                var anno_layer = base.data_layers[0];
-                anno_layer.type = "scatter";
-                anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
-                    "assoc:id", "catalog:study",
-                    "catalog:pmid", "assoc:chr",
-                    "assoc:position", "catalog:risk_frq",
-                    "catalog:variant", "catalog:rsid",
-                    "catalog:id", "catalog:trait",
-                    "catalog:log_pvalue",
-                    "catalog:risk_allele",
-                    "catalog:or_beta", "catalog:pos"
-                ];
-                anno_layer.id_field = "assoc:id";
-                anno_layer.x_axis = { field: "catalog:pos", axis: 1 };
-                anno_layer.y_axis = {
-                    field: "catalog:log_pvalue", 
-                    axis: 1, 
-                    floor: 0, 
-                    upper_buffer: 0.1, 
-                    min_extent: [0, 10] 
-                };
-                anno_layer.point_shape = {
-                    scale_function: "if",
-                    field: "catalog:study",
-                    parameters: {
-                      field_value: "UKBB",
-                      then: "circle",
-                      else: "diamond",
-                    },
-                  };
-                  anno_layer.color = {
-                    scale_function: "if",
-                    field: "catalog:study",
-                    parameters: {
-                      field_value: "UKBB",
-                      then: "#9632b8",
-                      else: "#d43f3a",
-                    },
-                };
-                anno_layer.tooltip = {
-                    closable: true,
-                    show: { or: ["highlighted", "selected"] },
-                    hide: { and: ["unhighlighted", "unselected"] },
-                    html: `
-                        <div>
-                        <h3 class="tooltip-heading">
-                            <span>
-                            {{catalog:study}} {{#if catalog:pmid}}(PMID: {{catalog:pmid}}){{/if}}
-                            </span>
-                        </h3>
-                        <p class="tooltip-paragraph"><strong>Top trait:</strong> {{catalog:trait}}</p>
-                        <p class="tooltip-paragraph"><strong>Log p-value:</strong> {{catalog:log_pvalue}}</p>
-                        <p class="tooltip-paragraph"><strong>Risk freq:</strong> {{catalog:risk_frq}}</p>
-                        <p class="tooltip-paragraph"><strong>Effect size:</strong> {{catalog:or_beta}}</p>
-                        <p class="tooltip-paragraph">
-                            <strong>Risk allele:</strong> {{catalog:risk_allele}}
-                        </p>
-                        <p class="tooltip-paragraph">
-                            <strong>rsid:</strong> {{catalog:rsid}}
-                            <button class="json-toggle-btn" onclick="toggleFormattedJsonDisplay('{{catalog:rsid}}')">
-                            All studies for this rsid [GWAS Catalog]
-                            </button>
-                        </p>
-                        <div id="json-display-{{catalog:rsid}}"
-                            class="json-container">
-                        </div>
-                        <div class="tooltip-footer">
-                            {{#if catalog:pmid}}
-                            <a href="https://pubmed.ncbi.nlm.nih.gov/{{catalog:pmid}}/" target="_blank" class="custom-link">PubMed</a>
-                            |
-                            {{/if}}
-                            <a href="https://www.ebi.ac.uk/gwas/search?query={{catalog:rsid}}/" target="_blank" class="custom-link">GWAS Catalog</a>
-                            |
-                            <a href="https://www.ncbi.nlm.nih.gov/snp/{{catalog:rsid}}/" target="_blank" class="custom-link">dbSNP</a>
-                        </div>
-                        </div>
-                    `
-                };
-                anno_layer.fill_opacity = 0.7;
-                return base;
-            }(),
             LocusZoom.Layouts.get("panel", "genes", {
                 unnamespaced: true,
                 // proportional_height: 0.5,
@@ -540,5 +427,13 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 previous_milliseconds = milliseconds;
             });
         })();
+        window.plot.on("state_changed", function() {
+            var currentState = window.plot.state;
+            Plotly.relayout("plotly-gwas-catalog", {
+                "xaxis.range": [currentState.start, currentState.end],
+                "xaxis.title": "Chromosome " + currentState.chr + " (Mb)"
+            });
+        });
+        
     });
 })();
