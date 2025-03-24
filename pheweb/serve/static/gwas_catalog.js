@@ -57,11 +57,11 @@ function renderPlotlyCatalogPlot() {
                 risk_allele: record.risk_allele || "N/A",
                 rsid: record.rsid || "N/A"
               };
-              // Create a new field: if study is UKBB, don't include the PMID.
+              // If study is UKBB, don't include the PMID.
               if (extra.study === "UKBB") {
-                extra.studyText = extra.study;
+                extra.studyText = wrapText(extra.study, 60);
               } else {
-                extra.studyText = extra.study + " (PMID: " + extra.pmid + ")";
+                extra.studyText = wrapText(extra.study + " (PMID: " + extra.pmid + ")", 60);
               }
           
               // Based on the catalog id (4 for UKBB), add to the appropriate arrays.
@@ -76,7 +76,33 @@ function renderPlotlyCatalogPlot() {
               }
             }
         });
-    
+
+        function wrapText(text, width) {
+          let result = '';
+          
+          while (text.length > width) {
+            // Look for the last whitespace before the width limit.
+            let breakIndex = text.lastIndexOf(' ', width);
+            
+            // If no whitespace is found before width, look forward.
+            if (breakIndex === -1) {
+              breakIndex = text.indexOf(' ', width);
+              // If there's still no whitespace, break at the end of the string.
+              if (breakIndex === -1) {
+                breakIndex = text.length;
+              }
+            }
+            
+            // Append the current segment and trim any leading spaces from the rest.
+            result += text.substring(0, breakIndex) + "<br>";
+            text = text.substring(breakIndex).trim();
+          }
+          
+          // Append any remaining text.
+          result += text;
+          return result;
+        }
+
         // Define a hovertemplate that mimics the LocusZoom tooltip.
         var tooltipTemplate = 
             "<b>%{customdata.studyText}</b><br>" +
