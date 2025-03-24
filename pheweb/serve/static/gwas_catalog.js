@@ -117,12 +117,25 @@ function renderPlotlyCatalogPlot() {
           xaxis: {
             title: "Chromosome " + chr + " (Mb)",
             showgrid: false,
-            zeroline: false
+            zeroline: true,
+            zerolinecolor: 'black',
+            zerolinewidth: 1,
+            ticks: 'outside',
+            ticklen: 6,
+            tickwidth: 1,
+            tickcolor: 'black'
           },
           yaxis: {
             title: "-log10 p-value",
             showgrid: false,
-            zeroline: false,
+            zeroline: true,
+            zerolinecolor: 'black',
+            zerolinewidth: 1,
+            showline: true,
+            ticks: 'outside',
+            ticklen: 6,
+            tickwidth: 1,
+            tickcolor: 'black',
             rangemode: "tozero"
           },
           height: 500,
