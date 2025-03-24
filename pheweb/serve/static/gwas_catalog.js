@@ -38,25 +38,55 @@ function renderPlotlyCatalogPlot() {
           return;
         }
     
-        // Prepare arrays for data points for each catalog source.
-        var ukbbX = [], ukbbY = [];
-        var ebiX = [], ebiY = [];
+        // Arrays for UKBB trace.
+        var ukbbX = [], ukbbY = [], ukbbCustom = [];
+        // Arrays for EBI trace.
+        var ebiX = [], ebiY = [], ebiCustom = [];
     
         results.forEach(function(record) {
-          var pos = record.pos;
-          var logp = record.log_pvalue;
-          if (pos != null && logp != null) {
-            // Assign catalog source based on catalog id (4 for UKBB)
-            if (record.id === 4) {
-              ukbbX.push(pos);
-              ukbbY.push(logp);
-            } else {
-              ebiX.push(pos);
-              ebiY.push(logp);
+            var pos = record.pos;
+            var logp = record.log_pvalue;
+            if (pos != null && logp != null) {
+              // Gather extra fields for the tooltip.
+              var extra = {
+                study: record.study || "N/A",
+                pmid: record.pmid || "",
+                trait: record.trait || "N/A",
+                risk_frq: record.risk_frq || "N/A",
+                or_beta: record.or_beta || "N/A",
+                risk_allele: record.risk_allele || "N/A",
+                rsid: record.rsid || "N/A"
+              };
+              // Create a new field: if study is UKBB, don't include the PMID.
+              if (extra.study === "UKBB") {
+                extra.studyText = extra.study;
+              } else {
+                extra.studyText = extra.study + " (PMID: " + extra.pmid + ")";
+              }
+          
+              // Based on the catalog id (4 for UKBB), add to the appropriate arrays.
+              if (record.id === 4) {
+                ukbbX.push(pos);
+                ukbbY.push(logp);
+                ukbbCustom.push(extra);
+              } else {
+                ebiX.push(pos);
+                ebiY.push(logp);
+                ebiCustom.push(extra);
+              }
             }
-          }
         });
     
+        // Define a hovertemplate that mimics the LocusZoom tooltip.
+        var tooltipTemplate = 
+            "<b>%{customdata.studyText}</b><br>" +
+            "<b>Top trait:</b> %{customdata.trait}<br>" +
+            "<b>Log p-value:</b> %{y}<br>" +
+            "<b>Risk freq:</b> %{customdata.risk_frq}<br>" +
+            "<b>Effect size:</b> %{customdata.or_beta}<br>" +
+            "<b>Risk allele:</b> %{customdata.risk_allele}<br>" +
+            "<b>rsid:</b> %{customdata.rsid}<extra></extra>";
+
         // Create trace for UKBB data (circle markers).
         var traceUKBB = {
           x: ukbbX,
@@ -64,7 +94,9 @@ function renderPlotlyCatalogPlot() {
           mode: 'markers',
           type: 'scatter',
           name: 'UKBB',
-          marker: { symbol: 'circle', color: '#9632b8', opacity: 0.7 }
+          marker: { symbol: 'circle', color: '#9632b8', opacity: 0.7 },
+          customdata: ukbbCustom,
+          hovertemplate: tooltipTemplate
         };
     
         // Create trace for EBI data (diamond markers).
@@ -74,10 +106,12 @@ function renderPlotlyCatalogPlot() {
           mode: 'markers',
           type: 'scatter',
           name: 'EBI',
-          marker: { symbol: 'diamond', color: '#d43f3a', opacity: 0.7 }
+          marker: { symbol: 'diamond', color: '#d43f3a', opacity: 0.7 },
+          customdata: ebiCustom,
+          hovertemplate: tooltipTemplate
         };
     
-        // Define layout (customize titles, axes, etc.).
+        // Define layout.
         var layout = {
           title: { text: "Hits in GWAS Catalog", font: { size: 14 } },
           xaxis: {
@@ -96,8 +130,20 @@ function renderPlotlyCatalogPlot() {
           plot_bgcolor: "white"
         };
     
-        // Render the plot in the designated div.
-        Plotly.newPlot('plotly-gwas-catalog', [traceUKBB, traceEBI], layout);
+        // Render the Plotly plot.
+        Plotly.newPlot('plotly-gwas-catalog', [traceUKBB, traceEBI], layout)
+          .then(function() {
+            // Attach a click event listener so that clicking a point opens the PubMed page.
+            var plotDiv = document.getElementById('plotly-gwas-catalog');
+            plotDiv.on('plotly_click', function(data) {
+              var point = data.points[0];
+              var custom = point.customdata;
+              if (custom.pmid) {
+                var pubmedUrl = "https://pubmed.ncbi.nlm.nih.gov/" + custom.pmid + "/";
+                window.open(pubmedUrl, "_blank");
+              }
+            });
+          });
       })
       .catch(function(error) {
         document.getElementById("plotly-gwas-catalog").innerHTML = "Error loading plot: " + error.message;
