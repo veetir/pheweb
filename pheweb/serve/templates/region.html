@@ -17,7 +17,7 @@
 <script src="{{ url_for('.static', filename='gwas_catalog.js') }}"></script>
 <script src="{{ url_for('.static', filename='finngen_catalog.js') }}"></script>
 <script type="text/javascript">
-  window.endpointsCsvUrl = "{{ url_for('static', filename='endpoints.csv') }}";
+  window.endpointsCsvUrl = "{{ url_for('bp.static', filename='endpoints.csv') }}";
 </script>
 {% endblock %}
 
