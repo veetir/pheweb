@@ -140,14 +140,40 @@ function renderFinnGenPlot() {
       // Render the plot and then attach the state synchronization.
       Plotly.newPlot('finngen-gwas-catalog', [trace], layout)
         .then(function() {
-          // Attach a state_changed listener so that the x-axis stays synced.
-          // This assumes that window.plot (from LocusZoom) is available.
-          window.plot.on("state_changed", function() {
-            var currentState = window.plot.state;
-            Plotly.relayout("finngen-gwas-catalog", {
-              "xaxis.range": [currentState.start, currentState.end],
-              "xaxis.title": "Chromosome " + currentState.chr + " (Mb)"
+          var plotDiv = document.getElementById('finngen-gwas-catalog');
+
+          // 1. LocusZoom -> Plotly sync: Whenever LZ region changes, relayout this chart
+          if (window.plot && window.plot.on) {
+            window.plot.on("state_changed", function() {
+              var currentState = window.plot.state;
+              Plotly.relayout("finngen-gwas-catalog", {
+                "xaxis.range": [currentState.start, currentState.end],
+                "xaxis.title": "Chromosome " + currentState.chr + " (Mb)"
+              });
             });
+          }
+
+          // 2. Plotly -> LocusZoom sync: on user pan/zoom, update LocusZoom + other chart
+          plotDiv.on('plotly_relayout', function(evtData) {
+            var xStart = evtData['xaxis.range[0]'];
+            var xEnd   = evtData['xaxis.range[1]'];
+
+            if (typeof xStart !== 'undefined' && typeof xEnd !== 'undefined') {
+              // Update LocusZoom's region if available
+              if (window.plot && window.plot.state) {
+                var currentState = window.plot.state;
+                window.plot.applyState({
+                  chr: currentState.chr,
+                  start: Math.floor(xStart),
+                  end: Math.floor(xEnd)
+                });
+              }
+              // Also update the GWAS Catalog chart to match new range
+              Plotly.relayout('plotly-gwas-catalog', {
+                'xaxis.range': [xStart, xEnd],
+                'xaxis.title': "Chromosome " + chr + " (Mb)"
+              });
+            }
           });
         });
       // Update the FinnGen button after successfully rendering.
@@ -172,7 +198,7 @@ function updateFinnGenButton() {
     // Create a new anchor element styled as a button.
     btn = document.createElement("a");
     btn.id = "finngen-link";
-    btn.className = "btn"; // You can add additional classes like "btn-primary" if using Bootstrap.
+    btn.className = "btn";
     btn.style.marginTop = "10px";
     btn.style.display = "inline-block";
     // Insert the button after the FinnGen plot container.
