@@ -117,7 +117,7 @@ function renderFinnGenPlot() {
           tickcolor: 'black'
         },
         yaxis: {
-          title: "-log10 p-value",
+          title: "<b>-log10 p-value</b>",
           showgrid: false,
           zeroline: true,
           zerolinecolor: 'black',
