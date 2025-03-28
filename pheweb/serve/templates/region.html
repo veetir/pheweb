@@ -23,60 +23,55 @@
 
 
 {% block contained %}
-{% for key in ['num_cases', 'num_controls', 'num_samples'] %}
- {% if key in pheno %}
-  {% if '<' in pheno[key]|string %}
-    <div class="alert alert-danger" role="alert"><b>Warning:</b> This phenotype has {{ pheno[key] }} {{ key.replace('num_','') }}.</div>
-  {% elif 0 < pheno[key]|int < 200 %}
-    <div class="alert alert-danger" role="alert"><b>Warning:</b> This phenotype only has {{ pheno[key] }} {{ key.replace('num_', '') }}.</div>
+<div class="container">
+  {% for key in ['num_cases', 'num_controls', 'num_samples'] %}
+  {% if key in pheno %}
+    {% if '<' in pheno[key]|string %}
+      <div class="alert alert-danger" role="alert"><b>Warning:</b> This phenotype has {{ pheno[key] }} {{ key.replace('num_','') }}.</div>
+    {% elif 0 < pheno[key]|int < 200 %}
+      <div class="alert alert-danger" role="alert"><b>Warning:</b> This phenotype only has {{ pheno[key] }} {{ key.replace('num_', '') }}.</div>
+    {% endif %}
   {% endif %}
- {% endif %}
-{% endfor %}
-<div class="row">
-  <div class="col-xs-12">
-    <h1 style="margin-top:0">{% include "region/h1.html" %}</h1>
-  </div>
-</div>
-<div class="row">
-    <div class="pheno-info col-xs-12">
-        {% if 'num_cases' in pheno %}
-          <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls.</p>
-        {% elif 'num_samples' in pheno %}
-          <p><b>{{ pheno.num_samples }}</b> samples</p>
-        {% endif %}
-        {% if pheno.category %}
-          <p>Category: <b>{{ pheno.category}}</b></p>
-        {% endif %}
+  {% endfor %}
+  <div class="row">
+    <div class="col-xs-12">
+      <h1 style="margin-top:0">{% include "region/h1.html" %}</h1>
     </div>
-</div>
-<br>
-<div class="row">
-  <div class="col-xs-12">
-    <div id="lz-1" class="lz-container-responsive" data-region={{ region }}></div>
   </div>
-</div>
-
-<div id="plotly-gwas-catalog" style="width:100%; height:500px;"></div>
-
-<div style="display: flex; align-items: center; margin-top: 10px;">
-  <a href="https://www.finngen.fi/en" target="_blank">
-    <img src="{{ url_for('bp.static', filename='images/finngen.png') }}" 
-    alt="FinnGen Logo" style="height:70px; 
-    margin-right:20px;
-    margin-bottom:20px;
-    margin-top:10px;
-    margin-left:20px;">
-  </a>
-  <div id="endpoint-controls">
-    <label for="endpoint-search">Search FinnGen Endpoints:</label>
-    <input type="text" id="endpoint-search" placeholder="Type to search..." />
-    <br>
-    <label for="endpoint-select">Select Endpoint:</label>
-    <select id="endpoint-select"></select>
+  <div class="row">
+      <div class="pheno-info col-xs-12">
+          {% if 'num_cases' in pheno %}
+            <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls.</p>
+          {% elif 'num_samples' in pheno %}
+            <p><b>{{ pheno.num_samples }}</b> samples</p>
+          {% endif %}
+          {% if pheno.category %}
+            <p>Category: <b>{{ pheno.category}}</b></p>
+          {% endif %}
+      </div>
   </div>
+  <br>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="lz-1" class="lz-container-responsive" data-region={{ region }}></div>
+    </div>
+  </div>
+
+  <div id="plotly-gwas-catalog" style="width:100%; height:500px;"></div>
+
+  <div id="endpoint-controls-wrapper">
+    <a href="https://www.finngen.fi/en" target="_blank">
+      <img src="{{ url_for('bp.static', filename='images/finngen.png') }}" 
+           alt="FinnGen Logo" style="height:70px;">
+    </a>
+    <div id="endpoint-controls">
+      <label for="endpoint-search">Search FinnGen Endpoints:</label>
+      <input type="text" id="endpoint-search" placeholder="Type to search..." />
+      <label for="endpoint-select">Select Endpoint:</label>
+      <select id="endpoint-select"></select>
+    </div>
+  </div>
+  
+  <div id="finngen-gwas-catalog" style="width:100%; height:500px;"></div>
 </div>
-
-
-
-<div id="finngen-gwas-catalog" style="width:100%; height:500px;"></div>
 {% endblock %}
