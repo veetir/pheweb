@@ -44,6 +44,7 @@ import os
 import os.path
 import sqlite3
 from typing import Dict, Tuple, List, Any, Optional
+import subprocess
 
 
 bp = Blueprint("bp", __name__, template_folder="templates", static_folder="static")
@@ -116,6 +117,72 @@ def check_auth(func):
 
 autocompleter = Autocompleter(phenos)
 
+
+# Define helper functions for running tabix and parsing its output.
+def query_tabix(file_path: str, region: str) -> list:
+    """
+    Runs the tabix command on the given file and region.
+    Returns the output lines as a list.
+    """
+    try:
+        result = subprocess.run(
+            ["tabix", file_path, region],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return result.stdout.strip().splitlines()
+    except subprocess.CalledProcessError as e:
+        raise Exception("Error querying region: " + e.stderr)
+
+def parse_tabix_output(lines: list) -> list:
+    """
+    Parse the output lines from the summary statistics file.
+    Assumes tab-delimited columns where:
+      - Column 1 (index 0): chromosome
+      - Column 2 (index 1): position
+      - Column 7 (index 6): p-value
+    Returns a list of dictionaries with position and p-value.
+    """
+    data = []
+    for line in lines:
+        if line.startswith("#"):
+            continue  # Skip header or comment lines.
+        parts = line.strip().split()
+        try:
+            pos = int(parts[1])
+            pval = float(parts[6])
+            data.append({"position": pos, "pval": pval})
+        except (IndexError, ValueError):
+            continue
+    return data
+
+# API endpoint for FinnGen tabix queries.
+@bp.route("/api/finngen/<endpoint>")
+@check_auth
+def api_finngen(endpoint: str):
+    """
+    This endpoint accepts a query parameter "region" in the format "chr:start-end"
+    and returns parsed tabix output from the corresponding FinnGen summary statistics file.
+    """
+    region = request.args.get("region")
+    if not region:
+        return jsonify({"error": "Missing region parameter, expected format 'chr:start-end'"}), 400
+
+    # Use the folder location defined in conf.py
+    data_folder = conf.FINNGEN_DATA_FOLDER
+    file_name = f"{endpoint}.gz"
+    file_path = os.path.join(data_folder, file_name)
+
+    if not os.path.isfile(file_path):
+        return jsonify({"error": f"File {file_name} not found in data folder {data_folder}."}), 404
+
+    try:
+        lines = query_tabix(file_path, region)
+        parsed_data = parse_tabix_output(lines)
+        return jsonify({"data": parsed_data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @bp.route("/api/autocomplete")
 @check_auth
