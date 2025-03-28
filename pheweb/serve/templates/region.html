@@ -62,15 +62,26 @@
   <div id="endpoint-controls-wrapper">
     <a href="https://www.finngen.fi/en" target="_blank">
       <img src="{{ url_for('bp.static', filename='images/finngen.png') }}" 
-           alt="FinnGen Logo" style="height:70px;">
+           alt="FinnGen Logo" class="finngen-logo">
     </a>
     <div id="endpoint-controls">
-      <label for="endpoint-search">Search FinnGen Endpoints:</label>
+      <label for="endpoint-search">
+        Search FinnGen Endpoints
+        <a href="https://genetics-docs.opentargets.org/our-approach/data-sources/genetic-variation/finngen" 
+           target="_blank" 
+           title="Data fetched from Open Targets"
+           class="info-link">
+          <img src="{{ url_for('bp.static', filename='images/info.svg') }}" 
+               alt="Info" 
+               class="info-icon">
+        </a>
+      </label>
       <input type="text" id="endpoint-search" placeholder="Type to search..." />
-      <label for="endpoint-select">Select Endpoint:</label>
+      <label for="endpoint-select">Select Endpoint</label>
       <select id="endpoint-select"></select>
     </div>
   </div>
+  
   
   <div id="finngen-gwas-catalog" style="width:100%; height:500px;"></div>
 </div>

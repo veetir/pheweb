@@ -63,3 +63,12 @@ h1 {
     overflow-wrap: break-word;
     white-space: normal;
 }
+
+.finngen-logo {
+    height: 70px;
+}
+  
+.info-link {
+    margin-left: 8px;
+    vertical-align: middle;
+}
