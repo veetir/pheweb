@@ -93,7 +93,7 @@ function renderFinnGenPlot() {
         mode: 'markers',
         type: 'scatter',
         name: selectedEndpoint,
-        marker: { color: 'blue', opacity: 0.7, size: 8 },
+        marker: { color: '#3500D3', opacity: 0.7, size: 8 },
         customdata: customData,
         hovertemplate:
           "<b>ID: %{customdata.id}</b><br>" +
