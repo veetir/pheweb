@@ -120,7 +120,7 @@ function renderPlotlyCatalogPlot() {
           mode: 'markers',
           type: 'scatter',
           name: 'UKBB',
-          marker: { symbol: 'circle', color: '#9632b8', opacity: 0.7 },
+          marker: { symbol: 'circle', color: '#9632b8', opacity: 0.6, size: 8 },
           customdata: ukbbCustom,
           hovertemplate: tooltipTemplate
         };
@@ -132,7 +132,7 @@ function renderPlotlyCatalogPlot() {
           mode: 'markers',
           type: 'scatter',
           name: 'GWAS Catalog',
-          marker: { symbol: 'diamond', color: '#d43f3a', opacity: 0.7 },
+          marker: { symbol: 'diamond', color: '#d43f3a', opacity: 0.6, size: 8 },
           customdata: ebiCustom,
           hovertemplate: tooltipTemplate
         };
