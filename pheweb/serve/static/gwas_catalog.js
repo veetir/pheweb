@@ -166,7 +166,13 @@ function renderPlotlyCatalogPlot() {
         },
         height: 500,
         margin: { t: 34, b: 40, l: 50, r: 20 },
-        plot_bgcolor: "white"
+        plot_bgcolor: "white",
+        legend: {
+          orientation: "h",
+          xanchor: "center",
+          x: 0.5,
+          y: -0.3
+        }
       };
 
       // Render the Plotly plot.
