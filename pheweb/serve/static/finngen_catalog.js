@@ -240,6 +240,14 @@ function updateFinnGenButton() {
   btn.target = "_blank"; // Opens the link in a new tab.
 }
 
+function updateEndpointLabel(endpointsList) {
+  const endpointLabel = document.getElementById('endpoint-select-label');
+  if (endpointLabel) {
+    const count = endpointsList.length;
+    endpointLabel.textContent = `Select out of ${count} endpoint${count !== 1 ? "s" : ""}`;
+  }
+}
+
 // Load endpoints from endpoints.csv and populate the dropdown.
 function loadEndpoints() {
   console.log("loading endpoints csv");
@@ -262,7 +270,10 @@ function loadEndpoints() {
         if (trimmed !== "") endpoints.push(trimmed);
       });
       window.allEndpoints = endpoints;
-
+    
+      // Update the label to show the total count of endpoints.
+      updateEndpointLabel(endpoints);
+    
       let select = document.getElementById('endpoint-select');
       if (select) {
         endpoints.forEach(ep => {
@@ -301,9 +312,10 @@ function setupEndpointSearch() {
     let query = normalizeTerm(e.target.value);
     let filtered = window.allEndpoints.filter(ep => {
       let normEp = normalizeTerm(ep);
-      console.log("we have norm: ", normEp, "we have query: ", query, "bool = ", (normEp.includes(query) || query.includes(normEp)))
       return normEp.includes(query) || query.includes(normEp);
     });
+    
+    updateEndpointLabel(filtered);
     
     select.innerHTML = "";
     filtered.forEach(ep => {
