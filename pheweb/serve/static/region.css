@@ -114,20 +114,16 @@ h1 {
     margin-top:20px;
   }
 
-  .trait-container {
-    flex: 1 1 250px;
-    min-width: 250px;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
-.trait-container h3 {
-    text-align: center;
-    margin-bottom: 10px;
+.trait-container {
+  flex: 0 1 auto;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .trait-btn {
-    padding: 3px 8px;
+    padding: 4px 12px;
     margin: 5px;
     border: none;
     border-radius: 20px;
