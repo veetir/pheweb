@@ -207,10 +207,15 @@ function renderPlotlyCatalogPlot() {
           btn.innerText = trait;
           btn.className = 'trait-btn ' + buttonClass;
           
-          // Split the trait into words and initialize an index for cycling.
+          // Tooltip
+          if (buttonClass === 'ukbb') {
+            btn.title = "UKBB top trait";
+          } else if (buttonClass === 'gwas') {
+            btn.title = "GWAS Catalog top trait";
+          }
           btn.words = trait.split(' ');
           btn.currentWordIndex = 0;
-          
+      
           btn.addEventListener('click', function() {
             // Get the current word from the trait.
             const rawWord = btn.words[btn.currentWordIndex];
@@ -218,14 +223,14 @@ function renderPlotlyCatalogPlot() {
             btn.currentWordIndex = (btn.currentWordIndex + 1) % btn.words.length;
             // Use getSearchTermFromTrait to normalize the word.
             const searchTerm = getSearchTermFromTrait(rawWord);
-            
+      
             const searchBox = document.getElementById('endpoint-search');
             searchBox.value = searchTerm;
             // Dispatch an "input" event so the fuzzy search listener triggers.
             var event = new Event('input', { bubbles: true });
             searchBox.dispatchEvent(event);
-          });          
-          
+          });
+      
           container.appendChild(btn);
         });
       }
