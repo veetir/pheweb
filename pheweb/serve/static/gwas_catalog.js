@@ -175,6 +175,61 @@ function renderPlotlyCatalogPlot() {
         }
       };
 
+      // Helper function to count trait frequencies and return the top N traits.
+      function getTopTraits(customArray, topN) {
+        const traitCounts = {};
+        customArray.forEach(item => {
+          const trait = item.trait;
+          if (trait) {
+            traitCounts[trait] = (traitCounts[trait] || 0) + 1;
+          }
+        });
+        // Sort traits by frequency (descending)
+        const sortedTraits = Object.keys(traitCounts).sort((a, b) => traitCounts[b] - traitCounts[a]);
+        return sortedTraits.slice(0, topN);
+      }
+
+      // Helper to extract a search term from the trait (e.g., first word).
+      function getSearchTermFromTrait(trait) {
+        return trait.split(' ')[0].toLowerCase().replace(/['’]/g, '');
+      }
+      
+
+      // Renders buttons for the top traits into the specified container.
+      function renderTopTraitButtons(customArray, containerId, buttonClass) {
+        const topTraits = getTopTraits(customArray, 5);
+        const container = document.getElementById(containerId);
+        container.innerHTML = ""; // Clear previous buttons if any.
+        
+        topTraits.forEach(trait => {
+          const btn = document.createElement('button');
+          // Optionally, display the full trait as the button label.
+          btn.innerText = trait;
+          btn.className = 'trait-btn ' + buttonClass;
+          
+          // Split the trait into words and initialize an index for cycling.
+          btn.words = trait.split(' ');
+          btn.currentWordIndex = 0;
+          
+          btn.addEventListener('click', function() {
+            // Get the current word from the trait.
+            const rawWord = btn.words[btn.currentWordIndex];
+            // Update the index to cycle through the words.
+            btn.currentWordIndex = (btn.currentWordIndex + 1) % btn.words.length;
+            // Use getSearchTermFromTrait to normalize the word.
+            const searchTerm = getSearchTermFromTrait(rawWord);
+            
+            const searchBox = document.getElementById('endpoint-search');
+            searchBox.value = searchTerm;
+            // Dispatch an "input" event so the fuzzy search listener triggers.
+            var event = new Event('input', { bubbles: true });
+            searchBox.dispatchEvent(event);
+          });          
+          
+          container.appendChild(btn);
+        });
+      }
+      
       // Render the Plotly plot.
       Plotly.newPlot('plotly-gwas-catalog', [traceUKBB, traceEBI], layout)
         .then(function() {
@@ -215,6 +270,8 @@ function renderPlotlyCatalogPlot() {
               });
             }
           });
+          renderTopTraitButtons(ukbbCustom, 'ukbb-traits-buttons', 'ukbb');
+          renderTopTraitButtons(ebiCustom, 'gwas-traits-buttons', 'gwas');
         });
     })
     .catch(function(error) {

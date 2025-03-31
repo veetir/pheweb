@@ -287,11 +287,24 @@ function setupEndpointSearch() {
   let select = document.getElementById('endpoint-select');
   if (!searchInput || !select || !window.allEndpoints) return;
 
+  // Helper function to normalize a term.
+  function normalizeTerm(term) {
+    return term
+      .toLowerCase()
+      .replace(/['’]/g, '')
+      .replace(/_/g, '') // remove underscores
+      .replace(/s$/, '') // strip trailing plural 's'
+      .trim();
+  }
+
   searchInput.addEventListener('input', function(e) {
-    let query = e.target.value.toLowerCase();
-    let filtered = window.allEndpoints.filter(ep =>
-      ep.toLowerCase().includes(query)
-    );
+    let query = normalizeTerm(e.target.value);
+    let filtered = window.allEndpoints.filter(ep => {
+      let normEp = normalizeTerm(ep);
+      console.log("we have norm: ", normEp, "we have query: ", query, "bool = ", (normEp.includes(query) || query.includes(normEp)))
+      return normEp.includes(query) || query.includes(normEp);
+    });
+    
     select.innerHTML = "";
     filtered.forEach(ep => {
       let option = document.createElement('option');
@@ -304,7 +317,7 @@ function setupEndpointSearch() {
     } else if (filtered.length > 0) {
       select.value = filtered[0];
     }
-    // Re-render the plot with the newly selected endpoint
+    // Re-render the plot with the newly selected endpoint.
     renderFinnGenPlot();
     updateFinnGenButton();
   });
