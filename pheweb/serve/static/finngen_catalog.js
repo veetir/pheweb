@@ -121,6 +121,18 @@ function renderFinnGenPlot() {
       Plotly.newPlot('finngen-gwas-catalog', [trace], layout)
         .then(function() {
           var plotDiv = document.getElementById('finngen-gwas-catalog');
+          
+          // Click event to go to dbSNP page
+          plotDiv.on('plotly_click', function(evtData) {
+            if (evtData.points && evtData.points.length > 0) {
+              var clickedData = evtData.points[0].customdata;
+              var rsid = clickedData.rsids;
+              if (rsid) {
+                var url = "https://www.ncbi.nlm.nih.gov/snp/" + rsid;
+                window.open(url, '_blank');
+              }
+            }
+          });
 
           // 3) Force the new chart to use the existing region from LocusZoom
           //    (if available; otherwise it just uses the layout defaults)
@@ -177,7 +189,7 @@ function renderFinnGenPlot() {
         });
 
       // Finally, update the FinnGen button link
-          updateFinnGenButton();
+      updateFinnGenButton();
     })
     .catch(function(error) {
       document.getElementById("finngen-gwas-catalog").innerHTML = "No results for this endpoint in this region " + error.message;
