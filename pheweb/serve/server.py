@@ -44,6 +44,7 @@ import os
 import os.path
 import sqlite3
 from typing import Dict, Tuple, List, Any, Optional
+import subprocess
 
 
 bp = Blueprint("bp", __name__, template_folder="templates", static_folder="static")
@@ -116,6 +117,96 @@ def check_auth(func):
 
 autocompleter = Autocompleter(phenos)
 
+
+# Define helper functions for running tabix and parsing its output.
+def query_tabix(file_path: str, region: str) -> list:
+    """
+    Runs the tabix command on the given file and region.
+    Returns the output lines as a list.
+    """
+    try:
+        result = subprocess.run(
+            ["tabix", file_path, region],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return result.stdout.strip().splitlines()
+    except subprocess.CalledProcessError as e:
+        raise Exception("Error querying region: " + e.stderr)
+
+def parse_tabix_output(lines: list) -> list:
+    """
+    Parse the output lines from the summary statistics file.
+    Expects tab-delimited columns with the following order:
+      1. chrom
+      2. pos
+      3. ref
+      4. alt
+      5. rsids
+      6. nearest_genes
+      7. pval
+      8. mlogp
+      9. beta
+      10. sebeta
+      11. af_alt
+      12. af_alt_cases
+      13. af_alt_controls
+    Returns a list of dictionaries with all these fields.
+    """
+    data = []
+    for line in lines:
+        if line.startswith("#"):
+            continue  # Skip header or comment lines.
+        parts = line.strip().split()
+        try:
+            record = {
+                "chrom": parts[0],
+                "pos": int(parts[1]),
+                "ref": parts[2],
+                "alt": parts[3],
+                "rsids": parts[4],
+                "nearest_genes": parts[5],
+                "pval": float(parts[6]),
+                "mlogp": float(parts[7]),
+                "beta": float(parts[8]),
+                "sebeta": float(parts[9]),
+                "af_alt": float(parts[10]),
+                "af_alt_cases": float(parts[11]),
+                "af_alt_controls": float(parts[12]),
+            }
+            data.append(record)
+        except (IndexError, ValueError) as e:
+            # Optionally log or handle problematic lines.
+            continue
+    return data
+
+# API endpoint for FinnGen tabix queries.
+@bp.route("/api/finngen/<endpoint>")
+@check_auth
+def api_finngen(endpoint: str):
+    """
+    This endpoint accepts a query parameter "region" in the format "chr:start-end"
+    and returns parsed tabix output from the corresponding FinnGen summary statistics file.
+    """
+    region = request.args.get("region")
+    if not region:
+        return jsonify({"error": "Missing region parameter, expected format 'chr:start-end'"}), 400
+
+    # Use the folder location defined in conf.py
+    data_folder = conf.FINNGEN_DATA_FOLDER
+    file_name = f"{endpoint}.gz"
+    file_path = os.path.join(data_folder, file_name)
+
+    if not os.path.isfile(file_path):
+        return jsonify({"error": f"File {file_name} not found in data folder {data_folder}."}), 404
+
+    try:
+        lines = query_tabix(file_path, region)
+        parsed_data = parse_tabix_output(lines)
+        return jsonify({"data": parsed_data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @bp.route("/api/autocomplete")
 @check_auth

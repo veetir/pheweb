@@ -1,6 +1,5 @@
-// FinnGen Catalog Plot Script
+// FinnGen Catalog Plot Script - modified to use local API endpoint
 
-// Render the FinnGen plot using GraphQL data.
 function renderFinnGenPlot() {
   // Grab LocusZoom region from the element with id "lz-1"
   var regionData = document.getElementById('lz-1').dataset.region;
@@ -10,78 +9,43 @@ function renderFinnGenPlot() {
   }
   var parts = regionData.split(':');
   var chr = parts[0];
-  var coords = parts[1].split('-');
-  var start = parseInt(coords[0], 10);
-  var end = parseInt(coords[1], 10);
 
   // Get the selected FinnGen endpoint or default to "E4_DIABETES"
   var endpointSelect = document.getElementById('endpoint-select');
   var selectedEndpoint = endpointSelect ? endpointSelect.value : "E4_DIABETES";
-  var studyId = "FINNGEN_R6_" + selectedEndpoint;
 
-  // Define the GraphQL query
-  var query = `
-    query regionalQuery($studyId: String!, $chromosome: String!, $start: Long!, $end: Long!) {
-      gwasRegional(studyId: $studyId, chromosome: $chromosome, start: $start, end: $end) {
-        variant {
-          id
-          rsId
-          chromosome
-          position
-          refAllele
-          altAllele
-        }
-        pval
-      }
-    }
-  `;
-  var variables = { studyId: studyId, chromosome: chr, start: start, end: end };
+  // Build the URL for your new local API endpoint.
+  // This URL uses the selected endpoint and passes the region (in "chr:start-end" format)
+  var apiUrl = "/api/finngen/" + selectedEndpoint + "?region=" + regionData;
 
-  // Fetch data from the Open Targets Genetics GraphQL endpoint
-  fetch('https://api.genetics.opentargets.org/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: query, variables: variables })
-  })
+  // Fetch data from the local API endpoint
+  fetch(apiUrl, { method: 'GET' })
     .then(function(response) {
       if (!response.ok) {
-        throw new Error("Error fetching FinnGen data: " + response.status);
+        throw new Error();
       }
       return response.json();
     })
     .then(function(data) {
-      var associations = data.data.gwasRegional;
+      var associations = data.data;
       if (!associations || associations.length === 0) {
         document.getElementById("finngen-gwas-catalog").innerHTML = "No associations in this region.";
         updateFinnGenButton();
         return;
       }
 
-      // Filter to ensure only data within the same chromosome/region
-      var filtered = associations.filter(function(record) {
-        var pos = record.variant.position;
-        return record.variant.chromosome === chr && pos >= start && pos <= end;
+      // Prepare arrays for Plotly.
+      // Assuming each record in associations has "position" and "pval"
+      var x = associations.map(function(record) {
+        return record.pos;
       });
-      if (filtered.length === 0) {
-        document.getElementById("finngen-gwas-catalog").innerHTML = "No associations in this region.";
-        updateFinnGenButton();
-        return;
-      }
-
-      // Prepare arrays for Plotly
-      var x = filtered.map(function(record) {
-        return record.variant.position;
-      });
-      var y = filtered.map(function(record) {
+      var y = associations.map(function(record) {
         return -Math.log10(record.pval);
       });
-      var customData = filtered.map(function(record) {
-        return {
-          id: record.variant.id,
-          refAllele: record.variant.refAllele,
-          altAllele: record.variant.altAllele,
-          pval: record.pval
-        };
+      // Optionally, if your API provides additional fields (e.g. variant ID, alleles),
+      // you can extract and include them in customData
+      var customData = associations.map(function(record) {
+        return record; // or extract specific fields as needed
       });
 
       // Define the Plotly trace
@@ -94,16 +58,23 @@ function renderFinnGenPlot() {
         marker: { color: '#3500D3', opacity: 0.7, size: 8 },
         customdata: customData,
         hovertemplate:
-          "<b>ID: %{customdata.id}</b><br>" +
-          "Position: %{x}<br>" +
-          "-log10 p-value: %{y}<br>" +
-          "Alleles: %{customdata.refAllele} > %{customdata.altAllele}<extra></extra>"
-      };
+          "<b>%{customdata.rsids}<br></b>" +
+          "Nearest Genes: %{customdata.nearest_genes}<br>" +
+          "Alt: %{customdata.alt}<br>" +
+          "p-value: %{customdata.pval}<br>" +
+          "mlogp: %{customdata.mlogp}<br>" +
+          "Beta: %{customdata.beta}<br>" +
+          "SE Beta: %{customdata.sebeta}<br>" +
+          "AF alt: %{customdata.af_alt}<br>" +
+          "AF alt cases: %{customdata.af_alt_cases}<br>" +
+          "AF alt controls: %{customdata.af_alt_controls}<br>" +
+          "<extra></extra>"
+      };      
 
       // A matching layout for consistent x-axis alignment
       var layout = {
-        title: { text: "FinnGen Associations (" + studyId + ")", font: { size: 14 } },
-        showlegend: false, // Hide or set a legend if you want to match the other chart
+        title: { text: "FinnGen Associations (" + selectedEndpoint + ")", font: { size: 14 } },
+        showlegend: false,
         xaxis: {
           domain: [0, 1],
           title: "Chromosome " + chr + " (Mb)",
@@ -206,10 +177,10 @@ function renderFinnGenPlot() {
         });
 
       // Finally, update the FinnGen button link
-      updateFinnGenButton();
+          updateFinnGenButton();
     })
     .catch(function(error) {
-      document.getElementById("finngen-gwas-catalog").innerHTML = "Error loading FinnGen plot: " + error.message;
+      document.getElementById("finngen-gwas-catalog").innerHTML = "No results for this endpoint in this region " + error.message;
       console.error(error);
     });
 }

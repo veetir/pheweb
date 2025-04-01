@@ -11,7 +11,7 @@ from typing import Optional, Any, Dict, Tuple, List
 # PheWeb should run fine when this is empty.
 # Modify with `set_override(key,value)`.
 overrides: Dict[str, Any] = {}
-
+FINNGEN_DATA_FOLDER = os.environ.get("FINNGEN_DATA_FOLDER", "/mnt/finngen")
 
 replacements = {
     "minimum_maf": "assoc_min_maf",
