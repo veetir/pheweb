@@ -16,7 +16,7 @@ function renderFinnGenPlot() {
 
   // Build the URL for your new local API endpoint.
   // This URL uses the selected endpoint and passes the region (in "chr:start-end" format)
-  var apiUrl = "/api/finngen/" + selectedEndpoint + "?region=" + regionData;
+  var apiUrl = window.model.urlprefix + "/api/finngen/" + selectedEndpoint + "?region=" + regionData;
   document.getElementById("finngen-gwas-catalog").innerHTML = "<p>Loading...</p>";
   
   // Fetch data from the local API endpoint
