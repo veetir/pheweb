@@ -230,8 +230,18 @@ function updateFinnGenButton() {
   var endpointSelect = document.getElementById('endpoint-select');
   if (!endpointSelect) return;
   var selectedEndpoint = endpointSelect.value;
-  var finngenUrl = "https://results.finngen.fi/pheno/" + selectedEndpoint;
-
+  var finngenUrl, btnText;
+  
+  // Check if there is a valid, non-empty endpoint selected.
+  if (selectedEndpoint && selectedEndpoint.trim() !== "") {
+    finngenUrl = "https://results.finngen.fi/pheno/" + selectedEndpoint;
+    btnText = "View " + selectedEndpoint + " in FinnGen";
+  } else {
+    // If no valid endpoint, use a default fallback.
+    finngenUrl = "https://results.finngen.fi/";
+    btnText = "Open FinnGen";
+  }
+  
   // Try to find an existing button.
   var btn = document.getElementById("finngen-link");
   if (!btn) {
@@ -245,9 +255,8 @@ function updateFinnGenButton() {
     var container = document.getElementById("finngen-gwas-catalog");
     container.parentNode.insertBefore(btn, container.nextSibling);
   }
-  // Update the button's attributes.
   btn.href = finngenUrl;
-  btn.textContent = "View " + selectedEndpoint + " in FinnGen";
+  btn.textContent = btnText;
   btn.target = "_blank"; // Opens the link in a new tab.
 }
 
