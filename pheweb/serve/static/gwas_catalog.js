@@ -194,45 +194,98 @@ function renderPlotlyCatalogPlot() {
         return trait.split(' ')[0].toLowerCase().replace(/['’]/g, '');
       }
       
-
-      // Renders buttons for the top traits into the specified container.
-      function renderTopTraitButtons(customArray, containerId, buttonClass) {
-        const topTraits = getTopTraits(customArray, 5);
-        const container = document.getElementById(containerId);
-        container.innerHTML = ""; // Clear previous buttons if any.
-        
-        topTraits.forEach(trait => {
-          const btn = document.createElement('button');
-          // Optionally, display the full trait as the button label.
-          btn.innerText = trait;
-          btn.className = 'trait-btn ' + buttonClass;
-          
-          // Tooltip
-          if (buttonClass === 'ukbb') {
-            btn.title = "UKBB top trait";
-          } else if (buttonClass === 'gwas') {
-            btn.title = "GWAS Catalog top trait";
+      function renderWordCloud(customArray, containerId, dataset) {
+        // Define words to exclude and regex for punctuation
+        const excludeWords = ["use", "at", "in", "not", "of", "or", "and", "with", "disease"];
+        const punctuationRegex = /[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
+      
+        // Count word frequencies
+        const wordCounts = {};
+        customArray.forEach(record => {
+          if (record.trait) {
+            // Remove punctuation from the trait string
+            const cleanTrait = record.trait.replace(punctuationRegex, '');
+            // Split into words by whitespace
+            const words = cleanTrait.split(/\s+/);
+            words.forEach(word => {
+              const lower = word.toLowerCase();
+              if (lower && excludeWords.indexOf(lower) === -1) {
+                wordCounts[lower] = (wordCounts[lower] || 0) + 1;
+              }
+            });
           }
-          btn.words = trait.split(' ');
-          btn.currentWordIndex = 0;
-      
-          btn.addEventListener('click', function() {
-            // Get the current word from the trait.
-            const rawWord = btn.words[btn.currentWordIndex];
-            // Update the index to cycle through the words.
-            btn.currentWordIndex = (btn.currentWordIndex + 1) % btn.words.length;
-            // Use getSearchTermFromTrait to normalize the word.
-            const searchTerm = getSearchTermFromTrait(rawWord);
-      
-            const searchBox = document.getElementById('endpoint-search');
-            searchBox.value = searchTerm;
-            // Dispatch an "input" event so the fuzzy search listener triggers.
-            var event = new Event('input', { bubbles: true });
-            searchBox.dispatchEvent(event);
-          });
-      
-          container.appendChild(btn);
         });
+      
+        // Convert the counts into an array of objects
+        let wordsArray = Object.keys(wordCounts).map(word => ({
+          text: word,
+          count: wordCounts[word]
+        }));
+      
+        // Sort descending by count and take the top 50 words
+        wordsArray.sort((a, b) => b.count - a.count);
+        wordsArray = wordsArray.slice(0, 50);
+      
+        // Use a logarithmic scale for font sizes to prevent domination.
+        const minFont = 8;
+        const maxFont = 32;
+        const maxCount = d3.max(wordsArray, d => d.count);
+        const fontSizeScale = d3.scaleLinear()
+                                .domain([0, Math.log(maxCount + 1)])
+                                .range([minFont, maxFont]);
+      
+        // Apply the scale to compute the size for each word.
+        wordsArray.forEach(d => {
+          d.size = fontSizeScale(Math.log(d.count + 1));
+        });
+      
+        // Choose a color based on the dataset.
+        const color = dataset === "ukbb" ? "#9632b8" : "#d43f3a";
+      
+        // Define dimensions for the word cloud.
+        const container = document.getElementById(containerId);
+        const width = container.clientWidth || 500;
+        const height = 150;
+      
+        // Remove any existing SVG (for re-rendering purposes)
+        d3.select("#" + containerId).select("svg").remove();
+      
+        // Create the cloud layout.
+        const layout = d3.layout.cloud()
+            .size([width, height])
+            .words(wordsArray)
+            .padding(5)
+            .rotate(() => 0)
+            .font("Impact")
+            .fontSize(d => d.size)
+            .on("end", draw);
+      
+        layout.start();
+      
+        // Draw function: render the words into an SVG
+        function draw(words) {
+          d3.select("#" + containerId).append("svg")
+              .attr("width", width)
+              .attr("height", height)
+            .append("g")
+              .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+            .selectAll("text")
+              .data(words)
+            .enter().append("text")
+              .style("font-family", "Impact")
+              .style("fill", color)
+              .style("cursor", "pointer")
+              .attr("text-anchor", "middle")
+              .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+              .style("font-size", d => d.size + "px")
+              .text(d => d.text)
+              .on("click", function(d) {
+                const searchBox = document.getElementById('endpoint-search');
+                searchBox.value = d.text;
+                const inputEvent = new Event('input', { bubbles: true });
+                searchBox.dispatchEvent(inputEvent);
+              });
+        }
       }
       
       // Render the Plotly plot.
@@ -275,8 +328,8 @@ function renderPlotlyCatalogPlot() {
               });
             }
           });
-          renderTopTraitButtons(ukbbCustom, 'ukbb-traits-buttons', 'ukbb');
-          renderTopTraitButtons(ebiCustom, 'gwas-traits-buttons', 'gwas');
+          renderWordCloud(ukbbCustom, 'ukbb-wordcloud', 'ukbb');
+          renderWordCloud(ebiCustom, 'gwas-wordcloud', 'gwas');
         });
     })
     .catch(function(error) {

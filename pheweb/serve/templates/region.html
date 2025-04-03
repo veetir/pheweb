@@ -10,6 +10,9 @@
 <link href="https://cdn.jsdelivr.net/npm/locuszoom@{{ config.LZJS_VERSION }}/dist/locuszoom.css" rel="stylesheet" type="text/css" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/locuszoom@{{ config.LZJS_VERSION }}/dist/locuszoom.app.min.js" type="text/javascript"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+
 
 <script src="{{ url_for('.static', filename='region.js') }}"></script>
 <link  href="{{ url_for('.static', filename='region.css') }}" rel="stylesheet" type="text/css">
@@ -84,14 +87,9 @@
         <label for="endpoint-select" id="endpoint-select-label"></label>
         <select id="endpoint-select"></select>
       </div>
-  
-      <div id="top-traits">
-        <div id="ukbb-traits-container" class="trait-container">
-          <div id="ukbb-traits-buttons"></div>
-        </div>
-        <div id="gwas-traits-container" class="trait-container">
-          <div id="gwas-traits-buttons"></div>
-        </div>
+      <div id="wordclouds">
+        <div id="ukbb-wordcloud" class="wordcloud-box"></div>
+        <div id="gwas-wordcloud" class="wordcloud-box"></div>
       </div>
     </div>
   </div>
