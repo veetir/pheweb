@@ -188,11 +188,6 @@ function renderPlotlyCatalogPlot() {
         const sortedTraits = Object.keys(traitCounts).sort((a, b) => traitCounts[b] - traitCounts[a]);
         return sortedTraits.slice(0, topN);
       }
-
-      // Helper to extract a search term from the trait (e.g., first word).
-      function getSearchTermFromTrait(trait) {
-        return trait.split(' ')[0].toLowerCase().replace(/['’]/g, '');
-      }
       
       function renderWordCloud(customArray, containerId, dataset) {
         // Define words to exclude and regex for punctuation
@@ -244,8 +239,8 @@ function renderPlotlyCatalogPlot() {
       
         // Define dimensions for the word cloud.
         const container = document.getElementById(containerId);
-        const width = container.clientWidth || 500;
-        const height = 150;
+        const width = container.clientWidth || 600;
+        const height = 120;
       
         // Remove any existing SVG (for re-rendering purposes)
         d3.select("#" + containerId).select("svg").remove();
