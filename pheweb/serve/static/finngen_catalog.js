@@ -262,11 +262,21 @@ function updateFinnGenButton() {
 
 function updateEndpointLabel(endpointsList) {
   const endpointLabel = document.getElementById('endpoint-select-label');
+  const endpointSelect = document.getElementById('endpoint-select');
   if (endpointLabel) {
     const count = endpointsList.length;
-    endpointLabel.textContent = `Select out of ${count} endpoint${count !== 1 ? "s" : ""}`;
+    if (count === 0) {
+      endpointLabel.textContent = "No endpoints match the search terms.";
+      endpointLabel.classList.add("error-label");
+      endpointSelect.disabled = true;
+    } else {
+      endpointLabel.textContent = `Select out of ${count} endpoint${count !== 1 ? "s" : ""}`;
+      endpointLabel.classList.remove("error-label");
+      endpointSelect.disabled = false;
+    }
   }
 }
+
 
 // Load endpoints from endpoints.csv and populate the dropdown.
 function loadEndpoints() {

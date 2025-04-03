@@ -143,4 +143,14 @@ h1 {
     flex: 1 1 auto;
     min-width: 0;
 }
+
+.error-label {
+    color: #cc0000;
+}
+
+#endpoint-select:disabled {
+    background-color: #f0f0f0;
+    color: #888;
+    cursor: not-allowed;
+  }
   
