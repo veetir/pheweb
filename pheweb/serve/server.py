@@ -204,7 +204,8 @@ def api_finngen(endpoint: str):
     try:
         lines = query_tabix(file_path, region)
         parsed_data = parse_tabix_output(lines)
-        return jsonify({"data": parsed_data})
+        filtered_data = [record for record in parsed_data if record['pval'] <= 0.05]
+        return jsonify({"data": filtered_data})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
