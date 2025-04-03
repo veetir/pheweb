@@ -49,6 +49,8 @@ function renderFinnGenPlot() {
         return record; // or extract specific fields as needed
       });
 
+      var sigThreshold = -Math.log10(0.05);
+
       // Define the Plotly trace
       var trace = {
         x: x,
@@ -104,7 +106,32 @@ function renderFinnGenPlot() {
         // Match margins so it lines up with the other plot
         margin: { t: 34, b: 40, l: 50, r: 20 },
         plot_bgcolor: "white",
-        height: 500
+        height: 500,
+        shapes: [
+          {
+            type: 'line',
+            x0: Math.min(...x),
+            y0: sigThreshold,
+            x1: Math.max(...x),
+            y1: sigThreshold,
+            line: {
+              color: 'grey',
+              dash: 'dot',
+              width: 2
+            }
+          }
+        ],
+        annotations: [
+          {
+            x: Math.max(...x),
+            y: sigThreshold,
+            text: "p=0.05",
+            showarrow: false,
+            xanchor: 'right',
+            yanchor: 'top',
+            font: { color: 'grey' }
+          }
+        ]
       };
 
       // Clear existing text if any
