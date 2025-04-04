@@ -192,7 +192,7 @@ function renderPlotlyCatalogPlot() {
       function renderWordCloud(customArray, containerId, dataset) {
         // Define words to exclude and regex for punctuation
         const excludeWords = ["use", "at", "in", "not", "of", "or", "and", "with", "disease"];
-        const punctuationRegex = /[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
+        const punctuationRegex = /[.,\/#!$%\^&\*;:{}=\-_`~()"]/g;
       
         // Count word frequencies
         const wordCounts = {};
