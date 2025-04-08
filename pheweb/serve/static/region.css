@@ -152,5 +152,17 @@ h1 {
     background-color: #f0f0f0;
     color: #888;
     cursor: not-allowed;
-  }
-  
+}
+
+.btn {
+    background-color: #3500d38e;
+    color: #FFFFFF;
+    padding: 4px 6px;
+    margin: 5px;
+    text-decoration: none;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+}

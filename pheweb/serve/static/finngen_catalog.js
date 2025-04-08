@@ -239,39 +239,65 @@ function renderFinnGenPlot() {
     });
 }
 
-// Create or update the FinnGen results button.
+// Create or update the FinnGen & Risteys results button.
 function updateFinnGenButton() {
   var endpointSelect = document.getElementById('endpoint-select');
   if (!endpointSelect) return;
   var selectedEndpoint = endpointSelect.value;
-  var finngenUrl, btnText;
   
-  // Check if there is a valid, non-empty endpoint selected.
-  if (selectedEndpoint && selectedEndpoint.trim() !== "") {
-    finngenUrl = "https://results.finngen.fi/pheno/" + selectedEndpoint;
-    btnText = "View " + selectedEndpoint + " in FinnGen";
-  } else {
-    // If no valid endpoint, use a default fallback.
-    finngenUrl = "https://results.finngen.fi/";
-    btnText = "Open FinnGen";
-  }
+  // Build the URLs using the selected endpoint.
+  var finngenUrl = (selectedEndpoint && selectedEndpoint.trim() !== "") 
+    ? "https://results.finngen.fi/pheno/" + selectedEndpoint 
+    : "https://results.finngen.fi/";
+  var risteysUrl = (selectedEndpoint && selectedEndpoint.trim() !== "") 
+    ? "https://risteys.finngen.fi/endpoints/" + selectedEndpoint 
+    : "https://risteys.finngen.fi/";
   
-  // Try to find an existing button.
-  var btn = document.getElementById("finngen-link");
-  if (!btn) {
-    // Create a new anchor element styled as a button.
-    btn = document.createElement("a");
-    btn.id = "finngen-link";
-    btn.className = "btn";
-    btn.style.marginTop = "10px";
-    btn.style.display = "inline-block";
-    // Insert the button after the FinnGen plot container.
-    var container = document.getElementById("finngen-gwas-catalog");
-    container.parentNode.insertBefore(btn, container.nextSibling);
+  // Construct the common text.
+  var commonText = (selectedEndpoint && selectedEndpoint.trim() !== "") 
+    ? "View " + selectedEndpoint + " in:" 
+    : "";
+
+  // Get the container element where the plot is rendered.
+  var container = document.getElementById("finngen-gwas-catalog");
+
+  // Create or update a container for the common text and both buttons.
+  var btnContainer = document.getElementById("finngen-buttons");
+  if (!btnContainer) {
+    btnContainer = document.createElement("div");
+    btnContainer.id = "finngen-buttons";
+    btnContainer.style.marginTop = "10px";
+    // Insert the container immediately after the plot container.
+    container.parentNode.insertBefore(btnContainer, container.nextSibling);
   }
-  btn.href = finngenUrl;
-  btn.textContent = btnText;
-  btn.target = "_blank"; // Opens the link in a new tab.
+  // Clear any old contents.
+  btnContainer.innerHTML = "";
+  
+  // Create a span for the common text.
+  var commonTextSpan = document.createElement("span");
+  commonTextSpan.id = "finngen-common-text";
+  commonTextSpan.textContent = commonText + " ";
+  btnContainer.appendChild(commonTextSpan);
+  
+  // Create the FinnGen button.
+  var finngenBtn = document.createElement("a");
+  finngenBtn.id = "finngen-link";
+  finngenBtn.className = "btn";
+  finngenBtn.href = finngenUrl;
+  finngenBtn.textContent = "FinnGen";
+  finngenBtn.target = "_blank";
+  btnContainer.appendChild(finngenBtn);
+  
+  // Create the Risteys button.
+  var risteysBtn = document.createElement("a");
+  risteysBtn.id = "risteys-link";
+  risteysBtn.className = "btn";
+  risteysBtn.href = risteysUrl;
+  risteysBtn.textContent = "Risteys";
+  risteysBtn.target = "_blank";
+  // Add left margin for spacing.
+  risteysBtn.style.marginLeft = "10px";
+  btnContainer.appendChild(risteysBtn);
 }
 
 function updateEndpointLabel(endpointsList) {
