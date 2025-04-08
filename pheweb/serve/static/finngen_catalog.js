@@ -47,6 +47,7 @@ function renderFinnGenPlot() {
       });
 
       var sigThreshold = -Math.log10(0.05);
+      var gwasThreshold = -Math.log10(5e-8);
 
       // Define the Plotly trace
       var trace = {
@@ -97,7 +98,6 @@ function renderFinnGenPlot() {
           tickcolor: 'black',
           rangemode: "tozero"
         },
-        // Match margins so it lines up with the other plot
         margin: { t: 34, b: 40, l: 50, r: 20 },
         plot_bgcolor: "white",
         height: 500,
@@ -108,6 +108,18 @@ function renderFinnGenPlot() {
             y0: sigThreshold,
             x1: Math.max(...x),
             y1: sigThreshold,
+            line: {
+              color: 'grey',
+              dash: 'dot',
+              width: 2
+            }
+          },
+          {
+            type: 'line',
+            x0: Math.min(...x),
+            y0: gwasThreshold,
+            x1: Math.max(...x),
+            y1: gwasThreshold,
             line: {
               color: 'grey',
               dash: 'dot',
@@ -124,10 +136,18 @@ function renderFinnGenPlot() {
             xanchor: 'right',
             yanchor: 'top',
             font: { color: 'grey' }
+          },
+          {
+            x: Math.max(...x),
+            y: gwasThreshold,
+            text: "p=5e-8",
+            showarrow: false,
+            xanchor: 'right',
+            yanchor: 'top',
+            font: { color: 'grey' }
           }
         ]
       };
-
       // Clear existing text if any
       document.getElementById("finngen-gwas-catalog").innerHTML = "";
 
