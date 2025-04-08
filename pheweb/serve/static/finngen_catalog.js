@@ -61,7 +61,7 @@ function renderFinnGenPlot() {
           "<b>%{customdata.rsid}<br></b>" +
           "Nearest Genes: %{customdata.nearest_genes}<br>" +
           "Alt: %{customdata.alt}<br>" +
-          "p-value: %{customdata.pval}<br>" +
+          "p-value: %{customdata.pvalue}<br>" +
           "mlogp: %{customdata.mlogp}<br>" +
           "Beta: %{customdata.beta}<br>" +
           "SE Beta: %{customdata.sebeta}<br>" +
