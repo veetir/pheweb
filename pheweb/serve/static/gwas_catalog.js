@@ -222,8 +222,8 @@ function renderPlotlyCatalogPlot() {
         wordsArray = wordsArray.slice(0, 50);
       
         // Use a logarithmic scale for font sizes to prevent domination.
-        const minFont = 8;
-        const maxFont = 32;
+        const minFont = 12;
+        const maxFont = 26;
         const maxCount = d3.max(wordsArray, d => d.count);
         const fontSizeScale = d3.scaleLinear()
                                 .domain([0, Math.log(maxCount + 1)])
