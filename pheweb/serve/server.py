@@ -44,8 +44,8 @@ import os
 import os.path
 import sqlite3
 from typing import Dict, Tuple, List, Any, Optional
-import subprocess
-
+import urllib.parse
+import requests
 
 bp = Blueprint("bp", __name__, template_folder="templates", static_folder="static")
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "static"))
@@ -117,96 +117,87 @@ def check_auth(func):
 
 autocompleter = Autocompleter(phenos)
 
+def transform_column_to_rows(data_dict: dict) -> list:
+    """
+    Given a column-oriented dict such as:
+      { "pval": [0.01, 0.02, ...],
+        "pos": [110580113, 110580234, ...],
+        ... }
+    transform it into a list of row-oriented dictionaries.
+    """
+    if not data_dict:
+        return []
+    fields = list(data_dict.keys())
+    # Use the length of the first array as the number of records.
+    record_count = len(data_dict[fields[0]])
+    rows = []
+    for i in range(record_count):
+        record = { field: data_dict[field][i] for field in fields }
+        rows.append(record)
+    print("Head (first 5 rows):")
+    for row in rows[:5]:
+        print(row)
+    return rows
 
-# Define helper functions for running tabix and parsing its output.
-def query_tabix(file_path: str, region: str) -> list:
-    """
-    Runs the tabix command on the given file and region.
-    Returns the output lines as a list.
-    """
-    try:
-        result = subprocess.run(
-            ["tabix", file_path, region],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return result.stdout.strip().splitlines()
-    except subprocess.CalledProcessError as e:
-        raise Exception("Error querying region: " + e.stderr)
-
-def parse_tabix_output(lines: list) -> list:
-    """
-    Parse the output lines from the summary statistics file.
-    Expects tab-delimited columns with the following order:
-      1. chrom
-      2. pos
-      3. ref
-      4. alt
-      5. rsids
-      6. nearest_genes
-      7. pval
-      8. mlogp
-      9. beta
-      10. sebeta
-      11. af_alt
-      12. af_alt_cases
-      13. af_alt_controls
-    Returns a list of dictionaries with all these fields.
-    """
-    data = []
-    for line in lines:
-        if line.startswith("#"):
-            continue  # Skip header or comment lines.
-        parts = line.strip().split()
-        try:
-            record = {
-                "chrom": parts[0],
-                "pos": int(parts[1]),
-                "ref": parts[2],
-                "alt": parts[3],
-                "rsids": parts[4],
-                "nearest_genes": parts[5],
-                "pval": float(parts[6]),
-                "mlogp": float(parts[7]),
-                "beta": float(parts[8]),
-                "sebeta": float(parts[9]),
-                "af_alt": float(parts[10]),
-                "af_alt_cases": float(parts[11]),
-                "af_alt_controls": float(parts[12]),
-            }
-            data.append(record)
-        except (IndexError, ValueError) as e:
-            # Optionally log or handle problematic lines.
-            continue
-    return data
-
-# API endpoint for FinnGen tabix queries.
 @bp.route("/api/finngen/<endpoint>")
 @check_auth
 def api_finngen(endpoint: str):
     """
     This endpoint accepts a query parameter "region" in the format "chr:start-end"
-    and returns parsed tabix output from the corresponding FinnGen summary statistics file.
+    and instead of using a local tabix query, it makes an external API call to FinnGen.
+    
+    The external API expects a URL-encoded filter string that describes the region.
+    For example:
+       analysis in 3 and chromosome in '20' and position ge 35187976 and position le 35687976
+    is URL encoded and inserted into the FinnGen API URL.
+    
+    Finally, the column-based API response is transformed into a row-based list,
+    optionally filtered (here by p-value <= 0.05) so that the output matches what
+    your JavaScript code is expecting.
     """
     region = request.args.get("region")
     if not region:
         return jsonify({"error": "Missing region parameter, expected format 'chr:start-end'"}), 400
 
-    # Use the folder location defined in conf.py
-    data_folder = conf.FINNGEN_DATA_FOLDER
-    file_name = f"{endpoint}.gz"
-    file_path = os.path.join(data_folder, file_name)
-
-    if not os.path.isfile(file_path):
-        return jsonify({"error": f"File {file_name} not found in data folder {data_folder}."}), 404
-
     try:
-        lines = query_tabix(file_path, region)
-        parsed_data = parse_tabix_output(lines)
-        filtered_data = [record for record in parsed_data if record['pval'] <= 0.05]
-        return jsonify({"data": filtered_data})
+        # Parse region data, expected in the "chr:start-end" format.
+        parts = region.split(":")
+        if len(parts) != 2:
+            return jsonify({"error": "Invalid region format (expected 'chr:start-end')"}), 400
+        chrom = parts[0]
+        coords = parts[1].split("-")
+        if len(coords) != 2:
+            return jsonify({"error": "Invalid region coordinates (expected 'start-end')"}), 400
+        pos_start, pos_end = coords[0], coords[1]
+        
+        # Construct the filter query string as required by FinnGen.
+        filter_query = (
+            f"analysis in 3 and chromosome in '{chrom}' and position ge {pos_start} and position le {pos_end}"
+        )
+        # URL encode the filter parameter.
+        encoded_filter = urllib.parse.quote(filter_query)
+
+        # Build the external API URL.
+        external_api_url = f"https://results.finngen.fi/api/region/{endpoint}/lz-results/?filter={encoded_filter}"
+        # Log or print the URL if desired:
+        print("Calling FinnGen external API:", external_api_url)
+        
+        # Fetch data from the external API.
+        external_response = requests.get(external_api_url)
+        external_response.raise_for_status()  # raise an error if the request failed
+        
+        external_json = external_response.json()
+        
+        # The external API returns a column-oriented structure under key "data".
+        if "data" in external_json:
+            transformed_data = transform_column_to_rows(external_json["data"])
+        else:
+            transformed_data = []
+        
+        return jsonify({"data": transformed_data})
+    
     except Exception as e:
+        # On error, return a JSON error message.
         return jsonify({"error": str(e)}), 500
 
 @bp.route("/api/autocomplete")

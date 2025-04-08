@@ -36,17 +36,14 @@ function renderFinnGenPlot() {
       }
 
       // Prepare arrays for Plotly.
-      // Assuming each record in associations has "position" and "pval"
       var x = associations.map(function(record) {
-        return record.pos;
+        return record.position;
       });
       var y = associations.map(function(record) {
-        return -Math.log10(record.pval);
+        return -Math.log10(record.pvalue);
       });
-      // Optionally, if your API provides additional fields (e.g. variant ID, alleles),
-      // you can extract and include them in customData
       var customData = associations.map(function(record) {
-        return record; // or extract specific fields as needed
+        return record;
       });
 
       var sigThreshold = -Math.log10(0.05);
@@ -61,18 +58,15 @@ function renderFinnGenPlot() {
         marker: { color: '#3500D3', opacity: 0.7, size: 8 },
         customdata: customData,
         hovertemplate:
-          "<b>%{customdata.rsids}<br></b>" +
+          "<b>%{customdata.rsid}<br></b>" +
           "Nearest Genes: %{customdata.nearest_genes}<br>" +
           "Alt: %{customdata.alt}<br>" +
           "p-value: %{customdata.pval}<br>" +
           "mlogp: %{customdata.mlogp}<br>" +
           "Beta: %{customdata.beta}<br>" +
           "SE Beta: %{customdata.sebeta}<br>" +
-          "AF alt: %{customdata.af_alt}<br>" +
-          "AF alt cases: %{customdata.af_alt_cases}<br>" +
-          "AF alt controls: %{customdata.af_alt_controls}<br>" +
           "<extra></extra>"
-      };      
+      };
 
       // A matching layout for consistent x-axis alignment
       var layout = {
@@ -154,7 +148,7 @@ function renderFinnGenPlot() {
           plotDiv.on('plotly_click', function(evtData) {
             if (evtData.points && evtData.points.length > 0) {
               var clickedData = evtData.points[0].customdata;
-              var rsid = clickedData.rsids;
+              var rsid = clickedData.rsid;
               if (rsid) {
                 var url = "https://www.ncbi.nlm.nih.gov/snp/" + rsid;
                 window.open(url, '_blank');
