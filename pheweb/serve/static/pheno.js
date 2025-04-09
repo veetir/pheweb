@@ -633,8 +633,10 @@ function populate_streamtable(variants) {
             pagination: function(summary){
                 if ($.trim($('#search').val()).length > 0){
                     $found.text(formatVariantCount(summary.total));
+                    patchPaginationMarkup();
                 } else {
                     $found.text(formatVariantCount(data.length));
+                    patchPaginationMarkup();
                 }
             }
         }
@@ -653,7 +655,24 @@ function populate_streamtable(variants) {
             }
         }
 
+        function patchPaginationMarkup() {
+            $('.st_pagination').find('ul.pagination').each(function() {
+                $(this).find('li').each(function() {
+                    $(this).addClass('page-item');
+                    const $a = $(this).find('a');
+                    if ($a.length) {
+                        $a.addClass('page-link');
+                        if ($a.hasClass('active')) {
+                            $a.removeClass('active');
+                            $(this).addClass('active');
+                        }
+                    }
+                });
+            });
+        }
+
         $('#stream_table').stream_table(options, data);
+        patchPaginationMarkup();
     });
 }
 
