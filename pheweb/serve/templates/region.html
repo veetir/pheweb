@@ -26,7 +26,7 @@
 
 
 {% block contained %}
-<div class="container">
+<div class="container-fluid px-5">
   {% for key in ['num_cases', 'num_controls', 'num_samples'] %}
   {% if key in pheno %}
     {% if '<' in pheno[key]|string %}

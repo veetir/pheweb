@@ -7,11 +7,6 @@
 .lz-toolbar-group-start, .lz-toolbar-group-middle, .lz-toolbar-group-end {
     float: none !important;
 }
-.container {
-    width: clamp(90%, 1200px, 95%);
-    margin: 0 auto;
-    padding: 0 1rem;
-}
 
 .lz-container-responsive,
 #plotly-gwas-catalog,
