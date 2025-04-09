@@ -7,8 +7,8 @@
 <script src="https://unpkg.com/underscore@1.8.3/underscore-min.js"></script>
 <script src="https://unpkg.com/corejs-typeahead@1.2.1/dist/typeahead.bundle.min.js" integrity="sha256-VCsWOz+0GuHdS/sIICtQNTFJdbaDI80rxvoB7BXabrU=" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('bp.static', filename='custom.css') }}">
 <script type="text/javascript">
   window.model = window.model || {};
@@ -24,40 +24,39 @@
 </head>
 
 <body>
-<nav class="navbar navbar-default" style="background: white;">
+  <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target="#navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            {% block navbar_left %}
-            <a class="navbar-brand" href="{{ url_for('.homepage') }}" style="color: #333; font-weight: bold; float: left; font-size: 15px;">PheWeb</a>
-            <div class="navbar-left" id="navbar_form_container">
-                <form action="{{ url_for('.go') }}" class="navbar-form" role="search">
-                    <div class="form-group" id="navbar-awesomebar">
-                        <input id="navbar-searchbox-input" name="query" class="form-control typeahead" autocomplete="off" type="text" size="40" placeholder="Search..."">
-                    </div>
-                </form>
-            </div>
-            {% endblock %}
+      <!-- Left side: Brand and search form -->
+      <div class="d-flex align-items-center">
+        {% block navbar_left %}
+        <a class="navbar-brand fw-bold" href="{{ url_for('.homepage') }}" style="font-size: 15px; color: #333;">PheWeb</a>
+        <div id="navbar_form_container" class="ms-3">
+          <form action="{{ url_for('.go') }}" class="d-flex" role="search">
+            <input id="navbar-searchbox-input" name="query" class="form-control me-2 typeahead" autocomplete="off" type="text" placeholder="Search...">
+          </form>
         </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url_for('.phenotypes_page') }}" style="color: #333; font-weight: bold;">Phenotypes</a></li>
-                <li><a href="{{ url_for('.top_hits_page') }}" style="color: #333; font-weight: bold;">Top hits</a></li>
-                <li><a href="{{ url_for('.about_page') }}" style="color: #333; font-weight: bold;">About</a></li>
-                {% if current_user and current_user.is_authenticated %}
-                <li><a href="{{ url_for('.logout') }}" style="color: #333; font-weight: bold;">Logout ({{ current_user.email }})</a></li>
-                {% endif %}
-
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
+        {% endblock %}
+      </div>
+      
+      <!-- Right side: Navigation links shown horizontally -->
+      <ul class="navbar-nav d-flex flex-row ms-auto mb-0">
+        <li class="nav-item me-3">
+          <a class="nav-link fw-bold text-dark" href="{{ url_for('.phenotypes_page') }}">Phenotypes</a>
+        </li>
+        <li class="nav-item me-3">
+          <a class="nav-link fw-bold text-dark" href="{{ url_for('.top_hits_page') }}">Top hits</a>
+        </li>
+        <li class="nav-item me-3">
+          <a class="nav-link fw-bold text-dark" href="{{ url_for('.about_page') }}">About</a>
+        </li>
+        {% if current_user and current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link fw-bold text-dark" href="{{ url_for('.logout') }}">Logout ({{ current_user.email }})</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>   
 {% block body %}
 <div class="container-fluid">
     {% with messages = get_flashed_messages() %}
