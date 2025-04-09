@@ -22,12 +22,11 @@
 
 <div class="row" style="margin-bottom: 0.5em">
   <div class="col-xs-12 col-sm-8 col-md-6">
-    <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
+    <input type="text" class="form-control" id="search" placeholder="Search...">
   </div>
 
-  <div id="alignment-container">
-    <div id="streamtable-found" class="label label-primary">
-    </div>
+  <div class="col-xs-12 col-sm-4 col-md-6" id="alignment-container">
+    <div id="streamtable-found" class="badge bg-primary text-light"></div>
 
     {% if config.DOWNLOAD_PHENOTYPES_BUTTON %}
     <span class="download-button">
