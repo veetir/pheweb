@@ -22,6 +22,7 @@ function populate_streamtable(phenotypes) {
                     text = count + (count === 1 ? " phenotype" : " phenotypes");
                 }
                 $found.text(text);
+                patchPaginationMarkup();
             }
         }
 
@@ -31,14 +32,31 @@ function populate_streamtable(phenotypes) {
             callbacks: callbacks,
             pagination: {
                 span: 5,
-                next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
-                prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
+                next_text: 'Next <i class="bi bi-arrow-right"></i>',
+                prev_text: '<i class="bi bi-arrow-left"></i> Previous',
                 per_page_select: false,
-                per_page_opts: [100] // this is the best way I've found to control the number of rows
+                per_page_opts: [100]
             }
         }
 
+        function patchPaginationMarkup() {
+            $('.st_pagination').find('ul.pagination').each(function() {
+                $(this).find('li').each(function() {
+                    $(this).addClass('page-item');
+                    const $a = $(this).find('a');
+                    if ($a.length) {
+                        $a.addClass('page-link');
+                        if ($a.hasClass('active')) {
+                            $a.removeClass('active');
+                            $(this).addClass('active');
+                        }
+                    }
+                });
+            });
+        }
+        
         $('#stream_table').stream_table(options, data);
+        patchPaginationMarkup();
     });
 }
 
