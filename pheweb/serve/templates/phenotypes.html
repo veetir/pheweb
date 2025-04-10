@@ -29,7 +29,7 @@ $(document).ready(function() {
           return (data !== null) ? parseFloat(data).toFixed(2) : '';
         }
       },
-      { data: 'num_peaks', title: '#Loci<5e-8' },
+      { data: 'num_peaks', title: '#Loci&lt;5e-8' },
       { 
         data: null,
         title: 'Top variant in pheno',
@@ -87,19 +87,17 @@ $(document).ready(function() {
 
 {% block contained %}
 <div class="row">
-    <div class="col-xs-12 col-sm-8">
-        <h1 style="margin-top:0">All Phenotypes</h1>
-    </div>
+  <div class="col-xs-12 col-sm-8">
+    <h1 style="margin-top:0">All Phenotypes</h1>
+  </div>
 </div>
 
 <div class="row" style="margin-bottom: 0.5em">
   <div class="col-xs-12 col-sm-8 col-md-6">
     <input type="text" class="form-control" id="search" placeholder="Search...">
   </div>
-
   <div class="col-xs-12 col-sm-4 col-md-6" id="alignment-container">
     <div id="streamtable-found" class="badge bg-primary text-light"></div>
-
     {% if config.DOWNLOAD_PHENOTYPES_BUTTON %}
     <span class="download-button">
       <a href="{{ url_for('.download_phenotypes') }}" title="Download all phenotypes">
@@ -107,7 +105,7 @@ $(document).ready(function() {
         <span style="display: none;">Download</span>
       </a>
     </span>
-    {% endif %}    
+    {% endif %}
   </div>
 </div>
 
@@ -130,27 +128,4 @@ $(document).ready(function() {
     </table>
   </div>
 </div>
-
-<script type="text/template" id="streamtable-template">
-  <tr>
-    <td><%= h.category %></td>
-    <td><a style="color:black" href="{{ url_for('.pheno_page', phenocode='').rstrip('/') }}/<%= h.phenocode %>">
-        <%= h.phenostring || h.phenocode %>
-    </a></td>
-    <td><%= (h.gc_lambda_hundred !== null) ? h.gc_lambda_hundred.toFixed(2) : '' %></td>
-    <td><%= h.num_peaks %></td>
-    <td><a style="color:black" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= h.chrom %>-<%= h.pos %>-<%= h.ref %>-<%= h.alt %>">
-        <%= h.chrom %>:<%= h.pos.toLocaleString() %> <%= h.ref %> / <%= h.alt %>
-        <% if (h.rsids) { %>(<%= h.rsids.replace(/,/g, ', ') %>)<% } %>
-    </a></td>
-    <td><%= (h.pval == 0) ? '≤1e-320' : h.pval.toExponential(1) %></td>
-    <td class="nearest_genes_col">
-      <% var ngs = h.nearest_genes.split(","); ngs.forEach(function(g, i) { %>
-      <a style="color:black" href="{{ url_for('.region_page', phenocode='', region='').rstrip('/') }}/<%= h.phenocode %>/gene/<%= g %>?include=<%= h.chrom %>-<%= h.pos %>">
-        <i><%= g %></i></a><%= (i+1 !== ngs.length)?',':'' %>
-      <% }) %>
-    </td>
-  </tr>
-</script>
-
 {% endblock %}
