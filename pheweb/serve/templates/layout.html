@@ -33,7 +33,7 @@
       <!-- Left side: Brand and search form -->
       <div class="d-flex align-items-center">
         {% block navbar_left %}
-        <a class="navbar-brand fw-bold" href="{{ url_for('.homepage') }}" style="font-size: 15px; color: #333;">PheWeb</a>
+        <a class="navbar-brand fw-bold text-dark fs-5 mb-0" href="{{ url_for('.homepage') }}">PheWeb</a>
         <div id="navbar_form_container" class="ms-3">
           <form action="{{ url_for('.go') }}" class="d-flex" role="search">
             <input id="navbar-searchbox-input" name="query" class="form-control me-2 typeahead" autocomplete="off" type="text" placeholder="Search...">
