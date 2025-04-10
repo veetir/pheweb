@@ -315,61 +315,91 @@ if (typeof window.variant.rsids !== "undefined") {
     })();
 }
 
-
-// Populate StreamTable
-$(function() {
-    // This is mostly copied from <https://michigangenomics.org/health_data.html>.
-    var data = _.sortBy(window.variant.phenos, function(pheno) { return pheno.pval; });
-    var template = _.template($('#streamtable-template').html());
-    var view = function(phenotype) {
-        return template({d: phenotype});
-    };
-    var $found = $('#streamtable-found');
-    $found.text(data.length + " total phenotypes");
-
-    var callbacks = {
-        pagination: function(summary){
-            if ($.trim($('#search').val()).length > 0){
-                $found.text(summary.total + " matching codes");
-                patchPaginationMarkup();
-            } else {
-                $found.text(data.length + " total codes");
-                patchPaginationMarkup();
+$(document).ready(function() {
+    // Use the preloaded data: window.variant.phenos contains the array of phenotype objects.
+    // Optionally, sort the data by p-value:
+    var tableData = window.variant.phenos.sort(function(a, b) {
+      return a.pval - b.pval;
+    });
+  
+    // Initialize DataTables on the table with the desired configuration.
+    var table = $('#stream_table').DataTable({
+      // Use the pre-sorted data array as the data source:
+      data: tableData,
+      // Remove the default search box so that we can use our custom <input id="search">
+      dom: 'lrtip',
+      columns: [
+        {
+          // Category column (optionally styled by color)
+          data: 'category',
+          title: 'Category',
+          render: function(data, type, row, meta) {
+            // If you want to use a custom color (for example, row.color already computed)
+            return '<span style="color:' + (row.color || 'inherit') + ';">' + data + '</span>';
+          }
+        },
+        {
+          // Phenotype: display as a link to the phenotype page.
+          data: null,
+          title: 'Phenotype',
+          render: function(data, type, row, meta) {
+            var label = data.phenostring || data.phenocode;
+            return '<a style="color:black" href="' + window.model.urlprefix + '/pheno/' + data.phenocode + '">' +
+                      label +
+                   '</a>';
+          }
+        },
+        {
+          // P-value: exponential notation with special handling for 0.
+          data: 'pval',
+          title: 'P-value',
+          render: function(data, type, row, meta) {
+            return (data === 0) ? '≤1e-320' : parseFloat(data).toExponential(1);
+          }
+        },
+        {
+          // Effect Size (se): display beta and its standard error.
+          data: null,
+          title: 'Effect Size (se)',
+          render: function(data, type, row, meta) {
+            var betaStr = (data.beta !== undefined) ? parseFloat(data.beta).toPrecision(2) : "";
+            if (data.sebeta !== undefined) {
+              betaStr += " (" + parseFloat(data.sebeta).toPrecision(2) + ")";
             }
+            return betaStr;
+          }
+        },
+        {
+          // Number of samples: either show "cases / controls" or "num_samples".
+          data: null,
+          title: 'Number of samples',
+          render: function(data, type, row, meta) {
+            if (data.num_cases) {
+                return data.num_cases + " / " + data.num_controls;
+            } else if (data.num_samples) {
+                return data.num_samples;
+            }
+            return "";
+          }
         }
-    };
-
-    var options = {
-        view: view,
-        search_box: '#search',
-        per_page: 20,
-        callbacks: callbacks,
-        pagination: {
-            span: 5,
-            next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
-            prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
-            per_page_select: false,
-            per_page: 10
-        }
-    };
-
-    function patchPaginationMarkup() {
-        $('.st_pagination').find('ul.pagination').each(function() {
-            $(this).find('li').each(function() {
-                $(this).addClass('page-item');
-                const $a = $(this).find('a');
-                if ($a.length) {
-                    $a.addClass('page-link');
-                    if ($a.hasClass('active')) {
-                        $a.removeClass('active');
-                        $(this).addClass('active');
-                    }
-                }
-            });
-        });
-    }
-
-    $('#stream_table').stream_table(options, data);
-    patchPaginationMarkup();
-
-});
+      ],
+      paging: true,
+      searching: true,
+      info: true,
+      // Update the hit counter after each draw.
+      drawCallback: function(settings) {
+        var api = this.api();
+        var totalRows = api.rows().count();
+        var filteredRows = api.rows({ filter: 'applied' }).count();
+        var text = ($.trim($('#search').val()) !== "") ?
+                     filteredRows + " matching codes" :
+                     totalRows + " total codes";
+        $('#streamtable-found').text(text);
+      }
+    });
+  
+    // Bind the custom search input to DataTables' built-in search.
+    $('#search').on('keyup', function() {
+      table.search(this.value).draw();
+    });
+  });

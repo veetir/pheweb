@@ -613,67 +613,100 @@ function create_qq_plot(maf_ranges, qq_ci) {
 
 
 function populate_streamtable(variants) {
-    $(function() {
-        // This is mostly copied from <https://michigangenomics.org/health_data.html>.
-        var data = _.sortBy(_.where(variants, {peak: true}), _.property('pval'));
-        var template = _.template($('#streamtable-template').html());
-        var view = function(variant) {
-            return template({v: variant});
-        };
-        var $found = $('#streamtable-found');
-        
-        // Function to handle singular/plural display
-        var formatVariantCount = function(count) {
-            return count + " " + (count === 1 ? "variant" : "variants");
-        };
+$(function() {
+    // Filter for variants marked as "peak" and sort by p-value
+    var data = _.sortBy(_.where(variants, { peak: true }), _.property('pval'));
 
-        $found.text(formatVariantCount(data.length));
-
-        var callbacks = {
-            pagination: function(summary){
-                if ($.trim($('#search').val()).length > 0){
-                    $found.text(formatVariantCount(summary.total));
-                    patchPaginationMarkup();
-                } else {
-                    $found.text(formatVariantCount(data.length));
-                    patchPaginationMarkup();
-                }
+    // Initialize DataTables on your table with id="stream_table"
+    var table = $('#stream_table').DataTable({
+    // Set the data source to the filtered/sorted array
+    data: data,
+    // Remove DataTables’ default search box (we use our own)
+    dom: 'lrtip',
+    columns: [
+        {
+        // Variant column with custom rendering:
+        // Shows "chrom: pos ref / alt (rsids)" as a link.
+        data: null,
+        title: 'Variant',
+        render: function(data, type, row, meta) {
+            var variantText = data.chrom + ':' + data.pos.toLocaleString() + ' ' +
+                            data.ref + ' / ' + data.alt;
+            if (data.rsids) {
+            variantText += ' (' + data.rsids.split(',').join(', ') + ')';
+            }
+            return '<a style="color:black" href="' + window.model.urlprefix +
+                    '/variant/' + data.chrom + '-' + data.pos + '-' + data.ref + '-' + data.alt + '">' +
+                    variantText + '</a>';
+        }
+        },
+        {
+        // Nearest Gene(s) column – italicized
+        data: 'nearest_genes',
+        title: 'Nearest Gene(s)',
+        render: function(data, type, row, meta) {
+            return '<i>' + data.replace(/,/g, ', ') + '</i>';
+        }
+        },
+        {
+        // MAF column – use maf, af, or ac as available
+        data: null,
+        title: 'MAF',
+        render: function(data, type, row, meta) {
+            if (data.maf) {
+            return parseFloat(data.maf).toPrecision(2);
+            } else if (data.af) {
+            return Math.min(data.af, 1 - data.af).toPrecision(2);
+            } else if (data.ac) {
+            return data.ac;
+            } else {
+            return "";
             }
         }
-
-        var options = {
-            view: view,
-            search_box: '#search',
-            per_page: 20,
-            callbacks: callbacks,
-            pagination: {
-                span: 5,
-                next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
-                prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
-                per_page_select: false,
-                per_page: 10
+        },
+        {
+        // P-value column – display using exponential notation, with a special case for p-value 0.
+        data: 'pval',
+        title: 'P-value',
+        render: function(data, type, row, meta) {
+            return (data == 0) ? '≤1e-320' : parseFloat(data).toExponential(1);
+        }
+        },
+        {
+        // Effect Size (se) – shows beta with standard error in parentheses, if available.
+        data: null,
+        title: 'Effect Size (se)',
+        render: function(data, type, row, meta) {
+            var betaText = (data.beta !== undefined) ? parseFloat(data.beta).toPrecision(2) : "";
+            if (data.sebeta) {
+            betaText += " (" + parseFloat(data.sebeta).toPrecision(2) + ")";
             }
+            return betaText;
         }
-
-        function patchPaginationMarkup() {
-            $('.st_pagination').find('ul.pagination').each(function() {
-                $(this).find('li').each(function() {
-                    $(this).addClass('page-item');
-                    const $a = $(this).find('a');
-                    if ($a.length) {
-                        $a.addClass('page-link');
-                        if ($a.hasClass('active')) {
-                            $a.removeClass('active');
-                            $(this).addClass('active');
-                        }
-                    }
-                });
-            });
         }
-
-        $('#stream_table').stream_table(options, data);
-        patchPaginationMarkup();
+    ],
+    // Configure paging and disable page length selection if desired.
+    pageLength: 10,
+    lengthChange: false,
+    searching: true
     });
+
+    // Bind your custom search input (#search) to the DataTables search API.
+    $('#search').on('keyup', function() {
+    table.search(this.value).draw();
+    });
+
+    // Update the hits counter (#streamtable-found) after each draw.
+    table.on('draw', function() {
+    var total = table.rows().count();
+    var filtered = table.rows({ filter: 'applied' }).count();
+    // Use your custom text formatting function inline.
+    var variantCountText = ( $('#search').val().trim().length > 0 ) ?
+                            filtered + " variant" + (filtered === 1 ? "" : "s") :
+                            total + " variant" + (total === 1 ? "" : "s");
+    $('#streamtable-found').text(variantCountText);
+    });
+});
 }
 
 

@@ -164,3 +164,8 @@
   background-color: #337ab7;
   color: white;
 }
+
+.dataTables_length select {
+  padding-right: 1.5em;
+  background: #fff;
+}
