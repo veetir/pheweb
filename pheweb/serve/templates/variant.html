@@ -87,24 +87,4 @@
     </table>
   </div>
 </div>
-
-
-<script type="text/template" id="streamtable-template">
-  <tr>
-    <td style="color:<%= d.color %>">
-      <%= d.category %>
-    </td>
-    <td><a style="color:black" href="{{ url_for('.pheno_page', phenocode='').rstrip('/') }}/<%= d.phenocode %>"><%= d.phenostring || d.phenocode %></a></td>
-    <td><%= (d.pval==0) ? '≤1e-320' : d.pval.toExponential(1) %></td>
-    <td><%= (d.beta!==undefined) ? d.beta.toPrecision(2) : "" %><%= (d.sebeta!==undefined) ? " ("+d.sebeta.toPrecision(2)+")" : "" %></td>
-    <td><% if (d.num_cases) { %>
-      <%= d.num_cases %> / <%= d.num_controls %>
-      <% } else if (d.num_samples) { %>
-      <%= d.num_samples %>
-      <% } %>
-    </td>
-
-  </tr>
-</script>
-
 {% endblock %}
