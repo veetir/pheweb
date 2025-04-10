@@ -1,61 +1,19 @@
 {% extends "layout.html" %}
-
 {% block navbar_left %}{% endblock %}
-
-{% block in_head %}
-<style type="text/css">
-  .navbar-default {
-    border: none;
-  }
-</style>
-<script type="text/javascript">
-$(function() { $('.typeahead').focus(); }); // autofocus attribute doesn't work in FF.
-</script>
-{% endblock %}
-
 {% block contained %}
 
 <br style="margin-top:2em">
-{% if current_user and not current_user.is_authenticated %}
-<div class="row">
-  <div class="col-xs-10 col-xs-offset-1">
-    <div class="jumbotron">
-      {% if not config['USE_WHITELIST'] %}
-      <p>Please register to view this data.</p>
-      <br>
-      <p><a class="btn-lg btn-primary" role="button" href="{{ url_for('.login_with_google') }}">Click here to register with a Google account</a></p>
-      {% else %}
-      <p>Please log in to view this data.</p>
-      <br>
-      <p><a class="btn-lg btn-primary" role="button" href="{{ url_for('.login_with_google') }}">Click here to log in with a Google account</a></p>
-      <br>
-      <p style="margin-bottom:0">
-        If your email address is on the list of allowed email addresses but is not connected to a Google account, please
-        <a href="https://accounts.google.com/SignUpWithoutGmail">create a Google account for it</a>.
-      </p>
-      {% endif %}
-    </div>
-  </div>
-</div>
-{% else %}
-<br style="margin-top: 3em">
-{% endif %}
-
-<!-- Centered "PheWeb" header -->
 <div class="row">
   <div class="col-xs-12">
     <h1 style="text-align: center; margin-bottom: 1em;">PheWeb</h1>
   </div>
 </div>
-
-<!-- Centered, narrower search bar -->
 <div class="row">
   <div class="col-xs-12">
     <div id="home-searchbox" style="margin: 0 auto; width: 30%;">
       <form action="{{ url_for('.go') }}">
          <fieldset>
             <div class="form-group" style="position: relative; width: 100%;">
-              <!-- Search icon moved to the left with a higher z-index -->
               <img src="{{ url_for('.static', filename='images/search.svg') }}" 
                    alt="Search" 
                    style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); height: 24px; width: 24px; cursor: pointer; z-index: 10;">
