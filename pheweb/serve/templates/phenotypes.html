@@ -6,7 +6,7 @@
 <script src="{{ url_for('.static', filename='phenotypes.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#stream_table').DataTable({
+  var table = $('#stream_table').DataTable({
     ajax: {
       url: window.model.urlprefix + "/api/phenotypes.json",
       dataSrc: ''
@@ -58,20 +58,28 @@ $(document).ready(function() {
         title: 'Nearest Gene(s)',
         render: function(data, type, row, meta) {
           var genes = data.split(",");
-          // Build links for each gene
           return genes.map(function(gene) {
-            return '<a style="color:black" href="' + window.model.urlprefix
-              + '/gene/' + gene + '?include=' +
-                   row.chrom + '-' + row.pos + '">' +
-                   '<i>' + gene + '</i>' +
-                   '</a>';
+            return '<a style="color:black" href="' + window.model.urlprefix +
+                   '/gene/' + gene + '?include=' + row.chrom + '-' + row.pos + '">' +
+                   '<i>' + gene + '</i></a>';
           }).join(', ');
         }
       }
     ],
     paging: true,
     searching: true,
-    info: true
+    info: true,
+    drawCallback: function(settings) {
+      var api = this.api();
+      var totalRows = api.rows().count();
+      var filteredRows = api.rows({ filter: 'applied' }).count();
+      var count = $.trim($('#search').val()) !== "" ? filteredRows : totalRows;
+      var text = count + " " + (count === 1 ? "hit" : "hits");
+      $('#streamtable-found').text(text);
+    }
+  });
+  $('#search').on('keyup', function() {
+      table.search(this.value).draw();
   });
 });
 </script>
