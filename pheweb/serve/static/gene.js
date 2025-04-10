@@ -1,34 +1,57 @@
 'use strict';
 
+
 function populate_streamtable(data) {
-    $(function() {
-        // data = _.sortBy(data, _.property('pval'));
-        var template = _.template($('#streamtable-template').html());
-        var view = function(p) {
-            return template({p: p});
-        };
-
-        var options = {
-            view: view,
-            search_box: false,
-            pagination: {
-                span: 5,
-                next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
-                prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
-                per_page_select: false,
-                per_page: 10
+    $(function () {
+      var table = $('#stream_table').DataTable({
+        data: data,
+        dom: 'lrtip',
+        paging: true,
+        searching: true,
+        info: false,
+        ordering: true,
+        columns: [
+          {
+            title: "Top p-value in gene",
+            data: "assoc.pval",
+            render: function (pval, type, row, meta) {
+              return (pval === 0)
+                ? '≤1e-320'
+                : parseFloat(pval).toExponential(1);
             }
+          },
+          {
+            title: "Phenotype",
+            data: null,
+            render: function (data, type, row, meta) {
+              var phenoData = data.pheno;
+              var label = phenoData.phenostring || phenoData.phenocode;
+              if (phenoData.phenocode === window.pheno.phenocode) {
+                return label;
+              } else {
+                var baseUrl = "{{ url_for('.region_page', phenocode='', region='').rstrip('/') }}";
+                var url = baseUrl + "/" + phenoData.phenocode + "/gene/" + window.gene_symbol;
+                return '<a style="color:black" href="' + url + '">' + label + '</a>';
+              }
+            }
+          }
+        ]
+      });
+
+      table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+        var rowData = this.data();
+        if (rowData.pheno.phenocode === window.pheno.phenocode) {
+          $(this.node()).css("background-color", "lightblue");
+        } else {
+          $(this.node())
+            .css("cursor", "pointer")
+            .on("click", function () {
+              var baseUrl = "{{ url_for('.region_page', phenocode='', region='').rstrip('/') }}";
+              var url = baseUrl + "/" + rowData.pheno.phenocode + "/gene/" + window.gene_symbol;
+              window.location = url;
+            });
         }
-
-        $("<style type='text/css'> .st_search { display: None }</style>").appendTo("head");
-
-        if (data.length <= 10) {
-            $("<style type='text/css'> .st_pagination { display: None }</style>").appendTo("head");
-            options.pagination.next_text = "";
-            options.pagination.prev_text = "";
-        }
-
-        $('#stream_table').stream_table(options, data);
+      });
     });
 }
 populate_streamtable(window.significant_phenos);
