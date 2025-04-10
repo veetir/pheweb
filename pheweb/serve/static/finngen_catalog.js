@@ -320,7 +320,6 @@ function updateEndpointLabel(endpointsList) {
 
 // Load endpoints from endpoints.csv and populate the dropdown.
 function loadEndpoints() {
-  console.log("loading endpoints csv");
   fetch(window.endpointsCsvUrl)
     .then(response => {
       if (!response.ok) {
