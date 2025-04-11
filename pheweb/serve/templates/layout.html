@@ -98,12 +98,17 @@
     <footer class="footer py-3 bg-light">
       <div class="container text-center">
         <small class="text-muted">
-          <a href="https://github.com/veetir/pheweb/" target="_blank" class="text-muted" style="text-decoration: none;">
+          <a href="https://github.com/veetir/pheweb/" 
+             target="_blank" 
+             class="text-muted" 
+             style="text-decoration: none;"
+             data-bs-toggle="tooltip" 
+             data-bs-placement="top" 
+             title="PheWeb GRCh{{ config.GRCH_BUILD_NUMBER }}">
             <i class="bi bi-github" style="font-size: 1rem;"></i>
-          </a>&nbsp;&middot;&nbsp;
-          All positions are on GRCh{{ config.GRCH_BUILD_NUMBER }}
+          </a>
         </small>
       </div>
-    </footer>     
+    </footer>       
   </body>
 </html>
