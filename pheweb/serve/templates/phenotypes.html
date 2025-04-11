@@ -6,6 +6,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
   var table = $('#stream_table').DataTable({
+    dom: 'lrtip',
     ajax: {
       url: window.model.urlprefix + "/api/phenotypes.json",
       dataSrc: ''
@@ -67,7 +68,7 @@ $(document).ready(function() {
     ],
     order: [[5, 'asc']],
     paging: true,
-    searching: false,
+    searching: true,
     info: true,
     drawCallback: function(settings) {
       var api = this.api();
