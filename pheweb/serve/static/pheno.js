@@ -661,9 +661,14 @@ function populate_streamtable(variants) {
             // Nearest Gene(s) column – italicized formatting.
             data: 'nearest_genes',
             title: 'Nearest Gene(s)',
-            render: function (data, type, row, meta) {
-              return '<i>' + data.replace(/,/g, ', ') + '</i>';
-            }
+            render: function(data, type, row, meta) {
+                var genes = data.split(",");
+                return genes.map(function(gene) {
+                  return '<a style="color:black" href="' + window.model.urlprefix +
+                         '/gene/' + gene + '?include=' + row.chrom + '-' + row.pos + '">' +
+                         '<i>' + gene + '</i></a>';
+                }).join(', ');
+              }
           },
           {
             // MAF column – use maf, af, or ac as available.
