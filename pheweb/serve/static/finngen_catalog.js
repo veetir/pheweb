@@ -240,7 +240,6 @@ function renderFinnGenPlot() {
 }
 
 // Create or update the FinnGen, Risteys, & Endpoint Browser results buttons.
-// Create or update the FinnGen, Risteys, & Endpoint Browser results buttons.
 function updateFinnGenButton() {
   var endpointSelect = document.getElementById('endpoint-select');
   if (!endpointSelect) return;
@@ -289,6 +288,7 @@ function updateFinnGenButton() {
   finngenBtn.className = "btn";
   finngenBtn.href = finngenUrl;
   finngenBtn.textContent = "FinnGen";
+  finngenBtn.title = "View in FinnGen PheWeb";
   finngenBtn.target = "_blank";
   btnContainer.appendChild(finngenBtn);
   
@@ -298,6 +298,7 @@ function updateFinnGenButton() {
   risteysBtn.className = "btn";
   risteysBtn.href = risteysUrl;
   risteysBtn.textContent = "Risteys";
+  risteysBtn.title = "View endpoint definition in Risteys";
   risteysBtn.target = "_blank";
   risteysBtn.style.marginLeft = "10px";
   btnContainer.appendChild(risteysBtn);
@@ -308,6 +309,7 @@ function updateFinnGenButton() {
   browserBtn.className = "btn";
   browserBtn.href = endpointBrowserUrl;
   browserBtn.textContent = "Endpoint Browser";
+  browserBtn.title = "Explore Endpoint connections";
   browserBtn.target = "_blank";
   browserBtn.style.marginLeft = "10px";
   btnContainer.appendChild(browserBtn);
