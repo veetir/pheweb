@@ -239,29 +239,33 @@ function renderFinnGenPlot() {
     });
 }
 
-// Create or update the FinnGen & Risteys results button.
+// Create or update the FinnGen, Risteys, & Endpoint Browser results buttons.
+// Create or update the FinnGen, Risteys, & Endpoint Browser results buttons.
 function updateFinnGenButton() {
   var endpointSelect = document.getElementById('endpoint-select');
   if (!endpointSelect) return;
   var selectedEndpoint = endpointSelect.value;
   
   // Build the URLs using the selected endpoint.
-  var finngenUrl = (selectedEndpoint && selectedEndpoint.trim() !== "") 
+  var finngenUrl = (selectedEndpoint && selectedEndpoint.trim() !== "")
     ? "https://results.finngen.fi/pheno/" + selectedEndpoint 
     : "https://results.finngen.fi/";
-  var risteysUrl = (selectedEndpoint && selectedEndpoint.trim() !== "") 
+  var risteysUrl = (selectedEndpoint && selectedEndpoint.trim() !== "")
     ? "https://risteys.finngen.fi/endpoints/" + selectedEndpoint 
     : "https://risteys.finngen.fi/";
-  
+  var endpointBrowserUrl = (selectedEndpoint && selectedEndpoint.trim() !== "")
+    ? "https://geneviz.aalto.fi/endpoint_browser_2.0/?view=network&data=" + selectedEndpoint 
+    : "https://geneviz.aalto.fi/endpoint_browser_2.0/";
+
   // Construct the common text.
-  var commonText = (selectedEndpoint && selectedEndpoint.trim() !== "") 
+  var commonText = (selectedEndpoint && selectedEndpoint.trim() !== "")
     ? "View " + selectedEndpoint + " in:" 
     : "";
 
   // Get the container element where the plot is rendered.
   var container = document.getElementById("finngen-gwas-catalog");
 
-  // Create or update a container for the common text and both buttons.
+  // Create or update a container for the common text and buttons.
   var btnContainer = document.getElementById("finngen-buttons");
   if (!btnContainer) {
     btnContainer = document.createElement("div");
@@ -295,9 +299,18 @@ function updateFinnGenButton() {
   risteysBtn.href = risteysUrl;
   risteysBtn.textContent = "Risteys";
   risteysBtn.target = "_blank";
-  // Add left margin for spacing.
   risteysBtn.style.marginLeft = "10px";
   btnContainer.appendChild(risteysBtn);
+
+  // Create the Endpoint Browser button.
+  var browserBtn = document.createElement("a");
+  browserBtn.id = "endpoint-browser-link";
+  browserBtn.className = "btn";
+  browserBtn.href = endpointBrowserUrl;
+  browserBtn.textContent = "Endpoint Browser";
+  browserBtn.target = "_blank";
+  browserBtn.style.marginLeft = "10px";
+  btnContainer.appendChild(browserBtn);
 }
 
 function updateEndpointLabel(endpointsList) {
