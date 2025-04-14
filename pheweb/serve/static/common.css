@@ -188,3 +188,7 @@
 #phewas_plot_container {
   min-width: 700px;
 }
+.phenocode {
+  color: #666;
+  margin-top: 0.5rem;
+}

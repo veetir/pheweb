@@ -1,1 +1,6 @@
-{{ pheno['phenocode'] }}
+{% if pheno.phenostring %}
+  <h1>{{ pheno.phenostring }}</h1>
+  <p class="phenocode">{{ pheno.phenocode }}</p>
+{% else %}
+  <h1>{{ pheno.phenocode }}</h1>
+{% endif %}
