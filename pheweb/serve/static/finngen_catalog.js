@@ -335,29 +335,43 @@ function updateEndpointLabel(endpointsList) {
 
 // Load endpoints from endpoints.csv and populate the dropdown.
 function loadEndpoints() {
-  fetch(window.endpointsCsvUrl)
+  fetch(window.endpointsTsvUrl)
     .then(response => {
       if (!response.ok) {
-        throw new Error("Error fetching endpoints.csv: " + response.status);
+        throw new Error("Error fetching endpoints.tsv: " + response.status);
       }
       return response.text();
     })
-    .then(csvText => {
+    .then(tsvText => {
       let endpoints = [];
-      let lines = csvText.split('\n');
-      // Remove header if present.
-      if (lines.length && lines[0].toLowerCase().includes("endpoint")) {
-        lines.shift();
+      let lines = tsvText.trim().split('\n');
+      
+      if (lines.length === 0) {
+        throw new Error("TSV file is empty");
       }
-      lines.forEach(line => {
-        let trimmed = line.trim();
-        if (trimmed !== "") endpoints.push(trimmed);
-      });
+
+      // Parse the header to find the 'endpoint' column index
+      const headers = lines[0].split('\t');
+      const endpointIndex = headers.findIndex(h => h.trim().toLowerCase() === 'endpoint');
+
+      if (endpointIndex === -1) {
+        throw new Error("No 'endpoint' column found in TSV.");
+      }
+
+      // Process each line to extract the 'endpoint' value
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].split('\t');
+        if (row.length > endpointIndex) {
+          const endpoint = row[endpointIndex].trim();
+          if (endpoint !== "") endpoints.push(endpoint);
+        }
+      }
+
       window.allEndpoints = endpoints;
-    
+
       // Update the label to show the total count of endpoints.
       updateEndpointLabel(endpoints);
-    
+
       let select = document.getElementById('endpoint-select');
       if (select) {
         endpoints.forEach(ep => {

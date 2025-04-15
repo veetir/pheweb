@@ -1,0 +1,2471 @@
+phenotype	endpoint
+Height, inverse-rank normalized	HEIGHT_IRN
+Weight, inverse-rank normalized	WEIGHT_IRN
+Body-mass index, inverse-rank normalized	BMI_IRN
+Hypertension	I9_HYPTENS
+Type 2 diabetes, definitions combined	T2D
+Diabetes, insulin treatment (Kela reimbursement) (more control exclusions)	KELA_DIAB_INSUL_EXMORE
+Hypertension, essential	I9_HYPTENSESS
+Antihypertensive medication - note that there are other indications	RX_ANTIHYP
+Statin medication	RX_STATIN
+Type 2 diabetes, wide definition	T2D_WIDE
+Varicose veins	I9_VARICVE
+Hypothyroidism, strict autoimmune	E4_HYTHY_AI_STRICT
+Diseases of veins, lymphatic vessels and lymph nodes, not elsewhere classified	I9_DISVEINLYMPH
+Autoimmune diseases	AUTOIMMUNE
+Disorders of the thyroid gland	E4_THYROID
+Atrial fibrillation and flutter	I9_AF
+Atrial fibrillation and flutter with reimbursement	I9_AF_REIMB
+Coronary revascularization (ANGIO or CABG)	I9_REVASC
+Coronary atherosclerosis	I9_CORATHER
+Leiomyoma of uterus	CD2_BENIGN_LEIOMYOMA_UTERI
+Ischaemic heart disease, wide definition	I9_IHD
+Asthma/COPD (KELA code 203)	J10_ASTHMACOPDKELA
+Malignant neoplasm of prostate, excluding all cancers (controls excluding all cancers)	C3_PROSTATE_EXALLC
+Gonarthrosis	M13_ARTHROSIS_KNEE
+Arthrosis	M13_ARTHROSIS
+Artrosis, including avohilmo	M13_ARTHROSIS_INCLAVO
+Cardiovascular diseases (excluding rheumatic etc)	FG_CVD
+Cardiac arrhythmias	CARDIAC_ARRHYTM
+Inguinal hernia	K11_HERING
+Malignant neoplasm of skin, excluding all cancers (controls excluding all cancers)	C3_SKIN_EXALLC
+Basal cell carcinoma, excluding all cancers (controls excluding all cancers)	C3_BASAL_CELL_CARCINOMA_EXALLC
+Glaucoma	H7_GLAUCOMA
+Basal cell carcinoma, including avohilmo, excluding all cancers (controls excluding all cancers)	C3_BASAL_CELL_CARCINOMA_INCLAVO_EXALLC
+Cholelithiasis	K11_CHOLELITH
+Chronic lower respiratory diseases	J10_LOWCHRON
+Diverticular disease of intestine	K11_DIVERTIC
+Hernia	K11_HERNIA
+Major coronary heart disease event	I9_CHD
+Angina pectoris	I9_ANGINA
+Asthma (more control exclusions)	J10_ASTHMA_EXMORE
+Coronary artery bypass grafting	I9_CABG
+Other malignant neoplasms of skin (=non-melanoma skin cancer), excluding all cancers (controls excluding all cancers)	C3_OTHER_SKIN_EXALLC
+Malignant neoplasm of breast, excluding all cancers (controls excluding all cancers)	C3_BREAST_EXALLC
+Atopic dermatitis	L12_ATOPIC
+Chronic diseases of tonsils and adenoids	J10_CHRONTONSADEN
+Ever smoker	EVER_SMOKER
+Current smoker	CURRENT_SMOKER
+Inflammatory bowel disease, strict (require KELA)	K11_IBD_STRICT
+Disorders of lipoprotein metabolism and other lipidaemias	E4_LIPOPROT
+Gonarthrosis, primary, with knee surgery	M13_ARTHROSIS_KNEE_PRIM_KNEESURG
+Autoimmune diseases excluding thyroid diseases	AUTOIMMUNE_NONTHYROID
+Pain (limb, back, neck, head abdominally)	PAIN
+Asthma (only as main-diagnosis) (more control exclusions)	J10_ASTHMA_MAIN_EXMORE
+Depression or dysthymia	F5_DEPRESSION_DYSTHYMIA
+Malignant neoplasm, excluding all cancers (controls excluding all cancers)	C3_CANCER_EXALLC
+Venous thromboembolism	I9_VTE
+Myocardial infarction, strict	I9_MI_STRICT
+Cholecystectomy	K11_CHOLECYSTECTOMY
+Other heart diseases	FG_OTHHEART
+Coxarthrosis	M13_ARTHTROSIS_COX
+Primary open-angle glaucoma, strict	H7_GLAUCOMA_POAG
+Hard cardiovascular diseases	I9_CVD_HARD
+Hallux valgus (acquired)	M13_HALLUXVALGUS
+Depression medications	ANTIDEPRESSANTS
+Primary gonarthrosis, bilateral	PRIM_KNEEARTHROSIS
+Obesity	E4_OBESITY
+Dermatitis and eczema	L12_DERMATITISECZEMA
+Carpal tunnel syndrome	G6_CARPTU
+Coxarthrosis, primary, with hip surgery	M13_ARTHTROSIS_COX_PRIM_HIPSURG
+Nontoxic goitre/thyroid nodule	E4_NONTOXIC_THYROID
+Malignant neoplasm of breast, ER-positive, excluding all cancers (controls excluding all cancers)	C3_BREAST_ERPLUS_EXALLC
+Dorsopathies	M13_DORSOPATHY
+Arthropathies	M13_ARTHROPATHIES
+Pure hypercholesterolaemia	E4_HYPERCHOL
+Coxarthrosis, primary	M13_ARTHTROSIS_COX_PRIM_ICD10
+Hyperplasia of prostate	N14_PROSTHYPERPLA
+First line medication for Crohn's disease	RX_CROHN_1STLINE
+Reimbursement for rheumatic diseases	K11_REIMB_202
+Nontoxic multinodular goitre	E4_GOITREMULTINOD
+Other diseases of upper respiratory tract	J10_UPPERDIS
+Other dorsopathies, not elsewhere classified	M13_DORSOPATHYOTH
+Migraine, single triptan purchase ok & required. ICD-code if available is included	MIGRAINE_TRIPTAN
+Coronary angioplasty	I9_ANGIO
+Senile cataract	H7_CATARACTSENILE
+Other intervertebral disc disorders	M13_INTERVERTEB
+Hypothyroidism, drug reimbursement	HYPOTHY_REIMB
+Metabolic disorders	E4_METABOLIA
+Spondylopathies	M13_SPONDYLOPATHY
+Noninfective enteritis and colitis	K11_ENERCOLNONINF
+Spinal stenosis	M13_SPINSTENOSIS
+Psoriasis	L12_PSORIASIS
+Palmar fascial fibromatosis [Dupuytren]	M13_DUPUTRYEN
+Ulcerative colitis (strict definition, require KELA, min 2 HDR)	K11_UC_STRICT2
+Nasal polyp	J10_NASALPOLYP
+Other disorders of veins	I9_VEINSOTH
+Hypertrophic cardiomyopathy	I9_HYPERTROCARDMYOP
+Hereditary retinal dystrophy	H7_HEREDRETINADYST
+Myotonic disorders	G6_MYOTDIS
+Any mental disorder	KRA_PSY_ANYMENTAL
+Muscular dystrophy	G6_MUSDYST
+Other coagulation defects	D3_COAGOTHER
+Second line medication for Crohn's disease	RX_CROHN_2NDLINE
+Seropositive rheumatoid arthritis, wide	RHEUMA_SEROPOS_WIDE
+Mucosal proctocolitis	MUCOPROCT
+Papulosquamous disorders	L12_PAPULOSQUAMOUS
+Glaucoma suspect	H7_GLAUCSUSP
+Sleep apnoea, including avohilmo	G6_SLEEPAPNO_INCLAVO
+Sleep apnoea	G6_SLEEPAPNO
+Tonsillectomy and adenotomy	J10_TONSILLECTOMY
+DVT of lower extremities	I9_PHLETHROMBDVTLOW
+Use of hypnotics and sedatives	RX_N05C
+Cardiomyopathy	I9_CARDMYO
+Age-related macular degeneration (whether dry or wet)	H7_AMD
+Thyrotoxicosis with diffuse goitre	E4_THYTOXGOITDIF
+Other and unspecified coagulation defects	D3_COAGDEFNAS
+Actinic keratosis	L12_ACTINKERA
+Sensorineural hearing loss	H8_HL_SEN_NAS
+Fracture of forearm	ST19_FRACT_FOREA
+Rheumatoid arthritis	M13_RHEUMA
+Fibroblastic disorders	M13_FIBROBLASTIC
+Unspecific neurodegenerative disorder	G6_NEURODEGENERATIVE
+Depression	F5_DEPRESSIO
+Dementia, including avohilmo	F5_DEMENTIA_INCLAVO
+Dementia	F5_DEMENTIA
+Polyarthropathies	M13_POLYARTHROPATHIES
+Diseases of the myoneural junction and muscle	G6_MYONEU
+Thyrotoxicosis	THYROTOXICOSIS
+Other joint disorders	M13_OTHERJOINT
+Otosclerosis	H8_OTOSCLE
+Hernia of abdominal wall	ABDOM_HERNIA
+Diseases of arteries, arterioles and capillaries (FINNGEN)	FG_DOAAC
+Obesity due to excess calories	E4_OBESITYCAL
+Endometriosis of ovary	N14_ENDOMETRIOSIS_OVARY
+Any dementia (more control exclusions)	KRA_PSY_DEMENTIA_EXMORE
+Cardiomyopathy, Hypertrophic obstructive	I9_CARDMYOHYP
+Cardiomyopathy (excluding other)	FG_CARDMYO
+Mood [affective] disorders	F5_MOOD
+Endometriosis	N14_ENDOMETRIOSIS
+Psoriasis vulgaris	L12_PSORI_VULG
+Umbilical hernia	K11_UMBHER
+Other disorders of ear	H8_OTHEREAR
+Unstable angina pectoris	I9_UAP
+Calcific aortic valvular stenosis, operated	I9_CAVS_OPERATED
+Asthma-related infections	ASTHMA_INFECTIONS
+Allergic asthma (mode)	ALLERG_ASTHMA
+Codeine or tramadol medication	RX_CODEINE_TRAMADOL
+Excessive, frequent and irregular menstruation	N14_MESNRUIRREG
+Ulcerative colitis, NAS	ULCERNAS
+Paracetamol of NSAID medication	RX_PARACETAMOL_NSAID
+Endometriosis ASRM stages 3,4	N14_ENDOMETRIOSIS_ASRM_STAGE3_4
+Myeloproliferative diseases (CML excluded)	MYELOPROF_NONCML
+Dorsalgia	M13_DORSALGIA
+Wet age-related macular degeneration	WET_AMD
+Pregnancy hypertension	O15_HYPTENSPREG
+Sleep disorders (combined)	SLEEP
+Soft tissue disorders	M13_SOFTTISSUE
+Lumbar disc prolapse	M13_LUMBAR_PROLAPSE
+COPD	J10_COPD
+Episodal and paroxysmal disorders	G6_EPIPAROX
+Alzheimer’s disease, wide definition	G6_AD_WIDE
+Intrahepatic Cholestasis of Pregnancy (ICP) , incl. ICD-8 (more control exclusions)	O15_ICP_WIDE_EXMORE
+Hypertrophy of breast	N14_HYPERTROPHYBREAST
+Atherosclerosis, excluding cerebral and coronary sclerosis	I9_ATHSCLE
+Aortic aneurysm	I9_AORTANEUR
+Gestational diabetes (for exclusion)	GEST_DIABETES
+Type 1 diabetes, definitions combined	T1D
+Intrahepatic Cholestasis of Pregnancy (ICP) , incl. ICD-8	O15_ICP_WIDE
+Anxiety disorders (more control exclusions)	KRA_PSY_ANXIETY_EXMORE
+Pulmonary embolism	I9_PULMEMB
+Systemic atrophies primarily affecting the central nervous system	G6_NEUATR
+Alzheimer disease	G6_ALZHEIMER
+Obesity, other/unspecified	E4_OBESITYNAS
+Familial hypercholesterolemia	E4_FH
+Dry age-related macular degeneration (includes geographic atrophy)	DRY_AMD
+Asthma-related acute respiratory infections	ASTHMA_ACUTE_RESPIRATORY_INFECTIONS
+Menorrhagia	N14_MENORRHAGIA
+Diseases of male genital organs	N14_MALEGEN
+Calculus of kidney and ureter	N14_CALCUKIDUR
+Other arrhythmias	I9_OTHARR
+Degeneration of macula and posterior pole	H7_MACULADEGEN
+Hereditary deficiency of other clotting factors	D3_HEREDOTHCLOFACTORS
+Benign neoplasm of colon, rectum, anus and anal canal	CD2_BENIGN_COLORECANI
+Asthma, unspecified (mode)	ASTHMA_NAS
+Childhood asthma (age<16) (more control exclusions)	ASTHMA_CHILD_EXMORE
+Intrahepatic Cholestasis of Pregnancy (ICP)  (more control exclusions)	O15_ICP_EXMORE
+Female genital prolapse	N14_FEMGENPROL
+Other cataract	H7_CATARACTOTHER
+Procreative management	Z21_PROCREATIVE_MANAG
+Congenital malformations of gallbladder, bile ducts and liver	Q17_CONGEN_MALFO_GALLB_BILE_DUCTS_LIVER
+Hypertrophy of breast in women and men	N14_HYPERTROPHYBREAST_BOTH
+Coeliac disease	K11_COELIAC
+Phlebitis and thrombophlebitis (not including DVT)	I9_PHLETHROM
+Coagulation defects, purpura and other haemorrhagic conditions	D3_COAGDEF_PURPUR_HAEMORRHAGIC
+Spondylopathies (FG)	SPONDYLOPATHY_FG
+Ankylosing spondylitis	M13_ANKYLOSPON
+Substance abuse (more control exclusions)	KRA_PSY_SUBSTANCE_EXMORE
+Allergic conjunctivitis	H7_ALLERGICCONJUNCTIVITIS
+Sarcoidosis	D3_SARCOIDOSIS
+Autoimmune hyperthyroidism	AUTOIMMUNE_HYPERTHYROIDISM
+Gout	M13_GOUT
+Chronic Coagulation defects	D3_COAGDEF
+Suggestive for eosinophilic asthma	ASTHMA_EOSINOPHIL_SUGG
+Seropositive rheumatoid arthritis, strict definition	RHEUMA_SEROPOS_STRICT
+Cystic kidney disease	Q17_CYSTIC_KIDNEY_DISEA
+Shoulder lesions	M13_SHOULDER
+Chronic sinusitis	J10_CHRONSINUSITIS
+Thoracic aortic aneurysm	I9_THAORTANEUR
+Hereditary corneal dystrophies	H7_KERATOCONUS
+Graves disease, strict definition	E4_GRAVES_STRICT
+Papillary adenocarcinoma of thyroid gland, excluding all cancers (controls excluding all cancers)	C3_THYROID_PAPILLARY_ADENO_EXALLC
+Malignant neoplasm of thyroid gland, excluding all cancers (controls excluding all cancers)	C3_THYROID_GLAND_EXALLC
+Malignant melanoma of skin, excluding all cancers (controls excluding all cancers)	C3_MELANOMA_SKIN_EXALLC
+Nerve, nerve root and plexus disorders	G6_NERPLEX
+Other and unspecified primary disorders of muscles	G6_MUSCOTHUNS
+Recurrent or chronic depression	F5_DEPRESSION_RECURRENT
+Hyperlipidaemia, other/unspecified	E4_HYPERLIPNAS
+Malignant melanoma, excluding all cancers (controls excluding all cancers)	C3_MELANOMA_EXALLC
+Colorectal cancer, excluding all cancers (controls excluding all cancers)	C3_COLORECTAL_EXALLC
+Allergic rhinitis	ALLERG_RHINITIS
+Spondyloarthritis	SPONDYLOARTHRITIS
+Other soft tissue disorders, not elsewhere classified	M13_SOFTTISSUEOTH
+Heart failure and coronary heart disease	I9_HEARTFAIL_AND_CHD
+Other and unspecified spinal muscular atrophies	G6_SPINAMUSCOTH
+Benign neoplasm: Colon	CD2_BENIGN_COLON
+Alzheimer’s disease (Late onset) (more control exclusions)	AD_LO_EXMORE
+Type1 diabetes, definitions combined, early onset	T1D_EARLY
+Primary coxarthrosis, bilateral	PRIM_COXARTHROSIS
+Polycythaemia vera	POLYCYTVERA
+Other diseases of intestines	K11_INTESTOTH
+Acute appendicitis	K11_APPENDACUT
+Anterior Iridocyclitis	H7_IRIDOCYC_ANTER
+Acute and subacute iridocyclitis	H7_IRIDOACUTE
+Other disorders of cornea	H7_CORNEALOTH
+STROKE	C_STROKE
+Colorectal adenocarcinoma, excluding all cancers (controls excluding all cancers)	C3_COLORECTAL_ADENO_EXALLC
+Malignant neoplasm of breast, ER-negative, excluding all cancers (controls excluding all cancers)	C3_BREAST_ERNEG_EXALLC
+Asthma and allergy	ASTHMA_ALLERG
+Ovarian cyst	N14_OVARYCYST
+Other arthrosis	M13_ARTHROSIS_OTH
+Other retinal disorders	H7_RETINALDISOTH
+Iridocyclitis	H7_IRIDOCYCLITIS
+Gout, strict definition	GOUT_STRICT
+Essential (haemorrhagic) thrombocythaemia	THROMBOCYTAEMIA
+Spondylosis	M13_SPONDYLOSIS
+Ankylosing spondylitis, strict definition	M13_ANKYLOSPON_STRICT
+Cardiomyopathy, other and unspecified	I9_CARDMYOOTH
+Disorders of sclera, cornea, iris and ciliary body	H7_SCLERACORNEA
+Dementia in Alzheimer disease	F5_ALZHDEMENT
+Endometriosis of pelvic peritoneum	N14_ENDOMETRIOSIS_PELVICPERITONEUM
+Disorders of breast	N14_BREAST
+Systemic connective tissue disorders	M13_SYSTCONNECT
+Heart failure and hypertrophic cardiomyopathy	I9_HEARTFAIL_AND_HYPERTCARDIOM
+Keratitis	H7_KERATITIS
+Migraine	G6_MIGRAINE
+Motor neuron disease	G6_ALS
+Amyloidosis, other/unspecified	E4_AMYLNAS
+Other and unspecified iron deficiency	D3_ANAEMIA_IRONDEF_NAS
+Primary_lymphoid and hematopoietic malignant neoplasms (controls excluding all cancers)	CD2_PRIMARY_LYMPHOID_HEMATOPOIETIC_EXALLC
+Ulcerative rectosigmoiditis	ULCERRECT
+Gestational [pregnancy-induced] hypertension	O15_GESTAT_HYPERT
+Lower back pain or/and sciatica	M13_LOWBACKPAINORANDSCIATICA
+Peritonsillar abscess	J10_PERITONSABSC
+Glaucoma, exfoliation	H7_GLAUCOMA_XFG
+Iron deficiency anaemia	D3_ANAEMIA_IRONDEF
+Other Crohn's disease	CHRONOTH
+Biological medication for rheuma	RX_RHEUMA_BIOLOGICAL
+Sciatica+with lumbago	M13_SCIATICA
+Other diseases of liver	K11_DISLIVOTH
+Other embolism and thrombosis	I9_THROMBOTH
+Paroxysmal tachycardia	I9_PAROXTAC
+Hypertensive Heart Disease	I9_HYPTENSHD
+Diseases of middle ear and mastoid	H8_MIDDLEMASTOID
+Disorders of parathyroid gland	E4_PARATHYRO
+Hyperparathyroidism	E4_HYPERPARA
+Certain disorders involving the immune mechanism	D3_IMMUNEMECHANISM
+Crohn's disease NAS	CHRONNAS
+Asthma-related pneumonia	ASTHMA_PNEUMONIA
+Other congenital malformations of the digestive system	Q17_OTHER_CONGEN_MALFO_DIGES_SYSTEM1
+Congenital malformations of the urinary system	Q17_CONGEN_MALFO_URINARY_SYSTEM
+Heart failure, strict	I9_HEARTFAIL
+Disorders of choroid and retina	H7_CHOROIDRETINA
+Gout, unspecified	GOUT_NOS
+Thyrotoxicosis with toxic multinodular goitre	E4_THYTOXGOITMULT
+Lymphoid leukaemia (controls excluding all cancers)	CD2_LYMPHOID_LEUKAEMIA_EXALLC
+Malignant neoplasm of urinary organs, excluding all cancers (controls excluding all cancers)	C3_URINARY_TRACT_EXALLC
+Malignant neoplasm of kidney, except renal pelvis, excluding all cancers (controls excluding all cancers)	C3_KIDNEY_NOTRENALPELVIS_EXALLC
+Malignant neoplasm of colon, excluding all cancers (controls excluding all cancers)	C3_COLON_EXALLC
+Psoriatic arthropathies	M13_PSORIARTH
+Follicular cysts of skin and subcutaneous tissue	L12_FOLLICULARCYST
+Dermatitis	L12_DERMATITISNAS
+Lichen ruber planus, wide definition including periferal and oral lichen planus	K11_LICHEN_PLANUS_WIDE
+Diaphragmatic hernia	K11_DIAHER
+Normotensive glaucoma	H7_GLAUCOMA_NTG
+MS-disease / Multiple Sclerosis	G6_MS
+Falls/tendency to fall	FALLS
+Familial hypercholesterolemia, with ischemic heart disease	E4_FH_IHD
+Benign leiomyoma with endometriosis (controls excluding all cancers)	CD2_LEIOMYOMA_ENDOMETRIOSIS_EXALLC
+Colon adenocarcinoma, excluding all cancers (controls excluding all cancers)	C3_COLON_ADENO_EXALLC
+Alcohol use disorder, Swedish definition	AUD_SWEDISH
+Cleft palate	Q17_CLEFT_PALATE
+Other disorders of urethra and urinary system	N14_URETHRAOTH
+Deep endometriosis	N14_ENDOMETRIOSIS_DEEP
+Diseases of liver	K11_LIVER
+Crohn disease (strict definition, require KELA, min 2 HDR)	K11_CD_STRICT2
+Interstitial lung disease endpoints	ILD_ENDPOINTS
+Valvular heart disease excluding rheumatic fever	I9_VHD
+Polycystic ovarian syndrome, broad definition	E4_PCOS_BROAD
+Other and/or unspecified nontoxic goitre	E4_GOITRENAS
+Vitamin B12 deficiency anaemia	D3_ANAEMIA_B12_DEF
+Childhood allergy (age < 16)	CHILDHOOD_ALLERGY
+Squamous cell neoplasms and carcinomas of the skin, excluding all cancers (controls excluding all cancers)	C3_SQUOMOUS_CELL_CARCINOMA_SKIN_EXALLC
+Obesity related asthma	ASTHMA_OBESITY
+SLE (Finngen)	SLE_FG
+COPD/asthma/ILD related infections	PULM_INFECTIONS
+Other degenerative diseases of the nervous system	NEURODEGOTH
+Low back pain	M13_LOWBACKPAIN
+Haemorrhoids and perianal venous thrombosis	K11_HAEMORR
+Idiopathic pulmonary fibrosis	IPF
+All anxiety disorders	F5_ALLANXIOUS
+Benign neoplasm: Cerebral meninges	CD2_BENIGN_MENINGES_CEREBRAL
+Benign neoplasm of meninges	CD2_BENIGN_MENINGES
+Acute appendicitis, no complications	APPENDACUT_NOCOMPLIC
+Other ulcerative colitis	ULCEROTH
+Other (seronegative) rheumatoid arthritis, wide	RHEUMA_OTHER_WIDE
+Cleft lip, lip and palate or palate	Q17_CLEFT_LIP_CLEFT_PALATE
+Noninflammatory disorders of female genital tract	N14_FEMALEGENNONINF
+Meniscus derangement	M13_MENISCUSDERANGEMENTS
+Pain in limb	M13_LIMBPAIN
+Adhesive capsulitis of shoulder	M13_ADHCAPSULITIS
+Ventral hernia	K11_VENTHER
+Nonsuppurative otitis media	H8_NONSUPPNAS
+Disorders of vitreous body	H7_VITRBODYGLOBE
+Use of antiglaucoma preparations and miotics	H7_GLAUCOMAMEDICATION
+Corneal ulcer	H7_CORNULCER
+Conjunctivitis	H7_CONJUNCTIVITIS
+Blepharochalasis	H7_BLEPHAROCHALASIS
+Disorders of iron metabolism	E4_IRON_MET
+Anaemias	D3_ANAEMIA
+Crohn's disease of small intestine	CHRONSMALL
+Carcinoma in situ of breast, intraductal (controls excluding all cancers)	CD2_INSITU_BREAST_INTRADUCTAL_EXALLC
+Malignant neoplasm of bladder, excluding all cancers (controls excluding all cancers)	C3_BLADDER_EXALLC
+Other diseases of urinary system	N14_URINOTH
+Rotator cuff syndrome	M13_ROTATORCUFF
+Osteoporosis	M13_OSTEOPOROSIS
+Pain in joint	JOINTPAIN
+Aneurysms, operations, SAH	I9_SAHANEUR
+Hereditary motor and sensory neuropathy	G6_HEREMOSEN
+Benign neoplasm of ovary	CD2_BENIGN_OVARY
+Chronic lymphocytic leukaemia and small lyphocytis leukaemia, excluding all cancers (controls excluding all cancers)	C3_CLL_EXALLC
+Erysipelas	AB1_ERYSIPELAS
+Other congenital malformations of skin	Q17_OTHER_CONGEN_MALFO_SKIN
+Other congenital malformations	Q17_OTHER_CONGEN_MALFO
+Neurofibromatosis, type 2	Q17_NEUROFIBROMATOSIS_2
+Congenital retinoschisis	Q17_CONGEN_MALFO_RETI
+Congenital malformations of ovaries, fallopian tubes and broad ligaments	Q17_CONGEN_MALFO_OVARIES_FALLOP_TUBES_BROAD_LIGAM
+Cleft hard palate NOS	Q17_CLEFT_HARD_PALATE_NOS
+Cervical disc disorders	M13_CERVICDISC
+Seborrhoeic keratosis	L12_SEBORRKERAT
+Other and unspecified psoriasis	L12_PSORI_NAS
+Disorders of skin appendages	L12_DISORDSKINAPPENDIX
+Tooth agenesis EXCLUDE clefts and syndromes	K11_HYPO_ONLY
+Acute pancreatitis	K11_ACUTPANC
+Abdominal aortic aneurysm (AAA)	I9_ABAORTANEUR
+Other and unspecified myopathies	G6_MYOPOTHUNS
+Disorder of lipoprotein metabolism, unspecified	E4_LIPOPROTNAS
+Crohn's disease of large intestine	CHRONLARGE
+Melanocytic naevi	CD2_BENIGN_MELANOCYTIC
+Alcohol-induced chronic pancreatitis	ALCOPANCCHRON
+Ulcerative proctitis	ULCERPROCT
+Seronegative rheumatoid arthritis	RHEUMA_SERONEG
+Pollen allergy	POLLENALLERG
+Other systemic involvement of connective tissue (FG)	OTHER_SYSTCON_FG
+Endometriosis diagnosis and infertility diagnosis occurring together	N14_ENDOMET_INFERT
+Trigger finger	M13_TRIGGERFINGER
+Sacroiliitis, not elsewhere classified	M13_SACROILIITIS
+Hypertrophic scar	L12_HYPETROPHICSCAR
+Diseases of the digestive system	K11_OTHDIG
+Acute upper respiratory infections	J10_UPPERINFEC
+Heart failure and bmi 25plus	I9_HEARTFAIL_AND_OVERWEIGHT
+Retinal detachments and breaks	H7_RETINALDETACH
+Other disorders of eyelid	H7_EYELIDDIS
+Normal-pressure hydrocephalus	G6_HCNP
+Unspecified dementia	F5_DEMNAS
+Postprocedural endocrine and metabolic disorders, not elsewhere classified	E4_ENDOMETPOSTOP
+Diabetic retinopathy (more control exclusions)	DM_RETINOPATHY_EXMORE
+Diabetic retinopathy	DM_RETINOPATHY
+Other and unspecified anaemias	D3_ANAEMIANAS
+Early onset COPD	COPD_EARLY
+Non-Hodgkin lymphoma, all, excluding all cancers (controls excluding all cancers)	C3_NONHODGKIN_EXALLC
+Other/unspecified rheumatoid arthritis	RHEUMA_NOS
+Phakomatoses, not elsewhere classified	Q17_PHAKOMATOSES_NOT_ELSEW_CLASSIFIED
+Caries in Clefts patients	Q17_CLEFT_AND_CARIES
+Pre-eclampsia or eclampsia	O15_PRE_OR_ECLAMPSIA
+Pre-eclampsia	O15_PREECLAMPS
+Nephrotic syndrome	N14_NEPHROTICSYND
+Cystitis	N14_CYSTITIS
+Macular pucker	MACULAR_PUCKER
+Early lumbar disc prolapse, operated	M13_EARLY_LUMBAR_PROLAPSE
+Pilonidal cyst	L12_PILONIDALCYST
+Chronic pancreatitis	K11_CHRONPANC
+Juvenile arthritis (FINNGEN)	JUVEN_ARTHR
+Deviated nasal septum	J10_SEPTDEV
+Stroke, excluding SAH	I9_STR
+Conduction disorders	I9_CONDUCTIO
+AV-block	I9_AVBLOCK
+Restless leg syndrome	G6_RLS
+Polycystic ovarian syndrome	E4_PCOS
+Ovarian dysfunction	E4_OVARDYS
+Disorders of mineral metabolism	E4_MINERAL_MET
+Von Willebrand disease	D3_VONVILLEBRAND
+Malignant neoplasm of rectum, excluding all cancers (controls excluding all cancers)	C3_RECTUM_EXALLC
+Malignant neoplasm of bronchus and lung, excluding all cancers (controls excluding all cancers)	C3_BRONCHUS_LUNG_EXALLC
+Alcohol use disorder, ICD-based	AUD
+Transient global amnesia	AMN2
+Kidney transplant status	Z21_KIDNEY_TRANSPLANT_STATUS
+Vertebral, anorectal, cardiavascular, thracheoesophagial, renal and limb anomaly	Q17_VACTREL
+Septal defects	Q17_SEPTA_DEFEC
+Congenital malformations of posterior segment of eye	Q17_CONGEN_MALFO_POSTERI_SEGMENT_EYE
+Other maternal disorders predominantly related to pregnancy	O15_PREG_OTHER_MAT_DISORD
+Female infertility	N14_FEMALEINFERT
+Adenomyosis (Endometriosis of uterus)	N14_ENDOMETRIOSIS_UTERUS
+Unspecified/other endometriosis	N14_ENDOMETRIOSIS_NOS
+Other specified/unspecified inflammatory spondylopathies	M13_SPONDYLINFLAMNAS
+Sicca syndrome [Sjögren]	M13_SJOGREN
+Reactive arthropathies	M13_REACTARTH
+Other and unspecified urticaria	L12_URTICA_NAS
+Molar incisor enamel hypoplasia, with caries	K11_MIH_CARIES
+Colonic or urogenital fistula	K11_FISTULA
+Appendectomy	K11_APPENDECTOMY
+Entropion and trichiasis of eyelid	H7_ENTROPION
+Idiopathic gout	GOUT_IDIO
+Melanoma in situ (controls excluding all cancers)	CD2_INSITU_MELANOMA_EXALLC
+Benign neoplasm: Rectum, anus and anal canal	CD2_BENIGN_RECTUM_ANAL
+Benign neoplasm: Rectum	CD2_BENIGN_RECTUM
+Melanocytic naevi of trunk	CD2_BENIGN_MELANOCYTIC_TRUNK
+Benign lipomatous neoplasm	CD2_BENIGN_LIPOMATOUS
+Adenocarcinoma, papilloma adenocarcinoma and mucinous carcinomas of rectum, excluding all cancers (controls excluding all cancers)	C3_RECTUM_ADENO_MUCINO_EXALLC
+Brain meningioma, excluding all cancers (controls excluding all cancers)	C3_MENINGIOMA_EXALLC
+Alzheimer’s disease (Early onset) (more control exclusions)	AD_EO_EXMORE
+Fracture of femur	ST19_FRACT_FEMUR
+Other arthritis (FG)	RHEU_ARTHRITIS_OTH
+Osteochondrodysplasia with defects of growth of tubular bones and spine	Q17_OSTEOCHONDROD_W_DEFECTS_GROWTH_TUBULAR_BONES_SPINE
+Psoriasis (vulgaris), strict definition	PSORI_STRICT
+Postmenopausal osteoporosis with pathological fracture	OSTPOPATFRCTURE_POSTEMENO
+Pre-existing hypertension complicating pregnancy, childbirth and the puerperium	O15_EXIST_HYPERT_COMPLIC
+Non-allergic asthma (mode) (more control exclusions)	NONALLERG_ASTHMA_EXMORE
+Endometriosis of rectovaginal septum and vagina	N14_ENDOMETRIOSIS_RECTPVAGSEPT_VAGINA
+Chronic kidney disease	N14_CHRONKIDNEYDIS
+Mixed connective tissue disease	M13_MCTD
+Other hammer toe(s) (acquired)	M13_HAMMERTOE
+Infective dermatitis	L12_INFECT_DERM
+Dermatitis herpetiformis	L12_DERMATHERP
+Other bullous disorders	L12_BULLOTH
+Allergic contact dermatitis	L12_ALLERGICCONTACT
+Hypoplasia of dental enamel, including avohilmo	K11_HYPOPLASIA_ENAMEL
+Alcoholic liver disease	K11_ALCOLIV
+Acute sinusitis	J10_SINUSITIS
+All pneumoniae	J10_PNEUMONIA
+Myopia	H7_MYOPIA
+Chalazion	H7_CHALAZION
+Other extrapyramidal and movement disorders in other diseases	G6_XTRAPYROTH
+Hydrocephalus	G6_HYDROCEPH
+Diabetic retinopathy, strict definition	DM_RETINOPATHY_STRICT
+Other diseases of blood and blood-forming organs	D3_OTHERBLOOD
+Cirrhosis, broad definition used in the article https://doi.org/10.1101/594523	CIRRHOSIS_BROAD
+Non-follicular lymphoma (controls excluding all cancers)	CD2_NONFOLLICULAR_LYMPHOMA_EXALLC
+Alcohol-induced acute pancreatitis	ALCOPANCACU
+Alzheimer’s disease (Atypical or mixed) (more control exclusions)	AD_AM_EXMORE
+Hernia of abdominal wall, postoperative	ABDOM_HERNIA_POSTOP
+Lung transplant status	Z21_LUNG_TRANSPLANT_STATUS
+Ulcerative ileocolitis	ULCERILEO
+Fracture of shoulder and upper arm	ST19_FRACT_SHOUL_UPPER_ARM
+Atrial septal defect	Q17_ASD
+Nonalcoholic fatty liver disease	NAFLD
+Spermatocele	N14_SPERMATOCELE
+Benign mammary dysplasia	N14_BENIGNMAMDYSP
+Spondylolisthesis/Spondylolysis	M13_SPONDYLOLISTHESIS
+Lung transplantation	LUNG_TRANSPLANTATION
+Urticaria	L12_URTICARIA
+Influenza and pneumonia	J10_INFLUPNEU
+Acute upper respiratory infections of multiple and unspecified sites	J10_ACUTEUPPERINFEC
+Nonischemic cardiomyopathy	I9_NONISCHCARDMYOP_STRICT
+Inguinal hernia, bilateral	HERING_BILATERAL
+Disorders of vestibular function (Vertigo)	H8_VERTIGO
+Presbycusis	H8_HL_PRESBY
+Disorders of eyelid, lacrimal system and orbit	H7_LIDLACRIMALORBIT
+Colour vision deficiencies	H7_COULOURVISDEF
+Keratoconus	H7_CORNEALDEFORM
+Extrapyramidal and movement disorders	G6_XTRAPYR
+Migraine without aura and triptan purchases	G6_MIGRAINE_NO_AURA_TRIPTAN
+Alcohol dependence	F5_ALCOHOL_DEPENDENCE
+Disorders of other endocrine glands	E4_ENDOGLAND
+Diabetic maculopathy	DM_MACULOPATHY
+Congenital malformations of heart and great arteries	CONGEN_HEART_ARTER
+Adenocarcinoma and papilloma adenocarcinoma of rectum	C3_RECTUM_ADENO
+Intestinal infectious diseases	AB1_INTESTINAL_INFECTIONS
+Thyroiditis	THYROIDITIS
+Fracture of lumbar spine and pelvis	ST19_FRACT_LUMBAR_SPINE_PELVIS
+Fracture of lower leg, including ankle	ST19_FRACT_LOWER_LEG_INCLU_ANKLE
+Reactive arthropathies, FINNGEN	RHEUMA_ARHTROPAT_REACTIVE
+Congenital malformations of the circulatory system	Q17_CONGEN_MALFO_CIRCULATO_SYSTEM
+Pre-eclampsia or poor fetal growth	O15_PREEC_OR_FETGRO
+Single spontaneous delivery	O15_DELIV_SPONT
+Medical abortion	O15_ABORT_MEDICAL
+Other noninflammatory disorders of uterus, except cervix	N14_OTHNONINFUTER
+Female infertility, cervigal, vaginal, other or unspecified origin	N14_FIOTHNAS
+Female infertility, associated with anovulation	N14_FIANOV
+Dialysis	N14_DIALYSIS
+Osteopathies and chondropathies	M13_OSTEOCHONDRO
+Erythema nodosum	L12_ERYTHEMANODOSUM
+Acne	L12_ACNE
+Other acute lower respiratory infections	J10_LOWERINF
+Status post-ami	I9_POSTAMI
+Nontraumatic intracranial haemmorrhage	I9_INTRACRA
+Cerebral aneurysm, nonruptured	I9_ANEURYSM
+Vestibular neuronitis	H8_VESTIBNEUR
+Suppurative and unspecified otitis media	H8_MED_SUPP
+Retinal detachment with retinal break	H7_RETINALDETACHBREAK
+Chronic iridocyclitis	H7_IRIDOCHRONIC
+Other and unspecified glaucoma	H7_GLAUCNAS
+Parkinson's disease	G6_PARKINSON
+Other anxiety disorders	F5_ANXIETY
+Erectile dysfunction	ERECTILE_DYSFUNCTION
+Subacute thyroiditis	E4_THYROIDITSUBAC
+Polycystic ovarian syndrome, consortium definition	E4_PCOS_CONCORTIUM
+Adrenocortical insufficiency	E4_ADDISON
+Drug-induced systemic lupus erythematosus	DRUGADVERS_SYSTEMIC_LUPUS_ERYTHEMAT
+Later onset COPD	COPD_LATER
+Cirrhosis of liver, NAS	CHIRHEP_NAS
+Follicular lymphoma, hilmo (controls excluding all cancers)	CD2_FOLLICULAR_LYMPHOMA_EXALLC
+Benign neoplasm: Adrenal gland	CD2_BENIGN_ADRENAL
+Neuroendocrine tumor and carcinoma of small intestine, excluding all cancers (controls excluding all cancers)	C3_SMALL_INTESTINE_NEUROENDOCRINE_EXALLC
+Non-small cell lung cancer, excluding all cancers (controls excluding all cancers)	C3_LUNG_NONSMALL_EXALLC
+Diarrhoea and gastroenteritis of presumed infectious origin	AB1_GASTROENTERITIS_NOS
+Other forms of systemic lupus erythematosus	SLE_OTH
+Other congenital malformations of heart	Q17_OTHER_CONGEN_MALFO_HEART
+Other chromosome abnormalities, not elsewhere classified	Q17_OTHER_CHROMOSOME_ABNORMALITI_NOT_ELSEW_CLASSIFIED
+Other disorders of breast and lactation associated with childbirth	O15_BREAST_LACT_OTHER_DIS
+Renal tubulo-interstitial diseases	N14_RENALTUB
+Polyp of the female genital tract	N14_POLYPFEMGEN
+Redundant prepuce, phimosis and paraphimosis	N14_PHIMOSIS
+Glomerular diseases	N14_GLOMERULAR
+HSIL lesion of the cervix uteri	N14_CERVICAL_HSIL
+Other disorders of patella	M13_PATELLAOTH
+Iliotibial band syndrome	M13_ILIOTIBBAND
+Enteropathic arthropathies	M13_ENTEROARTHR
+Other specified/unspecified systemic involvement of connective tissue	M13_CONNECTNAS
+Atlantoaxial subluxation	M13_ATLOAXSUBLUX
+Polyarthrosis	M13_ARTHROSIS_POLY
+Lupus erythematosus	L12_LUPUS
+Lichen sclerosus et atrophicus	L12_LICHENSCLERATROPH
+Infections of the skin and subcutaneous tissue	L12_INFECT_SKIN
+Hidradenitis suppurativa	L12_HIDRADENITISSUP
+Granuloma annulare	L12_GRANUANNU
+Personality disorders (more control exclusions)	KRA_PSY_PERSON_EXMORE
+Other noninfective gastroenteritis and colitis	K11_OTHENTERCOL
+Diseases of oesophagus, stomach and duodenum	K11_OESSTODUO
+Intestinal malabsorption	K11_MALABSORB
+Fibrosis and cirrhosis of liver	K11_FIBROCHIRLIV
+Other and unspecified tonsillitis	J10_TONSILLITIS
+Left bundle-branch block	I9_LBBB
+Dronedarone medication	I9_E_DRONE
+Perforation of tympanic membrane	H8_PERFORATION
+Other strabismus	H7_STRABOTH
+Other disorders of iris and ciliary body	H7_OTHIRISCILIARY
+Disorders of orbit	H7_ORBIT
+Other keratitis	H7_KERATITISOTH
+Divergent concomitant strabismus	H7_DIVERGSTRAB
+Migraine with aura	G6_MIGRAINE_WITH_AURA
+Migraine without aura	G6_MIGRAINE_NO_AURA
+Hereditary ataxia	G6_HERATAXIA
+Disorders of plasma-protein metabolism, not elsewhere classified	E4_PLASMAPROT
+Mixed hyperlipidaemia	E4_HYPERLIPMIX
+Nontoxic diffuse goitre	E4_GOITREDIFF
+Polyglandular dysfunction	E4_DYSPOLYGL
+Other diseases of blood and blood-forming organs, wide	D3_BLOODOTHER
+Carcinoma in situ of skin (controls excluding all cancers)	CD2_INSITU_SKIN_EXALLC
+Benign neoplasm: Peripheral nerves and autonomic nervous system	CD2_BENIGN_PERIPH_AUTO_NEURO
+Benign neoplasm: Parotid gland	CD2_BENIGN_PAROTID
+Benign neoplasm of other and unspecified endocrine glands	CD2_BENIGN_ENDOCRINE_OTH
+Benign neoplasm: Colon, unspecified	CD2_BENIGN_COLON_NOS
+Malignant neoplasm of small intestine, excluding all cancers (controls excluding all cancers)	C3_SMALL_INTESTINE_EXALLC
+Waldenstrom macroglobulinemia, lymphoplasmacytic lymphoma, excluding all cancers (controls excluding all cancers)	C3_MACROGLOBULINEMIA_EXALLC
+Hepatocellular carcinoma, excluding all cancers (controls excluding all cancers)	C3_HEPATOCELLU_CARC_EXALLC
+Malignant neoplasm of brain, excluding all cancers (controls excluding all cancers)	C3_BRAIN_EXALLC
+Bronchitis	BRONCHITIS
+Other predominantly sexually transmitted diseases, not elsewhere classified	AB1_SEXUAL_TRANSMISSION_NOS
+Infections with a predominantly sexual mode of transmission	AB1_SEXUAL_TRANSMISSION
+Other bacterial diseases	AB1_OTHER_BACTERIAL
+Malaria	AB1_MALARIA
+Vascular dementia (undefined)	VD_U
+Ulcerative enterocolitis	ULCERENTER
+Glucosamine medication	RX_GLUCOSAMINE
+Retention of urine	R18_RETEN_URINE
+Ankyloglossia	Q17_ANKYLOGLOSSIA
+Prolonged pregnancy	O15_PREG_PROLONGED
+Other maternal diseases classifiable elsewhere but complicating pregnancy, childbirth and the puerperium	O15_OTHER_MATERN_DIS_ELSEWHERE
+LSIL lesion of the vulva	N14_VULVAL_LSIL
+Renal failure	N14_RENFAIL
+Postmenopausal bleeding	N14_POSTMENBLEED
+Hydrocele	N14_HYDROCELE
+Glomerulonephritis	N14_GLOMER_NEPHRITIS
+LSIL lesion of the cervix uteri, vagina or vulva	N14_FEMALE_GENITAL_LSIL
+HSIL lesion of the cervix uteri, vagina or vulva	N14_FEMALE_GENITAL_HSIL
+Macular hole	MACULAR_HOLE
+Disorders of synovium and tendon	M13_SYNOTEND
+Other overlap syndromes	M13_OVERLAP
+Disorders of muscles	M13_MUSCLE
+Internal derangement of knee	M13_KNEEDERANGEMENTS
+Other/unspecified dorsalgia	M13_DORSALGIANAS
+Allergic urticaria	L12_URTICA_ALLERG
+Pustulosis palmaris et plantaris	L12_PSORI_PUSTUPALM
+Bullous pemphigoid	L12_PEMPHIGOID_BULL
+Bullous disorders	L12_BULLOUS
+Schizophrenia or delusion (more control exclusions)	KRA_PSY_SCHIZODEL_EXMORE
+Molar incisor enamel hypoplasia	K11_MIH
+Duodenal ulcer	K11_DULC
+Cholecystitis	K11_CHOLECYST
+Bacterial pneumoniae	J10_PNEUMOBACT
+Pleural plaque	J10_PLEURPLAGUE
+Acute laryngitis and tracheitis	J10_LARYNGITIS
+Chronic rhinitis, nasopharyngitis and pharyngitis	J10_CHRONRHINITIS
+ILD-related respiratory insufficiency	ILD_INSUFFICIENCY
+Oesophageal varices	I9_VARICVEOES
+Sequelae of cerebrovascular disease	I9_SEQULAE
+Subarachnoid haemorrhage	I9_SAH
+Non-ischemic cardiomyopathy	I9_NONISCHCARDMYOP
+Other diseases of arteries and capillaries	I9_ARTOTH
+Mixed conductive and sensorineural hearing loss	H8_HL_MIX_NAS
+Sudden idiopathic hearing loss	H8_HL_IDIOP
+Deaf mutism, not elsewhere classified	H8_HL_DEAFMUT
+Otitis externa, unspecified	H8_EXT_NAS
+Otitis externa	H8_EXTOTITIS
+Eustachian salpingitis and obstruction	H8_EUSTSALP
+Retinal breaks without detachment	H7_RETINALBREAK
+Ptosis of eyelid	H7_PTOSIS
+Heterophoria	H7_HETEROPHORIA
+Other and unspecified corneal deformities and disorders	H7_CORNEALNAS
+Corneal degeneration	H7_CORNEALDYSTROPHY
+Visual impairment including blindness (binocular or monocular)	H7_BLINDANDVISIMPAIRMENT
+Graves ophthalmopathy	GRAVES_OPHT
+Other and unspecified polyneuropathies, also in other diseases	G6_POLYOTHUNS
+Other headache syndromes	G6_HEADACHE
+Other reaction to severe stress, and adjustment disorders	F5_STRESSOTH
+Delirium, not induced by alcohol and other psychoactive substances	F5_DELIRIUM
+Autoimmune thyroiditis	E4_THYROIDITAUTOIM
+Lactose intolerance, other/unspecified	E4_LACTONAS
+Nontoxic single thyroid nodule	E4_GOITRENOD
+Other disorders of glucose regulation and pancreatic internal secretion	E4_GLUCOPANCREAS
+Autoimmune polyglandular failure	E4_AUTOPOLYFAI
+Diabetic nephropathy (more control exclusions)	DM_NEPHROPATHY_EXMORE
+Neovascular glaucoma	DM_NEOVASCULAR_GLAUCOMA
+Iron deficiency anaemia secondary to blood loss (chronic)	D3_ANAEMIA_IRONDEF_BLOODLOSS
+Continuous positive airway pressure	CPAP
+Malignant neoplasm of pancreas, excluding all cancers (controls excluding all cancers)	C3_PANCREAS_EXALLC
+Clear cell adenocarcinoma of kidney, excluding all cancers (controls excluding all cancers)	C3_KIDNEY_CLEAR_CELL_CARCINOMA_EXALLC
+Malignant neoplasm of head and neck, excluding all cancers (controls excluding all cancers)	C3_HEAD_AND_NECK_EXALLC
+Brain glioblastoma, excluding all cancers (controls excluding all cancers)	C3_GBM_EXALLC
+Rare circulating lymphoid malignancy, excluding all cancers (controls excluding all cancers)	C3_CIRCULATING_LYMPHOID_EXALLC
+Malignant neoplasm of intrahepatic ducts, biliary tract and gallbladder, excluding all cancers (controls excluding all cancers)	C3_BILIARY_GALLBLADDER_EXALLC
+Postdysenteric arthropathy	ARTRHO_POSTDYSENTERIC
+Other spirochaetal diseases	AB1_OTHER_SPIROCHAETAL
+Other septicaemia	AB1_OTHER_SEPSIS
+Lyme disease	AB1_LYME
+Dermatophytosis	AB1_DERMATOPHYTOSIS
+Suicide or other Intentional self-harm	VWXY20_SUICI_OTHER_INTENTI_SELF_H
+severe traumatic brain injury, does not include concussion	TRAUMBRAIN_NONCONCUS
+Reiter disease	REITER
+Other congenital malformations of ear	Q17_OTHER_CONGEN_MALFO_EAR
+Congenital malformations of genital organs	Q17_CONGEN_MALFO_GENITAL_ORGANS
+Dementia due to Parkinson's disease (more control exclusions)	PD_DEMENTIA_EXMORE
+Disorders related to short gestation and low birth weight, not elsewhere classified	P16_DISORD_RELATED_GESTATION_LOW_BIRTHWGHTT_NECIFIED
+Maternal care for other conditions predominantly related to pregnancy	O15_PREG_MATERN_CARE
+Pregnancy with abortive outcome	O15_PREG_ABORT
+Maternal care for known or suspected abnormality of pelvic organs	O15_MATERN_CARE_PELVIC_ABNORM
+Excessive vomiting in pregnancy	O15_EXCESS_VOMIT_PREG
+Urethral stricture	N14_URETHRALSTRICT
+Acute tubulo-interstitial nephritis	N14_PYELONEPHR
+Other disorders of prostate	N14_PROSTAOTH
+Other menopausal disorders	N14_MENOPAUSOT
+Galactorrhea	N14_GALACTORRHEA
+Pain and other conditions associated with female genital organs and menstrual cycle	N14_FEMGENPAIN
+All dysplastic lesions of the cervix uteri, vagina or vulva	N14_FEMALE_GENITAL_DYSPLASIA_ALL
+LSIL lesion of the cervix uteri	N14_CERVICAL_LSIL
+All dysplastic lesions of the cervix uteri	N14_CERVICAL_DYSPLASIA_ALL
+Other disorders of breast	N14_BREASTDISOTH
+Macular cyst	MACULAR_CYST
+Torticollis	M13_TORTICOLLIS
+Temporal arteritis	M13_TEMPARTERIT
+Pyogenic arthritis	M13_PYOGARTH
+Polymyalgia rheumatica	M13_POLYMYALGIA
+Myositis	M13_MYOSITIS
+Microscopic polyangiitis	M13_MICROPOLYANG
+Lateral epicondylitis	M13_LATERALEPICOND
+Juvenile rheumatoid arthirtis	M13_JUVERHEU
+Flat foot [pes planus] (acquired)	M13_FLATFOOT
+Other enthesopathies	M13_ENTESOPATHYOTH
+Enthesopathies of lower limb, excluding foot	M13_ENTESOPATHYLOW
+Other specified/unspecified disorders of synovium and tendon +Other specified/unspecified bursopathies	M13_DISSYNOTENDNAS
+Deforming dorsopathies	M13_DEFORMDORSO
+Seborrhoeic dermatitis	L12_SEBORRHOEIC
+Guttate psoriasis	L12_PSORI_GUTTATE
+Other disorders of skin and subcutaneous tissue	L12_OTHERSKINSUBCUTIS
+Other contact dermatitis	L12_OTHERCONTACT
+Hirsutism in women	L12_HIRSUTISM
+Granulomatous disorders of skin and subcutaneous tissue	L12_GRANULOMATOUSSKIN
+Other follicular disorders	L12_FOLICULAROTH
+Chronic ulcer of skin, not elsewhere classified	L12_CHRONICULCEROFSKIN
+Atrophic disorders of skin	L12_ATROPHICSKIN
+Any mental disorder, or suicide (or attempt), or psychic disorders complicating pregnancy, partum or puerperium or nerve system disorders (more control exclusions)	KRA_PSY_ANYMENTAL_SUICID_PREG_NERV_EXMORE
+Other inflammatory liver diseases	K11_OTHINFLIV
+Irritable bowel syndrome	K11_IBS
+Hypoplasia of dental enamel, prenatal , including avohilmo	K11_HYPOPLASIA_ENAMEL_PRENATAL_INCLAVO
+Hypoplasia of dental enamel , including avohilmo	K11_HYPOPLASIA_ENAMEL_INCLAVO
+Hypertrophy of tongue papillae	K11_HYPERTROPHY_TONGUE_PAPILLAE
+Gastroduodenal ulcer	K11_GASTRODUOULC
+Functional dyspepsia	K11_FUNCDYSP
+Deposits [accretions] on teeth	K11_DEPOSITS
+Chronic hepatitis, not elsewhere classified	K11_CHRONHEP
+Anomalies of dental arch relationship, including avohilmo	K11_ANOMALI_DENTAL_ARCH_RELATIONS1
+Abscess of anal and rectal regions	K11_ABSCANAL
+Unspecified acute lower respiratory infection	J10_ACUTELOWERNAS
+Acute suppurative otitis media	H8_SUP_ACUTE
+Other hearing loss	H8_OTHHEARINGLOSS
+Acute otitis externa, noninfective	H8_EXT_NONINF
+Diseases of external ear	H8_EXTERNAL
+Benign paroxysmal vertigo	H8_BPV
+Retinal vascular occlusion	H7_RETIVASCOCCLUSION
+Retinal vascular disorders	H7_RETINAVASC
+Separation of retinal layers (serosa)	H7_RETINASEPAR
+Moderate visual impairment, binocular	H7_MODVISIMPBINOC
+Other and unspecified iridocyclitis	H7_IRIDONAS
+Glaucoma secondary to eye inflammation	H7_GLAUCSECINFLAM
+Primary angle-closure glaucoma	H7_GLAUCCLOSEPRIM
+Degenerative myopia	H7_DEGENMYOPIA
+Chronic conjunctivitis	H7_CONJUNCTIVITISCHRON
+Other disorders of choroid	H7_CHOROIDOTH
+Anisometropia and aniseikonia	H7_ANISOMETROPIA
+Disorders of myoneural junction and muscle in diseases classified elsewhere	G6_MYOMUSCINOTH
+Other facial nerve disorders	G6_FACOTH
+Epilepsy	G6_EPLEPSY
+Bell's palsy	G6_BELLPA
+Circumscribed brain atrophy	G6_ATROPHCIRCUM
+Substance use, excluding alcohol	F5_SUBSNOALCO
+Other mental disorders due to brain damage and dysfunction and to physical disease	F5_MENTORG
+Generalized anxiety disorder	F5_GAD
+Acute alcohol intoxication	F5_ALCOHOLAC
+Vitamin D deficiency	E4_VIT_D_DEF
+Disorders of sphingolipid metabolism and other lipid storage disorders	E4_SPHINGOLIP
+Disorders of parathyroid gland, other and/or unspecified	E4_PARANAS
+Hypo-osmolality and hyponatraemia	E4_HYPOOSMNAT
+Nondiabetic hypoglycaemic coma	E4_HYPOCOMA
+Iron deficiency	E4_FE_DEF
+Congenital iodine-deficiency syndrome/hypothyroidism	E4_CONGEIOD
+Other disorders of carbohydrate metabolism	E4_CARBO
+Dermatopolymyositis (FG)	DERMATOPOLY_FG
+Other primary thrombocytopenia	D3_OTHPRIMTHROMBOCYTOPENIA
+Agranulocytosis	D3_AGRANULOCYTOSIS
+Enterocolitis due to Clostridium difficile	C_DIFFICILE_ENTEROCOLITIS
+Chronic hepatitis NAS	CHRONHEP_NAS
+Primary biliary cholangitis (PBC)	CHIRBIL_PRIM
+Carcinoma in situ of cervix uteri (controls excluding all cancers)	CD2_INSITU_CERVIX_UTERI_EXALLC
+Other benign neoplasms of skin	CD2_BENIGN_SKIN
+Benign neoplasm: Sigmoid colon	CD2_BENIGN_SIGMOID_COLON
+Benign neoplasm of major salivary glands	CD2_BENIGN_SALIVARY
+Benign neoplasm of other and unspecified sites	CD2_BENIGN_OTHER_NOS
+Benign neoplasm: Other and unspecified parts of mouth	CD2_BENIGN_MOUTH_NOS
+Benign lipomatous neoplasm of skin and subcutaneous tissue of trunk	CD2_BENIGN_LIPO_SKIN_TRUNK
+Benign neoplasm of brain and other parts of central nervous system	CD2_BENIGN_BRAIN_CNS
+Benign neoplasm: Appendix	CD2_BENIGN_APPENDIX
+Malignant neoplasm of testis, excluding all cancers (controls excluding all cancers)	C3_TESTIS_EXALLC
+Malignant neoplasm of stomach, excluding all cancers (controls excluding all cancers)	C3_STOMACH_EXALLC
+Adenocarcinoma and papillary adenocarcinoma of stomach, excluding all cancers (controls excluding all cancers)	C3_STOMACH_ADENO_EXALLC
+Adenocarcinoma and ductal carcinoma of pancreas, excluding all cancers (controls excluding all cancers)	C3_PANCREAS_ADENO_DUCTAL_EXALLC
+Non-small cell lung cancer, squamous, excluding all cancers (controls excluding all cancers)	C3_NSCLC_SQUAM_EXALLC
+Diffuse large B-cell lymphoma, excluding all cancers (controls excluding all cancers)	C3_DLBCL_EXALLC
+Bleeding	BLEEDING
+Autoimmune hepatitis	AUTOHEP
+Acute appendicitis, with complications	APPENDACUT_COMPLIC
+Viral warts	AB1_VIRAL_WARTS
+Viral and other specified intestinal infections	AB1_VIRAL_OTHER_INTEST_INFECTIONS
+Viral haemorrhagic fevers, not elsewhere classified/unspecified	AB1_VIRAL_HEMOR_FEVER_NOS
+Other viral diseases	AB1_OTHER_VIRAL
+Other superficial mycoses	AB1_OTHER_SUPERF_MYCOSIS
+Mycoses	AB1_MYCOSES
+Infectious mononucleosis	AB1_EBV
+Bacterial infection, other or unspecified	AB1_BACTINF_NOS
+Enteritis due to Yersinia enterocolitica	YERSINIAENTERITIS
+Covid-19 confirmed case	U22_COVID19_CONFIRMED
+Fracture of rib(s), sternum and thoracic spine	ST19_FRACT_RIBS_STERNUM_THORACIC_SPINE
+Fracture of foot, except ankle	ST19_FRACT_FOOT_ANKLE
+Respiratory disorders in diseases classified elsewhere	RESP_ILL_DIS_CLASS_ELSEWHERE
+Anorexia	R18_ANOREXIA
+Left ventricular outflow tract obstruction, narrow definition	Q17_LVOTO_NARROW
+Ehlers-Danlos syndrome	Q17_EHLER_SYNDR
+Congenital malformations of trachea and bronchus	Q17_CONGEN_MALFO_TRACHEA_BRONCHUS
+Congenital malformations of pulmonary and tricuspid valves	Q17_CONGEN_MALFO_PULMONARY_TRICU_VALVES
+Congenital malformations of anterior segment of eye	Q17_CONGEN_MALFO_ANTER_SEGMENT_EYE
+Congenital ichthyosis	Q17_CONGEN_ICHTHYOSIS
+Congenital hydrocephalus	Q17_CONGEN_HYDROCEPHALUS
+Chromosomal abnormalities, not elsewhere classified	Q17_CHROMOSOMAL_ABNORMALITI_NOT_ELSEW_CLASSIFIED
+Osteoporosis with pathological fracture (FG)	OSTEOPOROSIS_FRACTURE_FG
+Venous complications and haemorrhoids in the puerperium	O15_VENOUS_COMPLIC
+Maternal care for other known or suspected fetal problems	O15_MATERN_CARE_OTHER
+Maternal care for cervical incompetence	O15_MATERN_CARE_CERVICAL_INCOMPETENCE
+Obstructed labour due to maternal pelvic abnormality	O15_LABOUR_PELVIC_ABNORM
+Other complications of labour and delivery, not elsewhere classified	O15_LABOUR_OTHER
+Long labour	O15_LABOUR_LONG
+Abnormalities of forces of labour	O15_LABOUR_ABNORM_FORCES
+Gestational [pregnancy-induced] oedema and proteinuria without hypertension	O15_GESTAT_OEDEM_PREINUR
+False labour	O15_FALSE_LAB
+Single delivery by forceps and vacuum extractor	O15_DELIV_FORCEP_VAC
+Single delivery by caesarean section	O15_DELIV_CAESAR
+Other abnormal products of conception	O15_CONCEPT_ABNORM
+Antepartum haemorrhage, not elsewhere classified	O15_ANTEPART_HAEM_NAS
+Non-invasive ventilation	NIV
+Other necrotizing vasculopathies (FG)	NECROVASC_FG
+Urethritis and urethral syndrome	N14_URETHRITISANDURSYNDR
+Other female pelvic inflammatory diseases	N14_OTHFEMPELINF
+Oligomenorrhoea	N14_OLIGOMEN
+Other obstructive and reflux uropathy	N14_OBSTRUREFLUROPATH
+Irregular menses	N14_MENSIRREG
+Unspecified lump in breast	N14_LUMPNASBREAST
+IgA nephropathy (IgA glomerulonephritis)	N14_IGA_NEPHROPATHY
+Glomerular disorders in diseases classified elsewhere	N14_GLOMEINOTH
+Endometriosis of intestine	N14_ENDOMETRIOSIS_INTESTINE
+Acute renal failure	N14_ACUTERENFAIL
+Other deformities of toe(s)	M13_TOEDEFORMOTH
+Tibial collateral bursitis [Pellegrini-Stieda]	M13_TIBIALCOLLATERAL
+Systemic sclerosis	M13_SYSTSLCE
+Scoliosis	M13_SCOLIOSIS
+Rheumatism, unspecified	M13_RHEUMATISM
+Radiculopathy	M13_RADICULOPATHY
+Polymyositis	M13_POLYMYO
+Polyarthritis, unspecified	M13_POLYARTHRITIS
+Plantar fascial fibromatosis	M13_PLANTARFASC
+Patellar tendinitis	M13_PATELLARTEND
+Panniculitis affecting regions of neck and back	M13_PANNICULITIS
+Palindromic rheumatism	M13_PALINDROMIC
+Osteomyelitis	M13_OSTEOMYELITIS
+Other disorders of the musculoskeletal system and connective tissue	M13_MUSCULOSKELEOTH
+Monoarthritis, not elsewhere classified	M13_MONOARTHRITIS
+Hallux rigidus	M13_HALLUXRIGIDUS
+Giant cell arteritis	M13_GIANTCELL
+Ganglion	M13_GANGLION
+Diastasis of muscle	M13_DIASTASIS
+Radial styloid tenosynovitis [de Quervain]	M13_DEQUERVAIN
+Cervicobrachial syndrome	M13_CERVICOBRACHSDR
+Calcific tendinitis of shoulder	M13_CALCIFICTEND
+Biomechanical lesions, not elsewhere classified	M13_BIOMECHLESIO
+Bicipital tendinitis	M13_BICIPITALTEND
+Arthropathies in other diseases classified elsewhere	M13_ARTHINOTH
+Vitiligo	L12_VITILIGO
+Ulcer of lower limb, not elsewhere classified	L12_ULCERLOWLIMB
+Other and unspecified rosacea	L12_ROSACEANAS
+Pemphigus	L12_PEMPHIGUS
+Other and unspecified pemphigoid	L12_PEMPHIGOID_NAS
+Other disorders of skin and subcutaneous tissue, not elsewhere classified	L12_OTHERDISSKINANDSUBCUTIS
+Lichen simplex chronicus and prurigo	L12_LICHSIMPANDPRURIGO
+Lichen simplex chronicus	L12_LICHENSIMPLEX
+Dermatitis due to substances taken internally	L12_INTERNALSUBSTANCEDERM
+Dermatitis due to ingested food	L12_FOODDERMAT
+Exfoliative dermatitis	L12_EXFOLIATIVE
+Other epidermal thickening	L12_EPIDERMALTHICKOTH
+Cellulitis	L12_CELLULITIS
+Cutaneous abscess, furuncle and carbuncle	L12_ABSCESS_CUT
+Mental retardation (more control exclusions)	KRA_PSY_MENTALRET_EXMORE
+Gastro-oesophageal reflux disease	K11_REFLUX
+Colitis, primary sclerosing, strict definition	K11_PSC_COLITIS_STRICT
+Acute peritonitis	K11_PERITONITIS
+Other diseases of pancreas	K11_PANCOTH
+Other and unspecified abdominal hernia	K11_OTHABDHER
+Oral leukoplakia and related diseases, including avohilmo	K11_ORAL_LEUCOPLAC_RELAT_INCLAVO
+Oral leukoplakia, including avohilmo	K11_ORAL_LEUCOPLACIA_INCLAVO
+Open bite that required surgery (Lefort1 or BSSRO)	K11_OPEN_BITE_SURGERY
+Mandibular retrognathia	K11_MN_RETRGN
+Mandibular prognathia AND surgery (LeFortI or BSSO or LeFortI AND BSSO), including avohilmo	K11_MN_PROGN_AND_SURGRT_INCLAVO
+Mandibular prognathia AND surgery (LeFortI or BSSRO)	K11_MN_PROGN_AND_SURGRT
+Mandibular prognathia	K11_MN_PROGN
+Gingival hyperplasia	K11_GINGIV_HYPERPLAS
+Gingivitis and periodontal diseases	K11_GINGIVITIS_PERIODONTAL
+Femoral hernia	K11_FEMHER
+Deep bite	K11_DEEP_BITE
+Crowding of teeth, including avohilmo	K11_CROWDI_TEETH
+Chronic gastritis	K11_CHRONGASTR
+Cholangitis (primary sclerosing, PSC), with reimbursement 202	K11_CHOLANGI_STRICT
+Cholangitis (primary sclerosing, PSC)	K11_CHOLANGI
+Other appendicitis	K11_APPENDOTH
+Achalasia of cardia	K11_ACHAL
+Abrasion of teeth	K11_ABRASION
+Diseases of vocal cords and larynx+other diseases of upper respiratory tract, no elsewhere classified	J10_VOCALLARYNX
+Other diseases of the respiratory system	J10_RESPOTHER
+Pneumothorax	J10_PNEUMOTHORAX
+Acute epiglottitis	J10_EPIGLOTTITIS
+Emphysema	J10_EMPHYSEMA
+Chronic laryngitis and laryngotracheitis	J10_CHRONLARYNGITIS
+Acute bronchitis	J10_BRONCHITIS
+Transient ischemic attack	I9_TIA
+Embolic stroke with flimmer	I9_STR_EMBOLIC_WITH_FLIMMER
+Other aneurysm	I9_OTHANEUR
+Hypertensive Renal Disease	I9_HYPTENSRD
+Secondary hypertension	I9_HYPTENSEC
+Other arterial embolism and thrombosis	I9_ARTEMBTHRNAS
+Dissection of aorta	I9_AORTDIS
+Other otitis externa (chronic)	H8_EXT_OTH
+Cellulitis of external ear	H8_EXT_CELLUL
+Other and unspecified disorders of vitreous body	H7_VITROTH
+Blindness or visual impairment, binocular	H7_VISIMPBILATERAL
+Visual field defects	H7_VISFIELDDEF
+Hyphaema and other vascular disorders of iris and ciliary body	H7_VASCCILIARY
+Stenosis and insufficiency of lacrimal passages	H7_STENOLACRI
+Retinoschisis and retinal cysts	H7_RETINOCHISISCYST
+Traction detachment of retina	H7_RETINALDETACHTRACTION
+Retinal haemorrhage	H7_RETINAHAEMORR
+Paralytic strabismus	H7_PARASTRAB
+Optic neuritis	H7_OPTNEURITIS
+Dislocation of lens	H7_LENSDISLOCATIO
+Lagophthalmos	H7_LAGOPHTALMOS
+Iridocyclitis in diseases classified elsewhere	H7_IRIDOCYCLITISINOTH
+Other disorders of eye and adnexa	H7_EYEOTH
+Exophthalmic conditions	H7_EXOPTHALMUS
+Episcleritis	H7_EPISCLERITIS
+Ectropion of eyelid	H7_ECTROPION
+Bullous keratopathy	H7_BULLKERATOPATHY
+Generalized epilepsy	GE
+Other and unspecified trigeminal disorders	G6_TRIOTHUNS
+Status epilepticus	G6_STATUSEPI
+Lesion of sciatic nerve	G6_SCIALE
+Other and unspecified nerve root and plexus disorders, also in other diseases	G6_ROOTPLEXOTHUNS
+Lesion of plantar nerve	G6_PLANTAR
+Narcolepsy and cataplexy	G6_NARCOCATA
+Migraine with aura and triptan purchases	G6_MIGRAINE_WITH_AURA_TRIPTAN
+Migraine without aura, drug-induced	G6_MIGRAINE_NO_AURA_ADVERSE
+Toxic encephalopathy	G6_ENCEPHTOX
+Felty syndrome	FELTY
+Vascular dementia	F5_VASCDEM
+Paranoid personality disorder	F5_PARAPER
+Mental and behavioural disorders due to multiple drug use and use of multiple drugs and use of other psychoactive substances	F5_OTHERSUB
+Other neurotic disorders	F5_NEUROTICOTH
+Emotional disorders and disorders of social functioning with onset specific to childhood	F5_EMOCHILD
+Persistent delusional disorders	F5_DELUSIO
+Bipolar affective disorders	F5_BIPO
+Anankastic personality disorder	F5_ANAPER
+Thyroiditis, unspecified	E4_THYROIDITNAS
+Disorders of porphyrin and bilirubin metabolism	E4_PORBILIR
+Congenital lactase deficiency	E4_LACTOCON
+Hyperaldosteronism	E4_HYPERALDO
+Graves ophthalmopathy, strict	E4_GRAVES_OPHT_STRICT
+Gilbert syndrome	E4_GILBERT
+Other disorders of fluid, electrolyte and acid-base balance	E4_FLUIDELECTRO
+Disorders of puberty	E4_DISPUB
+Carcinoid syndrome	E4_CARCISDR
+Drug-induced cataract	DRUGADVERS_CATAR
+Diabetic neuropathy	DM_NEUROPATHY
+Other haemoglobinopathies	D3_OTHHAEMOGLOPAT
+Common variable immunodeficiency	D3_CVID
+Arthropathy in Crohn disease	CROHN_ARTHR
+CR(E)ST syndrome	CREST
+COPD-related respiratory insufficiency	COPD_INSUFFICIENCY
+Chronic myeloproliferative disease	CHRONMYELOPRO
+Other and unspecified types of non-Hodgkin lymphoma, hilmo (controls excluding all cancers)	CD2_NONHODGKIN_NAS_EXALLC
+Multiple myeloma and malignant plasma cell neoplasms (controls excluding all cancers)	CD2_MULTIPLE_MYELOMA_PLASMA_CELL_EXALLC
+Carcinoma in situ of prostate (controls excluding all cancers)	CD2_INSITU_PROSTATE_EXALLC
+Carcinoma in situ, bladder (controls excluding all cancers)	CD2_INSITU_BLADDER_EXALLC
+Hodgkin lymphoma, hilmo (controls excluding all cancers)	CD2_HODGKIN_LYMPHOMA_EXALLC
+Benign neoplasm of thyroid gland	CD2_BENIGN_THYROID
+Benign neoplasm: Stomach	CD2_BENIGN_STOMACH
+Benign neoplasm: Spinal cord	CD2_BENIGN_SPINAL_CORD
+Benign neoplasm: Retina	CD2_BENIGN_RETINA
+Benign neoplasm: Rectosigmoid junction	CD2_BENIGN_RECTOSIGMOID_JUNC
+Benign neoplasm: Pituitary gland, craniopharyngeal duct	CD2_BENIGN_PITUITARY_CRANIPHAR
+Benign neoplasm: Other/unspecified site	CD2_BENIGN_NOS
+Benign neoplasm: Nasopharynx	CD2_BENIGN_NASOPHARYNX
+Melanocytic naevi, other sites/unspecified	CD2_BENIGN_MELANOCYTIC_NOS
+Melanocytic naevi of lower limb, including hip	CD2_BENIGN_MELANOCYTIC_LOWERLIMB
+Benign neoplasm: Heart	CD2_BENIGN_HEART
+Benign neoplasm: Endocrine pancreas	CD2_BENIGN_ENDOCRINE_PANCREAS
+Benign neoplasm: Cranial nerves	CD2_BENIGN_CRANIAL_NERVE
+Benign neoplasm of breast	CD2_BENIGN_BREAST
+Benign neoplasm: Ascending colon	CD2_BENIGN_ASCENDING_COLON
+Seminoma of testis, excluding all cancers (controls excluding all cancers)	C3_TESTIS_SEMINOMA_EXALLC
+Non-seminoma of testis, excluding all cancers (controls excluding all cancers)	C3_TESTIS_NONSEMINOMA_EXALLC
+Serous carcinoma of ovary, excluding all cancers (controls excluding all cancers)	C3_OVARY_SEROUS_EXALLC
+Mucinous and mucinous cystic tumor, excluding all cancers (controls excluding all cancers)	C3_OVARY_MUCINO_EXALLC
+Non-small cell lung cancer, adenocarcinoma, excluding all cancers (controls excluding all cancers)	C3_NSCLC_ADENO_EXALLC
+Multiple myeloma, Monoclonal gammopathy of undetermined significance (MGUS), excluding all cancers (controls excluding all cancers)	C3_MYELOMA_MONOCLONAL_EXALLC
+Brain glioblastoma and astrocytoma, excluding all cancers (controls excluding all cancers)	C3_GBM_ASTROCYTOMA_EXALLC
+Malignant neoplasm of eye and adnexa, excluding all cancers (controls excluding all cancers)	C3_EYE_ADNEXA_EXALLC
+Brain astrocytoma, excluding all cancers (controls excluding all cancers)	C3_ASTROCYTOMA_EXALLC
+Anosmia	ANOSMIA
+Allergic contact dermatitis due to drugs in contact with skin	ALLERGIC_CONTACT_DERMA_DRUGS_CONTACT_W_SKIN
+Use of disulfiram, acamprosate or naltrexone	ALCO_PRESCRIPTION
+Alzheimer’s disease (undefined) (more control exclusions)	AD_U_EXMORE
+Zoster [herpes zoster]	AB1_ZOSTER
+Whooping cough	AB1_WHOOPCOUGH
+Viral infections characterized by skin and mucous membrane lesions	AB1_VIRAL_SKIN_MUCOUS_MEMBRANE
+Varicella [chickenpox]	AB1_VARICELLA
+Respiratory tuberculosis, confirmed	AB1_RESP_TUBERCU_CONF
+Other infectious diseases	AB1_OTHER_INFECTIONS
+Other bacterial intestinal infections	AB1_BACT_INTEST_OTH
+Tobacco use	Z21_TOBAC_USE
+Problems related to medical facilities and other health care	Z21_PROBL_RELATED_MEDICAL_FACILITI_OTH_HEALTH_CARE
+Vascular dementia (subcortical)	VD_SC
+Vascular dementia (mixed)	VD_MX
+Vascular dementia (multiple infarctions)	VD_MI
+Arthropathy in ulcerative colitis	ULCER_ARTHR
+Tongue abnormality	TONGUEABNORMALITY
+Temporomandibular joint disorders, including avohilmo	TEMPOROMANDIB_INCLAVO
+Temporomandibular joint disorders	TEMPOROMANDIB
+Type 1 diabetes, strict definition, subgroup 2	T1D_STRICT2
+Systemic sclerosis,strict definition	SYSTSCLE_STRICT
+Adult-onset Still disease	STILL_ADULT
+Toxic effect of ethanol	ST19_TOXIC_EFFECT_ETHAN
+Fracture at wrist and hand level	ST19_FRACT_WRIST_HAND_LEVEL
+Fracture of neck	ST19_FRACT_NECK
+Smoking dependency	SMOKING_DEPEND
+Small fibre neuropathy	SFN
+Other secondary coxarthrosis	SCND_OTH_COXARTHROSIS
+Biological medicines for asthma	RX_ASTMA_BIOL
+Vasomotor rhinitis (mode)	RHINITIS_VASOMOTOR
+Other specified congenital malformation syndromes affecting multiple systems	Q17_OTHER_SPECIFE_CONGEN_MALFO_SYNDR_AFFECTING_MULTIPLE_SYSTEMS
+Other congenital malformations of upper alimentary tract	Q17_OTHER_CONGEN_MALFO_UPPER_ALIME_TRACT
+Other congenital malformations of tongue, mouth and pharynx	Q17_OTHER_CONGEN_MALFO_TONGUE_MOUTH_PHARYNX
+Other congenital malformations of nervous system	Q17_OTHER_CONGEN_MALFO_NERVOUS_SYSTEM
+Other congenital malformations of circulatory system	Q17_OTHER_CONGEN_MALFO_CIRCULATO_SYSTEM
+Left ventricular outflow tract obstruction (LVOTO), broad definition	Q17_LVOTO_BROAD
+Conotruncal defects	Q17_CONOTR_DEFEC
+Congenital malformations of the nervous system	Q17_CONGEN_MALFO_NERVOUS_SYSTEM
+Congenital malformations of the musculoskeletal system, not elsewhere classified	Q17_CONGEN_MALFO_MUSCULOS_SYSTEM_NOT_ELSEW_CLASSIFIED
+Congenital malformations of great veins	Q17_CONGEN_MALFO_GREAT_VEINS
+Congenital malformations of great arteries	Q17_CONGEN_MALFO_GREAT_ARTERIES
+Congenital malformations and deformations of the musculoskeletal system	Q17_CONGEN_MALFO_DEFORMAT_MUSCULOS_SYSTEM
+Congenital deformities of feet	Q17_CONGEN_DEFORMITI_FEET
+Cleft lip and cleft lip and palate	Q17_CLEFT_LIP_OR_LIP_AND_PALATE
+Bicuspidal aortic valve syndrome	Q17_BICUSP_AORTIC_VALVE
+Phlebitis and thrombophlebitis of lower extremities, unspecified, drug-induced	PHLEBI_THROMBOP_LOWER_EXTREMITI_UNSPE
+Secondary parkinsonism (more control exclusions)	PD2ND_EXMORE
+Interstitial emphysema and related conditions originating in the perinatal period	P16_INTERSTITIAL_EMPHY_RELATED_COND_ORIGINA_PERINA_PERIOD
+Birth asphyxia	P16_BIRTH_ASPHYXIA
+Bacterial sepsis of newborn	P16_BACTERIAL_SEPSIS_NEWBO
+Other drug-induced secondary parkinsonism	OTHER_DRUGADVERS_SECONDA_PARKINSONI
+Osteonecrosis due to drugs	OSTEON_DRUGS
+Alcohol related diseases, tilastokeskus definition, death only	OFFICIAL_TILASTOKESKUS_DEATH
+Twin gestation	O15_TWIN_GEST
+Retained placenta and membranes, without haemorrhage	O15_RETAINED_PLAC_MEMB_NO_HEAMORRH
+Other puerperal infections	O15_PUERP_INFECT_OTHER
+Complications of the puerperium, not elsewhere classified	O15_PUERP_COMPL_NAS
+Complications of anaesthesia during the puerperium	O15_PUERP_ANEST_COMPL
+Preterm labour and delivery	O15_PRETERM
+Venous complications and haemorrhoids in pregnancy	O15_PREG_VENOUS_HAEMORRH
+Infections of genitourinary tract in pregnancy	O15_PREG_GU_INFECT
+Ectopic pregnancy	O15_PREG_ECTOP
+Postpartum haemorrhage	O15_POSTPART_HEAMORRH_ALLW
+Postpartum haemorrhage due to retained placenta	O15_POSTPART_HAEMORRH_PLACENTA
+Placenta praevia	O15_PLAC_PRAEVIA
+Other obstetric trauma	O15_OBSTET_TRAUMA_OTHER
+Multiple gestation	O15_MULTIP_GEST
+Premature rupture of membranes	O15_MEMBR_PREMAT_RUPT
+Maternal care for known or suspected malpresentation of fetus	O15_MAT_CARE_MALPRESENT
+Maternal care for known or suspected disproportion	O15_MATERN_CARE_DISPROP
+Other obstructed labour	O15_LABOUR_OBSTR_OTHER
+Labour and delivery complicated by fetal stress [distress]	O15_LABOUR_FETAL_STRESS
+Complications of anaesthesia during labour and delivery	O15_LABOUR_ANEST_COMPLIC
+Failed induction of labour	O15_FAILED_INDUCT
+Perineal laceration during delivery	O15_DELIV_PERIN_LACER
+Other assisted single delivery	O15_DELIV_OTHER_ASSIST
+Complications following abortion and ectopic and molar pregnancy	O15_COMPLIC_ABORT_ECTOP_MOLAR
+Other disorders of amniotic fluid and membranes	O15_AMNIOT_OTHER
+Nonalcoholic steatohepatitis	NASH
+HSIL lesion of the vulva	N14_VULVAL_HSIL
+All dysplastic lesions of the vulva	N14_VULVAL_DYSPLASIA_ALL
+Vaginitis/vulvovaginitis/vulvitis/abscess of vulva	N14_VAGINITIS
+All dysplastic lesions of the vagina	N14_VAGINAL_DYSPLASIA_ALL
+Ulcer of vagina/vulva	N14_ULCERVAGVUL
+Small kidney of unknown cause	N14_SMALLKIDNEY
+Salpingitis and oophoritis	N14_SALPHOOPH
+Other noninflammatory disorders of vagina	N14_OTHNONINFVAG
+Other and unspecified noninflammatory disorders of ovary, fallopian tube and broad ligament	N14_OTHNONINFOVA
+Other noninflammatory disorders of cervix uteri	N14_OTHNONINFCERVIX
+Other specified disorders of kidney and ureter	N14_OTHETNASKIDUR
+Other disorders of kidney and ureter	N14_KIDUROTH
+Inflammatory disorders of breast	N14_INFLAMMBREAST
+Hydronephrosis	N14_HYDRONEPHR
+Henoch-Schönlein purpura nephritis (HSPN)	N14_HENOCHSCHONLEIN_NEPHRITIS
+Other disorders of the genitourinary system	N14_GENITOUROTH
+Female infertility, tubal origin	N14_FITUB
+Inflammatory diseases of female pelvic organs	N14_FEMALEGENINF
+Erosion and ectropion of cervix uteri	N14_EROSECTROPUT
+Cyst of kidney	N14_CYSTKID
+Chronic nephritic syndrome	N14_CHRONEPHROPATH
+Calculus of lower urinary tract	N14_CALCULOWER
+Other and unspecified disease of Bartholin gland	N14_BARTHOOTHNAS
+Other abnormal uterine and vaginal bleeding	N14_ABNORMALBLEED
+Atypical mycobacterium lung infection	MYCOBLUNGATYPICA
+Memory loss	MEMLOSS
+Degenerative macular diseases	MACULA_NAS
+Wegener granulomatosis	M13_WEGENER
+Valgus deformity, not elsewhere classified	M13_VALGUS
+Trochanteric bursitis	M13_TROCHANTERICBURSITIS
+Pain in thoracic spine	M13_THORACISPINEPAIN
+Other/unspecified synovitis and tenosynovitis	M13_TENDOSYNOVITISNAS
+Spontaneous rupture of synovium and tendon	M13_SPONTRUPTSYNOTEND
+Other specified/unspecified spondylopathies	M13_SPONDYLOPATHYNAS
+Spinal instabilities	M13_SPININSTAB
+Spinal osteochondrosis	M13_SPINALOSTEOCHON
+Soft tissue disorders related to use, overuse and pressure	M13_SOFTOVERUSE
+Other shoulder lesions	M13_SHOULDERNAS
+Bursitis of shoulder	M13_SHOULDERBURSITIS
+Sacrococcygeal disorders, not elsewhere classified	M13_SACROCOGG
+Psoas tendinitis	M13_PSOASTEND
+Polyarteritis nodosa	M13_POLNODOSA
+Other disorders of bone	M13_OTHERBONE
+Neuralgia and neuritis, unspecified	M13_NEURALGIA
+Muscle strain	M13_MUSCLESTRAIN
+Loose body in joint	M13_LOOSEJOINT
+Juvenile osteochondrosis	M13_JUVOSTEOCHONRHIP
+Impingement syndrome of shoulder	M13_IMPINGEMENT
+Hypermobility syndrome	M13_HYPERMOBILITY
+Hypertrophy of (infrapatellar) fat pad	M13_FATPADHYPERTROPHY
+Other/unspecified enthesopathies, not elsewhere classified	M13_ENTESOPATHYNAS
+Infection of intervertebral disc (pyogenic)	M13_DISCINFECTION
+Other specified/unspecified deforming dorsopathies	M13_DEFORMDORSONAS
+Polyarteritis with lung involvement [Churg-Strauss]/EGPA	M13_CHURGSTRAUSS
+Other articular cartilage disorders	M13_CARTILAGE
+Other bursitis, not elsewhere classified	M13_BURSITISOTH
+Other bursal cyst	M13_BURSCYSTOTH
+Synovial cyst of popliteal space [Baker]	M13_BAKERCYST
+Algoneurodystrophy	M13_ALGONEURO
+Achilles tendinitis	M13_ACHILLESTEND
+Abscess of tendon sheath	M13_ABSCTENDON
+Localized skin eruption due to drugs and medicaments	LOCALIZED_SKIN_ERUPT_DRUGS_MEDICAM
+Dermatographic urticaria	L12_URTICA_DERTMATOG
+Rhinophyma	L12_RHINOPHYMA
+Pyogenic granuloma	L12_PYOGENGRANUL
+Generalized pustular psoriasis	L12_PSORI_PUSTGEN
+Prurigo nodularis	L12_PRURIGONOD
+Other  prurigo	L12_PRURIGONAS
+Polymorphous light eruption	L12_POLYMORPHLIGHTERUPT
+Perioral dermatitis	L12_PERIORALDERM
+Other and unspecified papulosquamous disorders	L12_PAPULOSQUONAS
+Other papulosquamous disorders	L12_PAPULOSQUAOTH
+Other melanin hyperpigmentation	L12_OTHERMELANIN
+Other infiltrative disorders of skin and subcutaneous tissue	L12_OTHERINFILTRATIVESKIN
+Other acute skin changes due to ultraviolet radiation	L12_OTHACUSKINSUN
+Other and unspecified skin changes due to chronic exposure to nonionizing radiation	L12_NONIONRADISKINNAS
+Necrobiosis lipoidica, not elsewhere classified	L12_NECROLIPOIDIC
+Ingrowing nail	L12_NAIL_INGROW
+Nail disorders	L12_NAILDIS
+Acute lymphadenitis	L12_LYMPHADENITIS
+Localized scleroderma [morphea]	L12_LOCALSCLERODERMA
+Other localized connective tissue disorders	L12_LOCALDCONNECTISSUEOTH
+Other and unspecified localized connective tissue disorders	L12_LOCALCONNECTISSUENAS
+Cicatricial alopecia [scarring hair loss]	L12_HAIRLOSSSCAR
+Folliculitis decalvans	L12_FOLLICULITDECALV
+Universal erythroderma, KELA reimbursement	L12_ERYTHRO_KELA
+Other and unspecified epidermal thickening	L12_EPIDERMTHICKNAS
+Nummular dermatitis	L12_DERM_NUMMULAR
+Decubitus ulcer and pressure area	L12_DECUBITANSULCERANDPRESSURE
+Corns and callosities	L12_CORNSANDCALLOS
+Alopecia areata	L12_ALOPECAREATA
+Acne conglobata	L12_ACNE_CONGLOBLATA
+Motor disorders (more control exclusions)	KRA_PSY_MOTOR_EXMORE
+Eating disorder (more control exclusions)	KRA_PSY_EATING_EXMORE
+Emotional disorders starting during childhood or adolescence (more control exclusions)	KRA_PSY_CHILDEMOT_EXMORE
+Alcohol abuse, main dg (more control exclusions)	KRA_PSY_ALCOH_EXMORE
+Vascular disorders of the intestines	K11_VASCINT
+Ulcerative colitis (strict) with PSC	K11_UC_STRICT_PSC
+Toxic liver disease	K11_TOXLIV
+Stomatitis and related lesions	K11_STOMATITIS
+Maxillary retrognathism	K11_RETROG_MAXILLAE
+Paralytic ileus	K11_PARALIL
+Other diseases of peritoneum	K11_OTHPERITON
+Other functional intestinal disorders	K11_OTHFUNC
+Other diseases of stomach and duodenum	K11_OTHDISSTOMDUOD
+Other diseases of oesophagus	K11_OTHDISOES
+Other diseases of the digestive system	K11_OTHDISDIG
+Oral lichen ruber planus	K11_ORAL_LICHEN_PLANUS
+Open bite	K11_OPEN_BITE
+Ulcer of oesophagus, drug-induced	K11_OESULC_ADVERSE
+Mesial bite	K11_MESIAL_BITE
+Maxillary  hypoplasia	K11_MAXIL_HYPOPL
+Impacted maxillary canine	K11_MAXIL_CANINE_FAILED_ERUPT_OBSTRUCTION_TOOTH
+Other diseases of lip and oral mucosa	K11_LIP_ORAL_MUCOSA
+Other diseases of jaws	K11_JAWS
+Paralytic ileus and intestinal obstruction	K11_ILEUS
+IBD (strict) with PSC	K11_IBD_STRICT_PSC
+Hypoplasia of dental enamel, prenatal	K11_HYPOPLASIA_ENAMEL_PRENATAL
+Other diseases of gallbladder	K11_GALLBLAOTH
+Erosion of teeth	K11_EROSION
+Embedded and impacted teeth	K11_EMBIMPACT_TEETH
+Disorders of oesophagus in diseases classified elsewhere	K11_DISOESINOTH
+Dentofacial anomalies [including malocclusion]	K11_DENTOFACIAL_ANOMALIES
+Deep bite that required surgery	K11_DEEP_BITE_SURGERY
+Constipation	K11_CONSTIPATION
+Other diseases of biliary tract	K11_BILIAOTH
+Barrett oesophagus	K11_BARRET
+Asymmetry of jaw	K11_ASYMMETRY_JAW
+Recurring oral aphthae, including avohilmo	K11_APHTA_RECUR_INCLAVO
+Recurring oral aphthae	K11_APHTA_RECUR
+Alcoholic gastritis	K11_ALCGASTR
+Viral pneumonia	J10_VIRALPNEUMO
+Pneumoconiosis due to dust containing silica	J10_SILICAPNEUMOC
+Pyothorax	J10_PYOTHORAX
+Pulmonary eosinophilia, not elsewhere classified	J10_PULMEOS
+Pneumonitis due to solids and liquids	J10_PNEUMONISOLLIQ
+Other diseases of pleura	J10_PLEURA
+Pneumoconiosis due to other inorganic dusts	J10_INORGPNEUMOC
+All influenza	J10_INFLUENZA
+Acute nasopharyngitis (common cold)	J10_COLD
+Respiratory conditions due to inhalation of chemicals, gases, fumes and vapours	J10_CHEMGASRESP
+Acute bronchiolitis	J10_BRONCHIOLITIS
+Bronchiectasis	J10_BRONCHIECTASIS
+Bronchitis, not specified as acute or chronic	J10_BRONCH
+Pneumoconiosis due to asbestos and other mineral fibres	J10_ASBESTPNEUMOC
+Invasive ventilation	INV_VENT
+Interstitial cystitis (chronic), drug-induced	INTERSTITIAL_CYSTIT_CHRONIC
+Increased muscle tone	INCREASEDMUSCLETONE
+Vascular diseases of the intestine	I9_VASCINT
+Embolic stroke	I9_STR_EMBOLIC
+Right bundle-branch block	I9_RBBB
+Progressive vascular leukoencephalopathy	I9_PROGVASC
+Pericarditis	I9_PERICARD
+Other noninfective disorders of lymphatic vessels and lymph nodes	I9_LYMPHOTH
+Nonspecific lymphadenitis	I9_LYMPHADE
+Intracerebral haemorrhage	I9_ICH
+Cerebral amyloid angiopathy	I9_CEREBAMY
+Cardiomyopathy in other diseases	I9_CARDMYOINOTH
+Cardiomyopathies, Secondary/extrinsic	I9_CARDMSEC
+Cardiac arrest	I9_CARDARR
+Arterial embolism and thrombosis of lower extremity artery	I9_ARTEMBTHRLOW
+Arterial embolism and thrombosis	I9_ARTEMBTHR
+Other/unspecified disorders of vestibular function	H8_VESTIFUNCNAS
+Postprocedural disorders of ear and mastoid process, not elsewhere classified	H8_POSTOP
+Recurrent cholesteatoma of postmastoidectomy cavity	H8_POSTMASTCHOLEASTOMA
+Other peripheral vertigo	H8_PERIPHVERTIGO
+Otorrhoea	H8_OTORRHOEA
+Abnormalities of ear ossicles	H8_OSSICABN
+Other specified/unspecified disorders of tympanic membrane	H8_MYRINGNAS
+Ménière disease	H8_MENIERE
+Other infective otitis externa	H8_EXT_INFNAS
+Abscess of external ear	H8_EXT_ABSC
+Other specified disorders of external ear	H8_EXTDISNAS
+Other disorders of Eustachian tube	H8_EUSTNAS
+Cholesteatoma of middle ear	H8_CHOLEASTOMA
+Xanthelasma of eyelid	H7_XANTHELASMA
+Subjective visual disturbances	H7_VISUDISTURBSUB
+Visual disturbances	H7_VISUDISTURB
+Other specified and unspecified strabismus	H7_STRABNAS
+Severe visual impairment, monocular	H7_SEVVISIMPMONOC
+Severe visual impairment, binocular	H7_SEVVISIMPBINOC
+Scleritis	H7_SCLERITIS
+Retrobulbar neuritis in diseases classified elsewhere	H7_RETROBULBNEURINOTH
+Other, unspecified and serous retinal detachments	H7_RETINALDETACHOTH
+Purulent endophthalmitis	H7_PURENDOPHTHALMITIS
+Pterygium	H7_PTERYGIUM
+Presbyopia	H7_PRESBYOPIA
+Peripheral retinal degeneration	H7_PERIPHRETINADEGEN
+Fourth [trochlear] nerve palsy	H7_PARASTRA4
+Third [oculomotor] nerve palsy	H7_PARASTRA3
+Other retinal artery occlusion	H7_OTHRETARTOCC
+Other disorders of optic [2nd] nerve and visual pathways	H7_OPTNEUROTH
+Disorders of optic nerve and visual pathways	H7_OPTNERVE
+Ocular pain	H7_OCUPAIN
+Disorders of ocular muscles, binocular movement, accommodation and refraction	H7_OCUMUSCLE
+Nystagmus and other irregular eye movements	H7_NYSTAGMUS
+Moderate visual impairment, monocular	H7_MODVISIMPMONOC
+Other and unspecified disorders of lacrimal system	H7_LACRINAS
+Inflammation of lacrimal passages (acute and unspecified)	H7_LACRIMINFLAMACU
+Disorders of lacrimal system	H7_LACRIMALSYSTEM
+Internuclear ophthalmoplegia	H7_INTERNUCOPHTHALMOPLEGIA
+Hypermetropia	H7_HYPERMETRO
+Other and unspecified heterotropia	H7_HETEROTRONAS
+Epiphora	H7_EPIPHORA
+Other specified and unspecified disorders of lens	H7_DISORDERLENSNAS
+Other corneal oedema	H7_CORNEALOEDEMA
+Chorioretinal inflammation	H7_CHORIORETINFLAM
+Central retinal artery occlusion	H7_CENTRRETARTOCC
+Other disorders of binocular vision	H7_BINODISTOTH
+Aphakia	H7_APHAKIA
+Amblyopia ex anopsia	H7_AMBLYANOPSIA
+Generalized epilepsy, mode (most common among epilepsy diagnosis)	GE_MODE
+Generalized skin eruption due to drugs and medicaments	GENERALI_SKIN_ERUPT_DRUGS_MEDICAM
+Postzoster neuralgia	G6_POSTZOST
+Other disorders of peripheral nervous system	G6_PERIPHOTH
+Other neurological diseases	G6_OTHNEU
+Other demyelinating diseases of the central nervous system	G6_OTHDEMYEL
+Inflammatory diseases of the central nervous system	G6_NEUINFL
+Other and unspecified mononeuropathies, also in other diseases	G6_MONOOTHUNS
+Meningitis, viral	G6_MENINGVIR
+Lumbosacral plexus disorders	G6_LSPLEX
+Guillain-Barre syndrome	G6_GUILBAR
+Dystonia	G6_DYSTON
+Drug-induced myopathy	G6_DRUGMYOP
+Other acute disseminated demyelination	G6_DISSOTH
+Other and unspecified degenerative diseases of nervous system	G6_DEGENOTH
+Causalgia	G6_CAUSALGIA
+Other and unspecified disorders of autonomic nervous system	G6_AUTOTHUNS
+Degeneration of the brain due to alcohol	G6_ALCODEGEN
+Frontotemporal dementia	FTD
+Femoral hernia, bilateral	FEMHER_BILATERAL
+Mental and behavioural disorders due to use of other stimulants, including caffeine	F5_STIMUL
+Specific development disorders of speech and language	F5_SPEECH
+Disorders of sexual preference	F5_SEXPREF
+Other and unspecified disorders of psychological development	F5_PSYCHDEVOTH
+Unspecified behavioural syndromes associated with physiological disturbances and physical factors +Physiological and behavioural factors associated with disorders of diseases classified elsewhere	F5_PHYSBEHOTH
+Enduring personality changes	F5_PERSOCHANGE
+Personality and behavioural disorders due to brain disease, damage and dysfunction	F5_PERSBEHORG
+Moderate mental retardation	F5_MODRET
+Mixed and other personality disorders	F5_MIXPER
+Mild mental retardation	F5_MILDRET
+Kela-code for severe mental illness	F5_KELAMENT
+Insomnia	F5_INSOMNIA
+Hypersomnia	F5_HYPERSOMNIA
+Habit and impulse disorders	F5_HABIT
+Emotionally unstable personality disorder	F5_EMOPER
+Dissociative [conversion] disorders	F5_DISSOCIATIVE
+Dementia in other diseases classified elsewhere	F5_DEMINOTH
+Mental and behavioural disorders due to cannabinoids	F5_CANNABIS
+Anorexia (incl.atypical)	F5_ANOREX
+Disturbance of activity and attention	F5_ADHD
+Deficiency of other B group vitamins	E4_VIT_B_DEF
+Vitamin A deficiency	E4_VIT_A_DEF
+Thyrotoxicosis with toxic single thyroid nodule	E4_THYTOXNOD
+Chronic thyroiditis	E4_THYROIDITCHRON
+Unspecified protein-energy malnutrition	E4_PROTMALNAS
+Disorders of pituitary gland, other and/or unspecified	E4_PITUDISNAS
+Disorders of phosphorus metabolism and phosphatases	E4_PHOS_MET
+Ovarian dysfunction, other/unspecified	E4_OVARDYSNAS
+Extreme obesity with alveolar hypoventilation	E4_OBESITYXTRMALV
+Other specified/unspecified nutritional deficiencies	E4_NUTRI_DEF_NAS
+Disorder of mineral metabolism, other/unspecified	E4_MINERAL_METNAS
+Metabolic disorder, other/unspecified	E4_METABONAS
+Postinfectious hypothyroidism	E4_HYTHYPOSTINF
+Hypoparathyroidism	E4_HYPOPARA
+Hypokalaemia	E4_HYPOKALAEMIA
+Drug-induced hypoglycaemia without coma	E4_HYPODRUG
+Pure hyperglyceridaemia	E4_HYPERGLYCER
+Other endocrine disorders	E4_ENDODIS
+Cushing syndrome	E4_CUSHING
+Disorders of aromatic amino-acid metabolism	E4_AROMAMINO
+Syndrome of inappropriate secretion of antidiuretic hormone	E4_ANTIDIU
+Organ-limited amyloidosis	E4_AMYL_ORGAN
+Other disorders of amino-acid metabolism	E4_AMINO
+Adrenogenital disorders	E4_ADRENOGEN
+Other adrenocortical overactivity	E4_ADREACT
+Drug-induced neutropenia	DRUGADVERS_NEUTROPENIA
+Diabetic nephropathy	DM_NEPHROPATHY
+Other nonthrombocytopenic purpura	D3_OTHNONTHROMBOCYTOPENPURPURA
+Other and unspecified aplastic anaemias	D3_OTHERAPLASTICANAEMIA
+Haemolytic-uraemic syndrome	D3_NONAIHA_OTHER
+Nezelof syndrome	D3_NEFELOF
+Other immunodeficiencies	D3_IMMUDEFOTHER
+Immunodeficiency with predominantly antibody defects	D3_IMMUDEFANTIBODY
+Hereditary hypogammaglobulinemia	D3_HEREDHYPOGAMMA
+Other and unspecified haemorrhagic conditions	D3_HAEMORRHAGICNAS
+Selective deficiency of immunoglobulin A [IgA]y	D3_DEF_IIGA
+Selective deficiency of immunoglobulin G [IgG] subclasses	D3_DEF_IGG
+Defects in the complement system	D3_COMPLEMENTDEF
+Allergic purpura	D3_ALLERGPURPURA
+Acute posthaemorrhagic anaemia	D3_ACUTEPOSTBLEEDANAEMIA
+Acquired haemolytic anaemia	D3_ACQHAEMOLYTICANAEMIA
+COPD related to chronic (opportunist) infections	COPD_OPPORTUNIST_INFECTIONS
+Other/unspecified cytomegaloviral diseases	CMV_NOS
+Cytomegaloviral hepatitis	CMV_HEPATITIS
+Chronic myeloid leukaemia [CML], BCR/ABL-positive	CML
+Other chondrocalcinosis	CHONDRO_OTH
+Biliary cirrhosis, NAS	CHIRBIL_NAS
+Charcot foot	CHARCOT
+Melanoma of uvea (controls excluding all cancers)	CD2_UVEAMELANOMA_EXALLC
+Myeloid leukaemia (controls excluding all cancers)	CD2_MYELOID_LEUKAEMIA_EXALLC
+Carcinoma in situ of vulva (controls excluding all cancers)	CD2_INSITU_VULVA_EXALLC
+Carcinoma in situ of endometrium (controls excluding all cancers)	CD2_INSITU_ENDOMETRIUM_EXALLC
+Malignant immunoproliferative diseases (controls excluding all cancers)	CD2_IMMUNOPROLIFERATIVE_EXALLC
+Benign neoplasm: Vagina	CD2_BENIGN_VULVA
+Benign neoplasm: Vulva	CD2_BENIGN_VAGINA
+Other benign neoplasms of uterus	CD2_BENIGN_UTERUS_OTH
+Benign neoplasm of urinary organs	CD2_BENIGN_URINARY
+Benign neoplasm: Transverse colon	CD2_BENIGN_TRANSVERSE_COLON
+Benign neoplasm: Testis	CD2_BENIGN_TESTIS
+Benign neoplasm: Other and unspecified parts of small intestine	CD2_BENIGN_SMALL_INTESTINE_OTH
+Benign neoplasm: salivary glands, exclude unknown (D119)	CD2_BENIGN_SALIVARY_KNOWN
+Benign neoplasm: Parathyroid gland	CD2_BENIGN_PARATHYROID
+Melanocytic naevi of upper limb, including shoulder	CD2_BENIGN_MELANOCYTIC_UPPERLIMB
+Melanocytic naevi of ear and external auricular canal	CD2_BENIGN_MELANOCYTIC_EAR
+Benign neoplasm: Mediastinum	CD2_BENIGN_MEDIASTINUM
+Benign neoplasm: Liver/bile ducts	CD2_BENIGN_LIVE_BILE
+Benign lipomatous neoplasm of skin and subcutaneous tissue of other and unspecified sites	CD2_BENIGN_LIPO_SKIN_NOS
+Benign lipomatous neoplasm of skin and subcutaneous tissue of limbs	CD2_BENIGN_LIPO_SKIN_LIMBS
+Benign lipomatous neoplasm of skin and subcutaneous tissue of head, face and neck	CD2_BENIGN_LIPO_SKIN_HEADFACENECK
+Benign neoplasm: Lip	CD2_BENIGN_LIP
+Benign neoplasm: Larynx	CD2_BENIGN_LARYNX
+Benign neoplasm of eye and adnexa	CD2_BENIGN_EYE
+Benign neoplasm: Middle ear, nasal cavity and accessory sinuses	CD2_BENIGN_EAR_NASAL_SINUS
+Benign neoplasm: Duodenum	CD2_BENIGN_DUODENUM
+Benign neoplasm: Ill-defined sites within the digestive system	CD2_BENIGN_DIGESTIVE_NOS
+Benign neoplasm: Descending colon	CD2_BENIGN_DESCENDING_COLON
+Other benign neoplasm of uterus: Corpus uteri	CD2_BENIGN_CORPUS_UTERI
+Benign neoplasm: Connective and other soft tissue of upper limb, including shoulder	CD2_BENIGN_CONNSOFT_UPPERLIMB
+Benign neoplasm: Connective and other soft tissue of thorax	CD2_BENIGN_CONNSOFT_THX
+Benign neoplasm: Central nervous system, other parts/unspecified	CD2_BENIGN_CNS_NOS
+Benign neoplasm: Choroid	CD2_BENIGN_CHOROID
+Benign neoplasm: Caecum	CD2_BENIGN_CAECUM
+Benign neoplasm: Short bones of upper limb	CD2_BENIGN_BONE_SHORT_UPPER
+Benign neoplasm: Short bones of lower limb	CD2_BENIGN_BONE_SHORT_LOWER
+Benign neoplasm: Scapula and long bones of upper limb	CD2_BENIGN_BONE_SCAPULA_LONG_UPPER
+Benign neoplasm: Long bones of lower limb	CD2_BENIGN_BONE_LONG_LOWER
+Benign neoplasm of bone and articular cartilage	CD2_BENIGN_BONE_CARTILAGE
+Campylobacter enteritis	CAMPYLOENTERITIS
+Malignant neoplasm of ureter, excluding all cancers (controls excluding all cancers)	C3_URETER_EXALLC
+Follicular adenocarcinoma of thyroid gland, excluding all cancers (controls excluding all cancers)	C3_THYROID_FOLLICULAR_EXALLC
+Malignant neoplasm of thymus, excluding all cancers (controls excluding all cancers)	C3_THYMUS_EXALLC
+Neuroendocrine tumor and carcinoma of stomach, excluding all cancers (controls excluding all cancers)	C3_STOMACH_NEUROENDOCRINE_EXALLC
+Adenocarcinoma of small intestine, excluding all cancers (controls excluding all cancers)	C3_SMALL_INTESTINE_ADENO_EXALLC
+Small cell lung cancer, excluding all cancers (controls excluding all cancers)	C3_SCLC_EXALLC
+Neuroendocrine tumor and carcinoma of pancreas, excluding all cancers (controls excluding all cancers)	C3_PANCREAS_NEUROENDOCRINE_EXALLC
+Malignant neoplasm of oropharynx, excluding all cancers (controls excluding all cancers)	C3_OROPHARYNG_EXALLC
+Malignant neoplasm of oral cavity, excluding all cancers (controls excluding all cancers)	C3_ORALCAVITY_EXALLC
+Malignant neoplasm of oesophagus, excluding all cancers (controls excluding all cancers)	C3_OESOPHAGUS_EXALLC
+Malignant neoplasm of nasal cavity and sinuses, excluding all cancers (controls excluding all cancers)	C3_NASAL_CAVITY_SINUSES_EXALLC
+Multiple myeloma, Monoclonal gammopathy of undetermined significance (MGUS)	C3_MYELOMA_MONOCLONAL
+Multiple myeloma, excluding all cancers (controls excluding all cancers)	C3_MULT_MYELOMA_EXALLC
+Mesothelioma, excluding all cancers (controls excluding all cancers)	C3_MESOTHELIOMA_EXALLC
+Marginal zone B-cell lymphoma, excluding all cancers (controls excluding all cancers)	C3_MARGINAL_ZONE_LYMPHOMA_EXALLC
+Mantle cell lymphoma, excluding all cancers (controls excluding all cancers)	C3_MANTLE_CELL_LYMPHOMA_EXALLC
+Malignant neoplasm of lip, excluding all cancers (controls excluding all cancers)	C3_LIP_EXALLC
+Adenocarcinoma and Papillary adenocarcinoma of kidney, excluding all cancers (controls excluding all cancers)	C3_KIDNEY_PAPILLARYADENO_EXALLC
+Malignant neoplasm of hypopharynx, excluding all cancers (controls excluding all cancers)	C3_HYPOPHARYNX_EXALLC
+Chronic myeloid leukaemia, excluding all cancers (controls excluding all cancers)	C3_CML_EXALLC
+Chondrosarcoma, excluding all cancers (controls excluding all cancers)	C3_CHONDROSARCOMA_EXALLC
+Malignant neoplasm of cervix uteri, excluding all cancers (controls excluding all cancers)	C3_CERVIX_UTERI_EXALLC
+Squamous cell neoplasms and carcinoma of cervix, excluding all cancers (controls excluding all cancers)	C3_CERVIX_SQUAM_EXALLC
+Asthma mixed form (mode) (more control exclusions)	ASTHMA_MIXED_EXMORE
+Other specific arthropathies, wide	ARTHRO_SPEC
+Anaphylactic shock due to adverse effect of correct drug or medication properly administered	ANAPH_SHOCK_ADVER_EFFECT_CORRE_DRUG_MEDICAM_PROPE_ADMINISTE
+Acute alcohol intoxication, ICD10	ALCOHOLACUTE10
+Other viral infections characterized by skin and mucous membrane lesions, not elsewhere classified	AB1_VIRAL_SKIN_NOS
+Other viral diseases, not elsewhere classified	AB1_VIRAL_NOS
+Viral agents as the cause of diseases classified to other chapters	AB1_VIRAL_INOTHER
+Tuberculosis, wide	AB1_TUBERCULOSIS
+Sequelae of infectious and parasitic diseases	AB1_SEQULEAE_OF_INFECTIONS_AND_PARASITES
+Scarlet fever	AB1_SCARLET_FEVER
+Scabies	AB1_SCABIES
+Other salmonella infections	AB1_SALMONELLA_OTH
+Rubella [German measles]	AB1_RUBELLA
+Relapsing fevers	AB1_RELAP_FEVER
+Pediculosis, acariasis and other infestations	AB1_PEDICULOSIS_ACARIASIS_OTHERINFEST
+Unspecified parasitic disease	AB1_PARASITIC_NOS
+Infection due to other mycobacteria	AB1_OTHER_MYCOBAC
+Measles	AB1_MEASLES
+Herpesviral [herpes simplex] infections	AB1_HERPES_SIMPLEX
+Enterobiasis	AB1_ENTEROBIASIS
+Cholera	AB1_CHOLERA
+Previous suicide attempt	Z21_PREVIOUS_SUICIDE_ATTEMPT
+Asymptomatic human immunodeficiency virus [HIV] infection status	Z21_ASYMP_HUMAN_IMMUNODEFICIENCY_VIRUS_HIV_INFECTION_STATUS
+Vocal cord dysfunction	VOCALCORDDYS
+Vitamin deficiency, wide	VIT_DEF
+Viral pneumonia (unknown virus, not influenza)	VIRALPNEUMONAS
+Viral pneumonia (known virus, not influenza)	VIRALPNEUMOKNOWN
+Vascular dementia (sudden onset)	VD_SO
+Vascular dementia (other)	VD_O
+Vaginal lichen planus	VAGINAL_LICHEN_PLANUS
+Covid-19 suspected case	U22_COVID19_SUSPECTED
+Tracheo-bronchomalasia	TRACHEOBRONCHOMAL
+Respiratory tuberculosis	TBC_RESP
+Systemic disorders of connective tissue in diseases classified elsewhere (FG)	SYSTINOTH_FG
+Toxic effect of alcohol	ST19_TOXIC_EFFECT_ALCOHOL
+Fracture of spine, level unspecified	ST19_FRACT_SPINE_LEVEL_UNSPE
+Fracture of skull and facial bones	ST19_FRACT_SKULL_FACIAL_BONES
+Fractures involving multiple body regions	ST19_FRACT_INVOLVI_MULTIPLE_BODY_REGIONS
+Other secondary gonarthrosis	SCND_OTH_KNEEARTHROSIS
+Medical treatment for female infertility	RX_INFERTILITY
+Rheumatoid lung disease	RHEUMAT_LUNG
+Undescended testicle	Q17_UNDES_TESTICLE
+Syndactyly	Q17_SYNDACTYLY
+Spina bifida	Q17_SPINA_BIFIDA
+Right ventricular outflow tract obstruction	Q17_RVOTO
+Renal agenesis and other reduction defects of kidney	Q17_RENAL_AGENE_OTHER_REDUCT_DEFECTS_KIDNEY
+Reduction defects of upper limb	Q17_REDUCT_DEFECTS_UPPER_LIMB
+Reduction defects of lower limb	Q17_REDUCT_DEFECTS_LOWER_LIMB
+Isolated patent ductus arteriosus	Q17_PDA
+Other sex chromosome abnormalities, male phenotype, not elsewhere classified	Q17_OTHER_SEX_CHROMOSOME_ABNORMALITI_MALE_PHENOT_NOT_ELSEW_CLASSIFIED
+Other osteochondrodysplasias	Q17_OTHER_OSTEOCHONDROD
+Other congenital musculoskeletal deformities	Q17_OTHER_CONGEN_MUSCULOS_DEFORMITI
+Other congenital malformations of urinary system	Q17_OTHER_CONGEN_MALFO_URINARY_SYSTEM
+Other congenital malformations of skull and face bones	Q17_OTHER_CONGEN_MALFO_SKULL_FACE_BONES
+Other congenital malformations of respiratory system	Q17_OTHER_CONGEN_MALFO_RESPI_SYSTEM
+Other congenital malformations of peripheral vascular system	Q17_OTHER_CONGEN_MALFO_PERIP_VASCULAR_SYSTEM
+Other congenital malformations, not elsewhere classified	Q17_OTHER_CONGEN_MALFO_NOT_ELSEW_CLASSIFIED
+Other congenital malformations of male genital organs	Q17_OTHER_CONGEN_MALFO_MALE_GENITAL_ORGANS
+Other congenital malformations of limb(s)	Q17_OTHER_CONGEN_MALFO_LIMBS
+Other congenital malformations of kidney	Q17_OTHER_CONGEN_MALFO_KIDNEY
+Other congenital malformations of intestine	Q17_OTHER_CONGEN_MALFO_INTESTINE
+Other congenital malformations of female genitalia	Q17_OTHER_CONGEN_MALFO_FEMALE_GENITALIA
+Other congenital malformations of face and neck	Q17_OTHER_CONGEN_MALFO_FACE_NECK
+Other congenital malformations of digestive system	Q17_OTHER_CONGEN_MALFO_DIGES_SYSTEM2
+Other congenital malformations of brain	Q17_OTHER_CONGEN_MALFO_BRAIN
+Neurofibromatosis, type 1	Q17_NEUROFIBROMATOSIS_1
+Monosomies and deletions from the autosomes, not elsewhere classified	Q17_MONOSOMI_DELET_AUTOSOMES_NOT_ELSEW_CLASSIFIED
+Mastocytosis	Q17_MASTOCYTOSIS
+Marfan's syndrome	Q17_MARFAN
+Hypospadias	Q17_HYPOSPADIAS
+Epidermolysis bullosa	Q17_EPIDERMOL_BULLOSA
+Down's syndrome	Q17_DOWNS_SYNDR
+Craniosynostosis EXCLUDE syndromes	Q17_CRANIOSYNOSTOSIS
+Congenital obstructive defects of renal pelvis and congenital malformations of ureter	Q17_CONGEN_OBSTRUCTIVE_DEFECTS_RENAL_PELVIS_CONGEN_MALFO_URETER
+Congenital musculoskeletal deformities of head, face, spine and chest	Q17_CONGEN_MUSCULOS_DEFORMITI_HEAD_FACE_SPINE_CHEST
+Congenital malformations of uterus and cervix	Q17_CONGEN_MALFO_UTERUS_CERVIX
+Congenital malformations of spine and bony thorax	Q17_CONGEN_MALFO_SPINE_BONY_THORAX
+Congenital malformations of the respiratory system	Q17_CONGEN_MALFO_RESPI_SYSTEM
+Congenital malformations of oesophagus	Q17_CONGEN_MALFO_OESOPHAGUS
+Congenital malformations of nose	Q17_CONGEN_MALFO_NOSE
+Congenital malformations of lung	Q17_CONGEN_MALFO_LUNG
+Congenital malformations of larynx	Q17_CONGEN_MALFO_LARYNX
+Congenital malformations of eye, ear, face and neck	Q17_CONGEN_MALFO_EYE_EAR_FACE_NECK
+Congenital malformations of eyelid, lacrimal apparatus and orbit	Q17_CONGEN_MALFO_EYELID_LACRIMAL_APPARA_ORBIT
+Congenital malformations of ear causing impairment of hearing	Q17_CONGEN_MALFO_EAR_CAUSI_IMPAIRM_HEARING
+Congenital malformations of cardiac chambers and connections	Q17_CONGEN_MALFO_CARDIAC_CHAMB_CONNECTIO
+Congenital malformations of breast	Q17_CONGEN_MALFO_BREAST
+Congenital malformation of biliary tract	Q17_CONGEN_MALFO_BILI
+Congenital lens malformations	Q17_CONGEN_LENS_MALFO
+Congenital deformities of hip	Q17_CONGEN_DEFORMITI_HIP
+Congenital absence, atresia and stenosis of large intestine	Q17_CONGEN_ABSENCE_ATRES_STENO_LARGE_INTESTINE
+Complex cardiac defects	Q17_COMPLEX_CARD_DEFEC
+Cleft lip	Q17_CLEFT_LIP
+Atrioventricular septal defect	Q17_AVSD
+Abnormal pulmonary venous return	Q17_APVR
+Pneumococcal septicemia	PNEUMO_SEPTHICHE
+Phlebitis and thrombophlebitis of superficial vessels of lower extremities, drug-induced	PHLEBI_THROMBOP_SUPERF_VESSE_LOWER_EXTREMITI
+Phlebitis and thrombophlebitis of other deep vessels of lower extremities, drug-induced	PHLEBI_THROMBOP_OTHER_DEEP_VESSE_LOWER_EXTREMITI
+Phantom limb syndrome with pain	PHANTOMLIMB
+Transitory disorders of carbohydrate metabolism specific to fetus and newborn	P16_TRANSITO_DISORD_CARBOH_METABOLISM_SPECIFIC_FETUS_NEWBO
+Slow fetal growth and fetal malnutrition	P16_SLOW_FETAL_GROWTH_FETAL_MALNUTRITION
+Respiratory distress of newborn	P16_RESPI_DISTR_NEWBO
+Respiratory and cardiovascular disorders specific to the perinatal period	P16_RESPI_CARDIOV_DISORD_SPECIFIC_PERINA_PERIOD
+Other perinatal haematological disorders	P16_OTH_PERINA_HAEMATOL_DISORD
+Other infections specific to the perinatal period	P16_OTH_INFECTIONS_SPECIFIC_PERINA_PERIOD
+Other disorders originating in the perinatal period	P16_OTH_DISORD_ORIGINA_PERINA_PERIOD
+Neonatal jaundice from other and unspecified causes	P16_NEONTAL_JAUND_OTH_UNSP_CAUSES
+Infections specific to the perinatal period	P16_INFECTIONS_SPECIFIC_PERINA_PERIOD
+Fetus and newborn affected by other complications of labour and delivery	P16_FET_NEWB_OTH_COMPLICATIO_LABOUR_DELIV
+Fetus and newborn affected by maternal factors and by complications of pregnancy, labour and delivery	P16_FET_NEWB_MATERN_FACTO_COMPLICATIO_PREGNAC_LABOUR_DELIV
+Fetus and newborn affected by maternal conditions that may be unrelated to present pregnancy	P16_FET_NEWB_MATERN_COND_UNREL_PRESENT_PREGNAC
+Fetus and newborn affected by maternal complications of pregnancy	P16_FET_NEWB_MATERN_COMPLICATIO_PREGNAC
+Fetus and newborn affected by complications of placenta, cord and membranes	P16_FET_NEWB_COMPLICATIO_PLACEN_CORD_MEMBRANES
+Fetal death of unspecified cause	P16_FETAL_DEATH_UNSP_CAUSE
+Feeding problems of newborn	P16_FEEDI_PROBL_NEWBO
+Disorders related to long gestation and high birth weight	P16_DISORD_RELATED_LONG_GESTATION_HIGH_BIRTHWGHTT
+Disorders of muscle tone of newborn	P16_DISORD_MUSCLE_TONE_NEWBO
+Chronic respiratory disease originating in the perinatal period	P16_CHRONIC_RESPI_DISEA_ORIGINA_PERINA_PERIOD
+Cardiovascular disorders originating in the perinatal period	P16_CARDIOV_DISORD_ORIGINA_PERINA_PERIOD
+Birth trauma	P16_BIRTH_TRAUMA
+Birth injury to peripheral nervous system	P16_BIRTHINJY_PERIP_NERVOUS_SYSTEM
+Drug-induced osteoporosis with pathological fracture	OSTPOPATFRACTURE
+Puerperal sepsis	O15_PUERP_SEPSIS
+Hydatidiform mole	O15_PREG_HYDAT
+Complications of anaesthesia during pregnancy	O15_PREG_ANESTH_COMPL
+Pre-eclampsia superimposed on chronic hypertension	O15_PREECLAMPS_CHRONIC_HYPERT
+Postpartum haemorrhage due to anatomy	O15_POSTPART_HAEMORRH_ANATOMY
+Poor fetal growth	O15_POOR_FETGRO
+Polyhydramnios	O15_POLYHYDR
+Premature separation of placenta [abruptio placentae]	O15_PLAC_PREMAT_SEPAR
+Placental disorders	O15_PLAC_DISORD
+Complications specific to multiple gestation	O15_MULTIP_GEST_COMPLIC
+Maternal infectious and parasitic diseases classifiable elsewhere but complicating pregnancy, childbirth and  the puerperium	O15_MATERN_INFECT_ELSEWHERE
+Unspecified maternal hypertension	O15_MATERN_HYPERT_UNS
+Maternal care for known or suspected fetal abnormality and damage	O15_MATERN_CARE_FETAL_ABNORM
+Maternal care related to the fetus and amniotic cavity and possible delivery problems	O15_MATERN_CARE
+Labour and delivery complicated by umbilical cord complications	O15_LABOUR_UMBILICAL
+Obstructed labour due to malposition and malpresentation of fetus	O15_LABOUR_MALPOS
+Labour and delivery complicated by intrapartum haemorrhage, not elsewhere classified	O15_LABOUR_INTRAPART_HAEMORRH
+Haemorrhage in early pregnancy	O15_HAEMORRH_EARLY_PREG
+Eclampsia	O15_ECLAMPSIA
+Multiple delivery	O15_DELIV_MULTIP
+Complications predominantly related to the puerperium	O15_COMPLIC_PUERP
+Complications of labour and delivery	O15_COMPLIC_LAB_DELIV
+Infections of breast associated with childbirth	O15_BIRTH_BREAT_INFECT
+Abnormal findings on antenatal screening of mother	O15_ANTENAT_ABNORM
+Unspecified abortion	O15_ABORT_UNS
+Spontaneous abortion	O15_ABORT_SPONTAN
+Other abortion	O15_ABORT_OTHER
+Failed attempted abortion	O15_ABORT_FAILED
+Nephropathy induced by other drugs, medicaments and biological substances	NEPHROP_INDUCED_OTHER_DRUGS_MEDICAM_BIOLO_SUBST
+Vulvovaginal ulceration/inflammation in other diseases	N14_VULVOVAGINFINOTH
+Dysplastic lesion of the vulva of unknown severity	N14_VULVAL_DYSPLASIA_NOS
+LSIL lesion of the vagina	N14_VAGINAL_LSIL
+HSIL lesion of the vagina	N14_VAGINAL_HSIL
+Uterine polyps	N14_UTER_POLYP
+Unspecified contracted kidney	N14_UNSPECKIDCONTR
+Tubulo-interstitial nephritis, not specified as acute or chronic	N14_TUBULOINTNEPHRNAS
+Torsion of testis	N14_TORSIOTEST
+Unspecified kidney failure	N14_RENFAILNAS
+Other renal tubulo-interstitial diseases	N14_RENALTUBULOOTH
+Renal tubulo-interstitial disorders in diseases classified elsewhere	N14_RENALTUBULOINOTH
+Unspecified renal colic	N14_RENALCOLNAS
+Recurrent and persistent haematuria	N14_RECURANDPERHEAMATUR
+Rapidly progressive nephritic syndrome	N14_RAPIDPROGNEPHRITIC
+Inflammatory diseases of prostate (prostatitis)	N14_PROSTATITIS
+Prolapse and hernia of ovary and fallopian tube	N14_PROHERNOV
+Premenstrual syndrome	N14_PREMENSTSYNDROM
+Postmenopausal atrophic vaginitis	N14_POSTMENATRVAG
+Ovarian hyperstimulation (induction)	N14_OVAR_HYPERSTIM
+Torsion of ovary, ovarian pedicle and fallopian tube	N14_OVARTORS
+Other disorders of penis	N14_OTHPENIS
+Other noninflammatory disorders of vulva and perineum	N14_OTHNONINFVULV
+Other inflammation of vagina/vulva	N14_OTHINFVAGVULV
+Other disorders of male genital organs	N14_OTHDISMALEGEN
+Other disorders of  bladder	N14_OTHBLADD
+Orchitis and epididymitis	N14_ORHCEPINDIDYMITIS
+Neuromuscular dysfunction of bladder	N14_NEUROMUSCDYSBLADD
+Hereditary nephropathy, not elsewhere classified	N14_NEPHROPATHYHER
+Unspecified nephritic syndrome	N14_NEPHRITICNAS
+Male infertility	N14_MALEINFERT
+Disorders of male genital organs in diseases classified elsewhere	N14_MALEGENINOTH
+Haematosalpinx/Haematoma of broad ligament	N14_MAEMABROAD
+Isolated proteinuria with specified morphological lesion	N14_ISOLPROTEINURIA
+Inflammatory disease of uterus	N14_INFLUTH
+Inflammatory disorders of male genital organs, not elsewhere classified	N14_INFLAMALEGEN
+Inflammatory disease of cervix uteri	N14_INFCERVIX
+Impotence	N14_IMPOTENCE
+Habitual aborter	N14_HABITABORT
+Female infertility, uterine origin	N14_FIUTERINE
+Female pelvic inflammatory disorders in diseases classified elsewhere	N14_FEMPELINFINOTH
+Fistulae involving female genital tract	N14_FEMGENFISTUL
+Dysplastic lesion of unknown severity in the cervix uteri, vagina or vulva	N14_FEMALE_GENITAL_DYSPLASIA_NOS
+Endometriosis in cutaneous scar	N14_ENDOMETRIOSIS_SKIN_SCAR
+Endometriosis of fallopian tube	N14_ENDOMETRIOSIS_FALLOPIAN_TUBE
+Drug- and heavy-metal-induced tubulo-interstitial and tubular conditions	N14_DRUGSANDHEAVYMETAL
+Disorders resulting from impaired renal tubular function	N14_DISIMPAIRRENTUB
+Chronic tubulo-interstitial nephritis	N14_CHRONTUBULOINTNEPHRITIS
+Dysplastic lesion of unknown severity of the cervix uteri	N14_CERVICAL_DYSPLASIA_NOS
+Cyst of Bartholin Gland	N14_BARTHOCYS
+Abscess of Bartholin gland	N14_BARTHOABSCESS
+Acquired atrophy of ovary and fallopian tube	N14_ATROPHOV
+Amenorrhoea	N14_AMENORRHEAPRIM
+Acute nephritic syndrome	N14_ACUTENEPHRITIC
+Migraine, unspecified, drug-induced	MIGRAINE_UNSPE
+Meningitis	MENINGITIS
+Maternal care for (suspected) damage to fetus from alcohol	MATERNCAREFETUSALCO
+Degenerative macular diseases, drug-induced	MACULA_NAS_ADVERSE
+Villonodular synovitis (pigmented)	M13_VILLONODULAR
+Collapsed vertebra, not elsewhere classified	M13_VERTEBCOLLAPSE
+Varus deformity, not elsewhere classified	M13_VARUS
+Transient synovitis	M13_TRANSSYNOVITIS
+Chondrocostal junction syndrome [Tietze]	M13_TIETZE
+Oher contracture of tendon (sheath)	M13_TENDONCONTRACT
+Aortic arch syndrome [Takayasu]	M13_TAKAYASU
+Systemic disorders of connective tissue in diseases classified elsewhere	M13_SYSTCONINOTH
+Disorders of synovium and tendon in diseases classified elsewhere	M13_SYNOTENDINOTH
+Synovial hypertrophy, not elsewhere classified	M13_SYNOHYPERTROPH
+Traumatic spondylopathy	M13_SPONDYLOTRAUM
+Spondylopathies in diseases classified elsewhere	M13_SPONDYLOPATHINOTH
+Other infective spondylopathies	M13_SPONDYLOINFECTION
+Spinal enthesopathy	M13_SPINENTHES
+Other fusion of spine	M13_SPINEFUSION
+Other specified/unspecified soft tissue disorders	M13_SOFTTISSUENAS
+Short Achilles tendon (acquired)	M13_SHORTACHILLES
+Other rupture of muscle	M13_RUPTUREMUSC
+Relapsing polychondritis	M13_RELAPSPOLYCHONDR
+Recurrent dislocation and subluxation of joint	M13_RECUDISLOCATIO
+Prepatellar bursitis	M13_PREPATELLARBURSITIS
+Other conditions related to polyarteritis nodosa	M13_POYARTOTH
+Postprocedural musculoskeletal disorders, not elsewhere classified	M13_POSTOPMUSCULOSKE
+Polyarteritis nodosa and related conditions	M13_POLYARTERETAL
+Peroneal tendinitis	M13_PERONEALTEND
+Recurrent dislocation of patella	M13_PATELLADISLOCATIO
+Panniculitis, unspecified	M13_PANNICULITISNAS
+Paget disease	M13_PAGET
+Other/unspecified soft tissue disorders related to use, overuse and pressure	M13_OVERUSENAS
+Other specific arthropathies	M13_OTERSPECARTHR
+Osteopathy in diseases classified elsewhere	M13_OSTEOPATHYINOTH
+Osteonecrosis	M13_OSTEONECROSIS
+Osteomyelitis of vertebra	M13_OSTEOMYELVERTEB
+Osteomalacia	M13_OSTEOMALACIA
+Other osteochondropathies	M13_OSTEOCHONDROPATHY
+Olecranon bursitis	M13_OLECRANONBURSITIS
+Other specified/unspecified necrotizing vasculopathies	M13_NECROVASCNAS
+Necrotizing fasciitis	M13_NECROFASC
+Myositis ossificans	M13_MYOSITISOSSIF
+Myalgia	M13_MYALGIA
+Contracture of muscle	M13_MUSCONTRAC
+Other specified disorders of muscle	M13_MUSCLEDISNAS
+Muscle wasting and atrophy, not elsewhere classified	M13_MUSCLEATROPH
+Multifocal fibrosclerosis	M13_MULTIFIBRO
+Metatarsalgia	M13_METATARSALGIA
+Medial epicondylitis	M13_MEDIALEPICOND
+Lordosis	M13_LORDOSIS
+Unequal limb length (acquired)	M13_LIMBLENGTH
+Other specified acquired deformities of limbs	M13_LIMBDEFORM
+Kyphosis	M13_KYPHOSIS
+Knuckle pads	M13_KNUCKLEPADS
+Kissing spine	M13_KISSING
+Mucocutaneous lymph node syndrome [Kawasaki]	M13_KAWASAKI
+Intermittent hydrarthrosis	M13_INTERHYDRARTHR
+Other infective (teno)synovitis	M13_INFTENOSYNOVITIS
+Infective bursitis	M13_INFBURSA
+Hypersensitivity angiitis	M13_HYPERANG
+Thrombotic microangiopathy	M13_HTROMBMICROANG
+Other deformity of hallux (acquired)	M13_HALLUDEFORMOTH
+Gluteal tendinitis	M13_GLUTEALTEND
+Ankylosing hyperostosis [Forestier]	M13_FORESTIER
+Residual foreign body in soft tissue	M13_FOREIGNBODY
+Deformity of finger(s)	M13_FINGERDEFORM
+Fibromyalgia	M13_FIBROMYALGIA
+Other fibroblastic disorders	M13_FIBROBLASTNAS
+Fatigue fracture of vertebra	M13_FATIGFRACT
+Other/unspecified enthesopathies of lower limb, excluding foot	M13_ENTESOPATHYLOWNAS
+Other specified/unspecified dorsopathies	M13_DORSOPATHYNAS
+Discitis, unspecified	M13_DISCITIS
+Diffuse (eosinophilic) fasciitis	M13_DIFFASCITIS
+Dermatopolymyositis, unspecified	M13_DERMATOPOLYNAS
+Other dermatomyositis	M13_DERMATOMYOTH
+Other acquired deformities of musculoskeletal system and connective tissue	M13_DEFORMACQ
+Other crystal arthropathies	M13_CRYSTALARTH
+Contracture of joint	M13_CONTRACTUREJOINT
+Acquired clawhand, clubhand, clawfoot and clubfoot	M13_CLAWCLUBHANDFOOT
+Chronic crepitant synovitis/bursitis of hand and wrist/periarthritis of wrist	M13_CHRONSYNOVITISHANDWRIST
+Chondropathies	M13_CHRONDROPATHIES
+Chondromalacia	M13_CHONDROMALACIA
+Cervicocranial syndrome	M13_CERVICOCRANSDR
+Cervicalgia	M13_CERVICALGIA
+Calcific tendinitis	M13_CALCTENDINITIS
+Calcification and ossification of muscle	M13_CALCIOSSIMUSCLE
+Calcium deposit in bursa	M13_CALCBURS
+Calcaneal spur	M13_CALCANSPUR
+Other bursopathies	M13_BURSOPATHY
+Other bursitis of knee	M13_BURSITISKNEEOTH
+Other bursitis of hip	M13_BURSITISHIPOTH
+Other bursitis of elbow	M13_BURSELBOWOTH
+Hypertrophy of bone	M13_BONEHYPERTRPH
+Other specified/unspecified disorders of  bone/cartilage	M13_BONEDISNAS
+Other disorders of bone density and structure	M13_BONEDENSOTH
+Disorders of continuity of bone	M13_BONECONTINUITY
+Behçet disease	M13_BEHCET
+Ankylosis of joint	M13_ANKYLOSISJOINT
+Other acquired deformities of ankle and foot	M13_ANKLEFOOT
+Lichenoid drug reaction	LICHENOID_DRUG_REACTION
+Xerosis cutis	L12_XEROSCUT
+Other and unspecified vasculitis limited to skin	L12_VASCULITISNAS
+Contact urticaria	L12_URTIGA_CONTACT
+Idiopathic urticaria	L12_URTICA_IDIOPAT
+Urticaria due to cold and heat	L12_URTICA_COLDHEAT
+Cholinergic urticaria	L12_URTICA_CHOLINERG
+Telogen effluvium	L12_TELOGEFFLU
+Sunburn	L12_SUNBURN
+Striae atrophicae	L12_STRIAEATROPHICAE
+Other and unspecified disorders of skin and subcutaneous tissue	L12_SKINSUBCUTISNAS
+Other disorders of skin and subcutaneous tissue related to radiation	L12_SKINRADIOTH
+Scar conditions and fibrosis of skin	L12_SCARCONDITIONS
+Radiodermatitis	L12_RADIODERMATITIS
+Pyoderma	L12_PYODERMA
+Acrodermatitis continua	L12_PSORI_ACRODERM
+Pruritus	L12_PRURITUS
+Poikiloderma of Civatte	L12_POIKOLOCIVAT
+Pityriasis rosea	L12_PITYROCHEA
+Pityriasis rubra pilaris	L12_PITYRIASISRUBRA
+Pigmented purpuric dermatosis	L12_PIGPURPDERM
+Other and unspecified disorders of pigmentation	L12_PIGMENTNAS
+Severe bullous disorders, KELA reimbursement	L12_PEMPHIKELA
+Pemphigus vulgaris	L12_PEMPHIGUS_VULG
+Other and unspecified pemphigus	L12_PEMPHIGUS_NAS
+Cicatricial pemphigoid	L12_PEMPHIGOID_CICA
+Other and unspecified parapsoriasis	L12_PARAPSO_RETIFORM
+Small plaque parapsoriasis	L12_PARAPSO_PLAQUE
+Pityriasis lichenoides et varioliformis acuta	L12_PARAPSO_PITYLICHETVARACUT
+Pityriasis lichenoides chronica	L12_PARAPSO_PITYLICHCHRON
+Parapsoriasis	L12_PARAPSORI
+Other disorders of pigmentation	L12_OTHPIGMENTATION
+Other and unspecified bullous disorders	L12_OTHERBULL
+Other and unspecified acute skin changes due to ultraviolet radiation	L12_OTHACUSKINSUNNAS
+Onycholysis	L12_NAIL_LYSIS
+Onychogryphosis	L12_NAIL_GRYPHOSIS
+Nail dystrophy	L12_NAIL_DYSTROPHY
+Other and unspecified nail disorders	L12_NAILNAS
+Livedoid vasculitis	L12_LIVEDOIDVASC
+Lichen planopilaris	L12_LICHENPLANO
+Other local infections of skin and subcutaneous tissue	L12_INFECT_SKIN_OTHER
+Impetigo	L12_IMPETIGO
+Other and unspecified hypertrophic disorders of skin	L12_HYPERTROPHICNAS
+Other hypertrichosis	L12_HYPERTICHNAS
+Hirsutism, drug-induced	L12_HIRSUTISM_ADVERSE
+Other and unspecified cicatricial alopecia	L12_HAIRLOSS_SCARNAS
+Other and unspecified nonscarring hair loss	L12_HAIRLOSS_NONSCARNAS
+Other nonscarring hair loss	L12_HAIRLOSSNONSCAR
+Hair colour and hair shaft abnormalities	L12_HAIRCOLOUR
+Transient acantholytic dermatosis [Grover]	L12_GROVER
+Other and unspecified granulomatous disorders of skin and subcutaneous tissue	L12_GRANULOMASKINNAS
+Foreign body granuloma of skin and subcutaneous tissue	L12_FOREIGNBODYGRANULOMA
+Other and unspecified follicular disorders	L12_FOLLICULARNAS
+Factitial dermatitis	L12_FACTITIALDERMAT
+Erythema intertrigo	L12_ERYT_INTERTRIG
+Erythema annulare centrifugum	L12_ERYTH_ANNULCENTRIFUG
+Erythrasma	L12_ERYTHRASMA
+Erythema in diseases classified elsewhere	L12_ERYTHINOTH
+Other erythematous conditions	L12_ERYTHEMATOUSOTH
+Erythema multiforme	L12_ERYTHEMAMULTIF
+Toxic erythema	L12_ERTYTH_TOXIC
+Eccrine sweat disorders	L12_ECCRINESWEAT
+Dyshidrosis [pompholyx]	L12_DYSHIDROSIS
+Diaper [napkin] dermatitis	L12_DIAPER
+Cutis laxa senilis	L12_CUTLAXSEN
+Chloasma	L12_CHLOASMA
+Calcinosis cutis	L12_CALCINOSISCUTIS
+Other and unspecified atrophic disorders of skin	L12_ATROPHICSKINNAS
+Apocrine sweat disorders, other sweat gland disorders	L12_APOCRINESWEAT
+Androgenic alopecia	L12_ALOPECANDRO
+Acrodermatitis chronica atrophicans	L12_ACRODERMATITIS
+Acquired keratosis [keratoderma] palmaris et plantaris	L12_ACQKERAT
+Acne varioliformis	L12_ACNE_VARIOLIFORMIS
+Other  and unspecified acne	L12_ACNE_NAS
+Acne keloid	L12_ACNEKELOID
+Other acantholytic disorders	L12_ACANTHOLYTIC
+Acanthosis nigricans	L12_ACANTHNIGRICANS
+Tic and related disorders (more control exclusions)	KRA_PSY_TIC_EXMORE
+Tic and related disorders	KRA_PSY_TIC
+Speech and linguistic disorders (more control exclusions)	KRA_PSY_SPEELING_EXMORE
+Nonorganic sleeping disorders (more control exclusions)	KRA_PSY_SLEEP_NONORG_EXMORE
+Mental and behavioural disorders of puerperium, not classified elsewhere (more control exclusions)	KRA_PSY_PUERPER_EXMORE
+Hyperkinetic disorders (more control exclusions)	KRA_PSY_HYPERKIN_EXMORE
+Wide developmental disorders (more control exclusions)	KRA_PSY_DEVWIDE_EXMORE
+Mixed disorders of conduct and emotions (more control exclusions)	KRA_PSY_CODUCTEMOT_EXMORE
+Social disorders starting during childhood or adolescence (more control exclusions)	KRA_PSY_CHILDSOC_EXMORE
+Other disorders starting during childhood or adolescence (more control exclusions)	KRA_PSY_CHILDOTH_EXMORE
+Behavioural disorders (more control exclusions)	KRA_PSY_BEHAV_EXMORE
+Autism spe (more control exclusions)	KRA_PSY_AUTISM_EXMORE
+Volvulus	K11_VOLVU
+Supernumerary teeth EXCLUDE clefts and syndromes, including avohilmo	K11_SUPNUM_ONLY_INCLAVO
+Supernumerary teeth EXCLUDE clefts and syndromes	K11_SUPNUM_ONLY
+Scissor bite	K11_SCISS_BITE
+Diseases of salivary glands	K11_SALIVARY
+Pathological resorption of teeth	K11_RESORPTION
+Peptic ulcer	K11_PULC
+Postprocedural disorders of digestive system, not elsewhere classified	K11_POSTOPDIS
+Diseases of peritoneum	K11_PERITON
+Perforation of oesophagus	K11_PERFOES
+Overjet	K11_OVERJET
+Other diseases of intestine	K11_OTHINT
+Other or unspecified ileus, impaction or obstruction	K11_OTHILEUS
+Other gastritis (incl. Duodenitis)	K11_OTHGASTR
+Other diseases of appendix	K11_OTHAPPEND
+Other diseases of anus and rectum	K11_OTHANRECT
+Oral leukoplakia and related diseases	K11_ORAL_LEUCOPLAC_RELAT
+Oral leukoplakia	K11_ORAL_LEUCOPLACIA
+Cysts of oral region, not elsewhere classified	K11_ORALCYST
+Diseases of oral cavity, salivary glands and jaws	K11_ORAL
+Ulcer of oesophagus	K11_OESULC
+Oesophageal obstruction	K11_OESOBST
+Oesophagitis, drug-induced	K11_OESITIS_ADVERSE
+Oesophagitis	K11_OESITIS
+Mandibular retrognathia AND surgery (BSSRO)	K11_MN_RETRGN_AND_SURG
+Missing teeth due to accident, extraction or parodontitis	K11_MISS_TEETH_ACCID_EXTR_PAROD
+Maxillary prognathism	K11_MAXIL_PROGN
+Impacted maxillary molar	K11_MAXIL_MOLAR_FAILED_ERUPT_OBSTRUCTION_TOOTH
+Palatinal maxillary canine	K11_MAXIL_CANINE_PALAT
+Mandibular hypoplasia	K11_MANDIBULAR_HYPOPL
+Major anomalies of jaw size	K11_MAJOR_ANOMALI_JAW_SIZE
+Liver disorders in diseases classified elsewhere	K11_LIVDISINOTH
+Intussusception	K11_INTUSS
+Impacted teeth	K11_IMPACTED_TEETH
+Impaction of intestines	K11_IMPACT
+Hepatic failure, not elsewhere classified	K11_HEPFAIL
+Gastric ulcer	K11_GULC
+Gastrojejunal ulcer	K11_GJULC
+Tooth eruption problems	K11_ERUPTION
+Erosion of teeth, including avohilmo	K11_EROSION_INCLAVO
+Embedded teeth, including avohilmo	K11_EMBED_TEETH
+Distal bite	K11_DISTAL_BITE
+Other disorders of teeth and supporting structures	K11_DISORD_TEETH
+Crossbite	K11_CROSSBITE
+Crohn's disease (strict) with PSC	K11_CD_STRICT_PSC
+Excessive attrition of teeth	K11_ATTRITION
+Intestinal adhesions without obstruction	K11_ADHE
+Acute gastritis	K11_ACUTGASTR
+Simple and mucopurulent chronic bronchitis	J10_SIMPLBRONCH
+Respiratory conditions due to other external agents	J10_RESPCONDEXT
+Pulmonary oedema	J10_PULMOEDEMA
+Pneumonia due to Streptococcus pneumoniae	J10_PNEUMOPNEUMO
+Pneumonia due to other infectious organisms, not elsewhere classified	J10_PNEUMONONBACT
+Pneumonia due to Haemophilus influenzae	J10_PNEUMOHAEM
+Other pleural conditions	J10_PLEUROTH
+Pleural effusion	J10_PLEUREFFUSION
+Acute pharyngitis	J10_PHARYNGITIS
+Suppurative and necrotic conditions of lower respiratory tract	J10_NECROTIC
+Hypersensitivity pneumonitis due to organic dust	J10_HYPERSPNEUMONI
+Lung diseases due to external agents	J10_EXTERLUNG
+Unspecified chronic bronchitis	J10_BRONCHNAS
+Adult respiratory distress syndrome	J10_ARDS
+Airway disease due to specific organic dust	J10_AIRWDISDUST
+Abscess of mediastinum	J10_ABSCMEDIASTINUM
+Abscess of lung	J10_ABSCLUNGPNEUMO
+All influenza (not pneumonia)	INFLUENZA
+Vascular syndromes of brain in cerebrovascular disorders	I9_VASCSYND
+Varicose veins of other sites	I9_VARICVESOTH
+Nonpyogenic thrombosis of intracranial venous system	I9_THROMBICV
+Thromboangiitis obliterans	I9_THROMBANG
+Occlusion and stenosis of arteries, not leading to stroke	I9_STENOSIS
+Secondary right heart disease	I9_SECONDRIGHT
+Rheumatic valve diseases	I9_RHEUVALV
+Rheumatic heart disease, other	I9_RHEUOTHHRT
+Rheumatic fever without mention of heart involvement	I9_RHEUFEVWITHOUTHEART
+Rheumatic fever with heart involvement	I9_RHEUFEVHRT
+Rheumatic fever incl heart disease	I9_RHEUFEV
+Portal vein thrombosis	I9_PVT
+Other diseases of pericardium	I9_PERICAOTH
+Other peripheral vascular diseases	I9_OTHPER
+Other other unspecified disorders of the circulatory system	I9_OTHOTH
+Other intracranial haemorrhages	I9_OTHINTRACRA
+Other or ill-defined heart diseases	I9_OTHILLHEART
+Myocarditis	I9_MYOCARD
+Complications following myocardial infarction	I9_MI_COMPLICATIONS
+Hypertension, Pulmonary Arterial	I9_HYPTENSPUL
+Hypertension, portal	I9_HYPTENSPOR
+Hypotension	I9_HYPOTE
+Hypertensive encephalopathy	I9_HYPERTENC
+Endocarditis	I9_ENDOCARD
+Embolism and thrombosis of abdominal aorta	I9_EMBTHROAOR
+Dissection of cerebral arteries, nonruptured	I9_DISCER
+Cerebral arteritis	I9_CEREBRART
+Other specified cerebrovascular diseases, other cerebrovascular disorders in diseases classified elsewhere	I9_CEREBDOTH
+Cerebral atherosclerosis	I9_CEREBATHER
+Restrictive cardiomyopathy	I9_CARDMYORESTR
+Alcoholic cardiomyopathy	I9_CARDMYOALC
+Hypotension due to drugs	HYPOTE_DRUGS
+Inguinal hernia, unilateral	HERING_UNILATERAL
+Haemophilus septicemia	HAEMOPHIL_SEPTICHE
+Vertigo of central origin	H8_VERTIGOCENT
+Tympanosclerosis	H8_TYMPSCLE
+Tinnitus	H8_TINNITUS
+Suppurative otitis media, unspecified	H8_SUP_OTINAS
+Acquired stenosis of external ear canal	H8_STENOEXTCAN
+Other/unspecified postprocedural disorders of ear and mastoid process	H8_POSTOPNAS
+Other disorders following mastoidectomy	H8_POSTMASTNAS
+Polyp of middle ear	H8_POLYPMIDD
+Noninfective disorders of pinna	H8_PINNADIS
+Perichondritis of external ear	H8_PERCHRONDR
+Otorrhagia	H8_OTORRHAGIA
+Otitis media, unspecified	H8_OTIMEDNAS
+Otalgia	H8_OTALGIA
+Noise effects on inner ear	H8_NOISEINNER
+Chronic myringitis	H8_MYRINGCHRON
+Acute myringitis	H8_MYRINGACU
+Other specified/unspecified disorders of middle ear and mastoid	H8_MIDDMASTNAS
+Adhesive middle ear disease	H8_MIDDLEADDH
+Other/unspecified mastoiditis and related conditions	H8_MASTNAS
+Chronic mastoiditis	H8_MASTCHRON
+Acute mastoiditis	H8_MASTACU
+Labyrinthitis	H8_LABYRINTHITIS
+Labyrinthine fistula	H8_LABYRFISTU
+Other specified/unspecified diseases of inner ear	H8_INNERNAS
+Ototoxic hearing loss	H8_HL_OTOTOX
+Other specified/unspecified hearing loss	H8_HL_NAS
+Conductive hearing loss, unspecified	H8_HL_CON_NAS
+Malignant otitis externa	H8_EXT_MALIGN
+Cholesteatoma of external ear	H8_EXT_CHOL
+Disorder of external ear, unspecified	H8_EXTDISINOTH
+Other specified/unspecified disorders of ear	H8_EARNAS
+Discontinuity and dislocation of ear ossicles	H8_DISCON
+Chronic suppurative otitis media	H8_CHRON_SUPOTITIS
+Impacted cerumen	H8_CERUMEN
+Other abnormal auditory perceptions	H8_ABNAUDPER
+Vitreous prolapse	H7_VITRPROLAPSE
+Other vitreous opacities	H7_VITROPACIT
+Crystalline deposits in vitreous body	H7_VITRCRYSTAL
+Disorder of visual pathways, unspecified	H7_VISUALPATHNAS
+Other and unspecified visual disturbances	H7_VISDISTNAS
+Vertical strabismus	H7_VERTISTRAB
+Mechanical strabismus	H7_STRABMECH
+Other retinal disorders in diseases classified elsewhere	H7_RETINODISINOTH
+Other specified and unspecified retinal disorders	H7_RETINANAS
+Transient retinal artery occlusion	H7_RETARTOCCTRANS
+Disorders of refraction and accommodation	H7_REFRAACCOMMODIS
+Other proliferative retinopathy	H7_PROLIFRETINOPATHOTH
+Other and unspecified postprocedural disorders of eye and adnexa	H7_POSTOPEYENAS
+Other or unspecified paralytic strabismus	H7_PARASTRANAS
+Sixth [abducent] nerve palsy	H7_PARASTRA6
+Papilloedema, unspecified	H7_PAPILLOEDEMA
+Other disorders of conjunctiva	H7_OTHERCONJ
+Other endophthalmitis	H7_OTHENDOPHTHALMITIS
+Other and unspecified disorders of orbit	H7_ORBITNAS
+Chronic inflammatory disorders of orbit	H7_ORBITINFLAMCHRON
+Acute inflammation of orbit	H7_ORBITINFLAMACU
+Disorders of optic nerve, not elsewhere classified	H7_OPTNERVNAS
+Other disorders of optic disc	H7_OPTICDISCOTH
+Optic atrophy	H7_OPTATROPHY
+Mild or no visual impairment, binocular	H7_MILDVISIMPBINOC
+Inflammation of lacrimal passages (chronic)	H7_LACRIMINFLAMCHRON
+Keratitis and keratoconjunctivitis in other diseases classified elsewhere	H7_KERATITISINOTH
+Other specified and unspecified disorders of iris and ciliary body	H7_IRISCILIARYNAS
+Lens-induced iridocyclitis	H7_IRIDOLENS
+Intermittent heterotropia	H7_INTERHETEROTRO
+Hordeolum and other deep inflammation of eyelid	H7_HORDEOLUM
+Herpesviral keratitis and keratoconjunctivitis	H7_HERPESKERATITIS
+Other and unspecified disorders of globe	H7_GLOBENAS
+Degenerative conditions of globe	H7_GLOBEDEGENERATED
+Disorders of globe	H7_GLOBE
+Glaucoma secondary to eye trauma	H7_GLAUCSECTRAUMA
+Glaucoma secondary to drugs	H7_GLAUCSECDRUG
+Juvenile Open Angle Glaucoma	H7_GLAUCOMA_JOAG
+Postprocedural disorders of eye and adnexa, not elsewhere classified	H7_EYEPOSTOP
+Other specified and unspecified  disorders of eyelid	H7_EYELIDNAS
+Disorders of eyelid in diseases classified elsewhere	H7_EYELIDINOTH
+Other inflammation of eyelid	H7_EYELIDINFLAMMATION
+Other disorders affecting eyelid function	H7_EYELIDFUNC
+Other degenerative disorders of eyelid and periocular area	H7_EYELIDDEGEN
+Other specified and unspecified disorders of eye and adnexa	H7_EYEADNEXOTH
+Diplopia	H7_DIPLOPIA
+Dacryoadenitis	H7_DACRYOADENITIS
+Cyst of iris, ciliary body and anterior chamber	H7_CYSTIRIS
+Corneal pigmentations and deposits	H7_CORNEAPIGMENT
+Corneal scars and opacities	H7_CORNEALSCAR
+Changes in corneal membranes	H7_CORNEALMEMBRANE
+Convergent concomitant strabismus	H7_CONVERSTRAB
+Convergence insufficiency and excess	H7_CONVERGINSUFF
+Other conjunctival vascular disorders and cysts	H7_CONJUVASC
+conjunctival scars	H7_CONJUNCTSCAR
+Atopic conjunctivitis	H7_CONJUNCTIVITISATOPIC
+Conjunctivitis (acute, non atopic)	H7_CONJUNCTIVITISACUNONATOPIC
+conjunctival degenerations and deposits	H7_CONJUNCTDEGDEPOT
+Other specified and unspecified disorders of conjunctiva	H7_CONJUNAS
+conjunctival haemorrhage	H7_CONJUHAEMOR
+Chorioretinal scars	H7_CHORSCAR
+Other specified and unspecified disorders of choroid	H7_CHORNAS
+Choroidal haemorrhage and rupture	H7_CHORHAEMORRHAGE
+Choroidal detachment	H7_CHORDETACH
+Blindness, monocular	H7_BLINDMONOCULAR
+Other disorders of binocular movement	H7_BINOCUMOVOTH
+Other and unspecified disorders of binocular movement	H7_BINOCUMOVNAS
+Background retinopathy and retinal vascular changes	H7_BCKRNDRETINOPAT
+Astigmatism	H7_ASTIGMATISM
+Anomalies of pupillary function	H7_ANOMAPUPFUNC
+Pupillary membranes and other adhesions and disruptions of iris and ciliary body	H7_ADHESIOIRIS
+Other secondary gout	GOUT_SCND
+Gout due to impairment of renal function	GOUT_KIDNEY
+Generalized epilepsy, strict definition	GE_STRICT
+Gastric ulcer - Acute with haemorrhage, drug-induced	GASTRIC_ULCER_ACUTE_W_HAEMORRHAGE
+Lesion of ulnar nerve	G6_ULLNLE
+Trigeminal neuralgia	G6_TRINEU
+Thoracic root disorders	G6_THROOT
+Tetraplegia	G6_TETRAPLE
+Tarsal tunnel syndrome	G6_TARSTUN
+Other diseases of spinal cord	G6_SPINOTH
+Other sleep disorders	G6_SLEEPDISOTH
+Lesion of radial nerve	G6_RADLES
+Postviral fatigue syndrome	G6_POSTVIRFAT
+Postpolio syndrome	G6_POSTPOLIO
+Postprocedural disorders of nervous system	G6_POSTOPNEURO
+Phantom limb syndrome	G6_PHANTOM
+Paraplegia, diplegia of upper limbs	G6_PARDIPLE
+Other and unspecified paralytic syndromes	G6_PARALOTHUNS
+Other disorders of nervous system	G6_NEUROOTH
+Sequelae of inflammatory diseases of the central nervous system	G6_NEUROINFSEQ
+Neuralgic amyotrophy	G6_NEURAMYO
+Other and unspecified myoneural disorders	G6_MYONEUOTHUNS
+Myasthenia gravis, drug-induced	G6_MYASTHENIA_ADVERSE
+Myasthenia gravis	G6_MYASTHENIA
+Monoplegia	G6_MONOPLE
+Other and unspecified mononeuropathies of upper limb	G6_MONONPOTHUS
+Other and unspecified mononeuropathies of lower limb	G6_MONOLOWOTHUNS
+Mononeuritis multiplex	G6_MONNEURMPLX
+Migraine with aura, drug-induced	G6_MIGRAINE_WITH_AURA_ADVERSE
+Meralgia paraesthetica	G6_MERALGIA
+Other meningitis	G6_MENINGOTH
+Bacterial meningitis	G6_MENINGBACT
+Other lesions of median nerve	G6_MEDLEOTH
+Lumbosacral root disorders, not elsewhere classified	G6_LSROOT
+Idiopathic progressive neuropathy	G6_IPNEUROP
+Inflammatory myopathy	G6_INFLAMYOP
+Idiopathic peripheral autonomic neuropathy	G6_IDIOAUT
+Intercostal neuropathy	G6_ICNEUROP
+Horner syndrome	G6_HORNER
+Other and unspecified neuropathies	G6_HERIPOTHUN
+Hemiplegia	G6_HEMIPLE
+Post-traumatic hydrocephalus, unspecified	G6_HCPOSTRAU
+Other and unspecified hydrocephalus	G6_HCOTHUNS
+Obstructive hydrocephalus	G6_HCOBSTR
+Hydrocephalus in other diseases	G6_HCINOTH
+Communicating hydrocephalus	G6_HCCOMM
+Lesion of medial popliteal nerve	G6_FEMMEPOP
+Lesion of femoral nerve	G6_FEMLE
+Lesion of lateral popliteal nerve	G6_FEMLAPOP
+Other encephalitis	G6_ENCEPHOTH
+Encephalopathy	G6_ENCEPATH
+Drug-induced polyneuropathy	G6_DRUGPOLY
+Disorders of other and unspecified cranial nerves	G6_DISOTHUNS
+Disorders of glossopharyngeal nerve	G6_DISGLO
+Disorders of brain, other and unspecified	G6_DISBROTHUNS
+Senile degeneration of the brain, not elsewhere classified	G6_DEGENSEN
+Other cranial nerve disorders in other disorders	G6_CRAINOTH
+Cerebral palsy and other paralytic syndromes	G6_CPETAL
+Cerebral palsy	G6_CP
+Congenital myopathies	G6_CONMYOP
+Other disorders of central nervous system	G6_CNSOTH
+Intracranial and intraspinal abscess and granuloma	G6_CNSABSC
+Cluster headache, wide	G6_CLUSTHEADACHE_WIDE
+Cluster headache, strict, including avohilmo	G6_CLUSTHEADACHE_STRICT_INCLAVO
+Cervical root disorders	G6_CERVROOT
+Cerebral oedema	G6_CEROEDEMA
+Cerebral cysts	G6_CERCYST
+Cauda equina syndrome	G6_CAUDA
+Brachial plexus disorders	G6_BRACHPLE
+Benign intracranial hypertension	G6_BENINTRAHYP
+Other degenerative diseases of the basal ganglia	G6_BASDEGENOTH
+Autonomic disorders	G6_AUTONOM
+Atypical facial pain	G6_ATYFAC
+Anoxic brain damage	G6_ANOXBRAINDAM
+Alcohol induced polyneuropathy	G6_ALCOPOLY
+Acute disseminated encephalitis/encephalomyelitis	G6_ADEM
+Food allergy	FOOD_ALLERGY
+Fibrosis of liver	FIBROLIV
+Focal epilepsy, strict definition	FE_STRICT
+Focal epilepsy, mode (most common among epilepsy diagnosis)	FE_MODE
+Focal epilepsy	FE
+Unspecified organic or symptomatic mental disorder	F5_UNSORG
+Somatoform disorder	F5_SOMATOFORM
+Mental and behavioural disorders due to use of volatile solvents	F5_SOLVENT
+Social phobias	F5_SOCPHOB
+Sleep disorders, other/unspecified	F5_SLEEP_NOS
+Sleepwalking [somnambulism]	F5_SLEEPWALKING
+Disorder of the sleep-wake schedule	F5_SLEEPWAKE
+Sleep terrors [night terrors]	F5_SLEEPTERRORS
+Physiological and behavioural disorders associated with sexual development and orientation	F5_SEXUAL
+Sexual dysfunction	F5_SEXDYS
+Severe mental retardation	F5_SEVRET
+Mental and behavioural disorders due to sedatives or hypnotics	F5_SEDAHYP
+Schizophrenia	F5_SCHZPHR
+Specific development disorders of scholastic skills	F5_SCHOLA
+Schizoid personality disorder	F5_SCHIZPER
+Schizotypal disorder	F5_SCHIZOTYP
+Schizoaffective disorder	F5_SCHIZOAFF
+Post-traumatic stress disorder	F5_PTSD
+Acute and transient psychotic disorders	F5_PSYTRANS
+Other and unspecified nonorganic psychotic disorders	F5_PSYCHOTH
+Disorders of psychological development	F5_PSYCHDEV
+Phobic anxiety disorders	F5_PHOBANX
+Pervasive developmental disorders excl. Autism + Asperger	F5_PERVASIVE
+Other and unspecified disorders of adult personality and behaviour	F5_PERSOTH
+Persistent mood disorders	F5_PERSMOOD
+Panic disorder	F5_PANIC
+Other and unspecified mental retardation	F5_OTHRET
+Other specified and unspecified personality disorders	F5_OTHPER
+Mental and behavioural disorders due to opioids	F5_OPIOIDS
+Obsessive-compulsive disorder	F5_OCD
+Nightmares	F5_NIGHTMARES
+Other and unspecified mood [affective] disorders	F5_MOODOTH
+Mixed specific developmental disorders	F5_MIXEDDEV
+Mental disorders, not otherwise specified	F5_MENTALUNSPE
+Manic episode	F5_MANIA
+Kela-code for behavioural disturbances in mental retardation	F5_KELARET
+Hyperkinetic disorders (excl. ADHD)	F5_HYPERKIN
+Histrionic personality disorder	F5_HISPER
+Mental and behavioural disorders due to hallucinogens	F5_HALLUCIN
+Gender identity disorders	F5_GENDER
+Other eating disorders	F5_EATOTH
+Dissocial personality disorder	F5_DISPER
+Psychotic depression	F5_DEPRESSION_PSYCHOTIC
+Dependent personality disorder	F5_DEPPER
+Mental and behavioural disorders due to cocaine	F5_COCAINE
+Bulimia nervosa (incl. atypical)	F5_BULIMIA
+Behavioural and emotional disorders with onset usually occurring in childhood and adolescence	F5_BEHEMOCHILD
+Behavioural syndromes associated with physiological disturbances and physical factors	F5_BEHAVE
+Anxious personality disorder	F5_ANXPER
+Agoraphobia	F5_AGORAPHOBIA
+Eosinophilic disease (BM)	ESOSINOPHIL_DISEASE
+Epileptic seizures related to alcohol	EPISEIZALCO
+Epileptic seizures related to drugs	EPILEPTIC_SEIZU_RELATED_DRUGS
+Enteropathogenic Escherichia coli infection	ENTEROPATH_E_COLI
+Enterohaemorrhagic Escherichia coli infection	EHEC
+Volume depletion	E4_VOLUME
+Thyrotoxicosis factitia	E4_THYTOXFAC
+Disorder of thyroid, unspecified	E4_THYROIDNASOTH
+Drug-induced thyroiditis	E4_THYROIDITDRUG
+Acute thyroiditis	E4_THYROIDITACU
+Disease of thymus, other/unspecified	E4_THYMUSDISNAS
+Diseases of thymus	E4_THYMUSDIS
+Thyroid crisis or storm	E4_THYCRISIS
+Thiamine deficiency	E4_THIA_DEF
+Testicular hypofunction	E4_TESTICHYPO
+Testicular dysfunction, other/unspecified	E4_TESTICDYSNAS
+Sequelae of malnutrition and other nutritional deficiencies	E4_SEQUMAL
+Disorders of puberty, other/unspecified	E4_PUBDISNAS
+Unspecified severe protein-energy malnutrition	E4_PROTMALSEVERNAS
+Protein-energy malnutrition of moderate and mild degree	E4_PROTMALMODMILD
+Precocious puberty	E4_PREPUB
+Precocious central puberty	E4_PRECOXCENTPUB
+Other porphyria	E4_PORPHYNAS
+Disorder of pancreatic internal secretion, other and/or unspecified	E4_PANCSECNAS
+Primary ovarian failure	E4_OVARFAIL
+Ovarian dysfunction: androgen excess	E4_ODANDRO
+Drug-induced obesity	E4_OBESITYDRUG
+Disorders of magnesium metabolism	E4_MG_MET
+Magnesium deficiency	E4_MG_DEF
+Nutritional marasmus	E4_MARASMUS
+Marasmic kwashiorkor	E4_MARAKWASH
+Malnutrition	E4_MALNUTRITION
+Localized adiposity	E4_LOCALADIP
+Lipomatosis, not elsewhere classified	E4_LIPOMATOSIS
+Lipodystrophy, not elsewhere classified	E4_LIPODYST
+Lipoprotein deficiency	E4_LIPODEF
+Kwashiorkor	E4_KWASHIORKOR
+Hypothyroidism, autoimmune, DX-based	E4_HYTHY_AI_DX
+Hypothyroidism due to medicaments and other exogenous substances	E4_HYTHYSUBS
+Hypothalamic dysfunction, including iatrogenic, not elsewhere classified	E4_HYPOTHALDYSF
+Hypopituitarism	E4_HYPOPIT
+Hyperuricaemia without signs of inflammatory arthritis and tophaceous disease	E4_HYPERURI
+Hyperprolactinaemia, drug-induced	E4_HYPERPRO_ADVERSE
+Hyperprolactinaemia	E4_HYPERPRO
+Hyperfunction of pituitary gland, other and/or unspecified	E4_HYPERPITNAS
+Hyperfunction of pituitary gland	E4_HYPERPIT
+Hyperosmolality and hypernatraemia	E4_HYPEROSMHNAT
+Hyperkalaemia	E4_HYPERKALAEMIA
+Hyperchylomicronaemia	E4_HYPERCHYLO
+Sequelae of hyperalimentation	E4_HYPERALISEQ
+Other hyperalimentation	E4_HYPERALI
+Fluid overload	E4_FLUIDOVER
+Other disorders of electrolyte and fluid balance, not elsewhere classified	E4_FLUIDELECTRONAS
+Endocrine disorders, other/unspecified	E4_ENDODISNAS
+Disorders of endocrine glands in diseases classified elsewhere	E4_ENDINOTH
+Diabetes insipidus	E4_DIABINSIPIDUS
+Delayed puberty	E4_DELPUB
+Disorder of carbohydrate metabolism, other/unspecified	E4_CARBONAS
+Atrophy of thyroid (acquired)	E4_ATROTHY
+Secondary systemic amyloidosis	E4_AMYL_SCNDSYST
+Disorders of amino-acid transport	E4_AMINOTRANSPORT
+Alkalosis	E4_ALKALOSIS
+Disorders of adrenal gland, other and/or unspecified	E4_ADRENAS
+Adrenomedullary hyperfunction	E4_ADREMEDHYPER
+Acromegaly and pituitary gigantism	E4_ACROMEG
+Acidosis	E4_ACIDOSIS
+Duodenal ulcer - Unspecified as acute or chronic, without haemorrhage or perforation, drug-induced	DUODENAL_ULCER_UNSPE_ACUTE_CHRONIC_WO_HAEMORRHAGE_PERFORATION
+Duodenal ulcer - Acute with haemorrhage, drug-induced	DUODENAL_ULCER_ACUTE_W_HAEMORRHAGE
+Drug-induced tremor	DRUGADVERS_TREMOR
+Drug-induced osteoporosis	DRUGADVERS_OSTEOPO
+Drug-induced interstitial lung disorders, unspecified	DRUGADVERS_INTERSTITIAL_LUNG_DISORD_UNSPE
+Drug-induced headache, not elsewhere classified	DRUGADVERS_HEADA_NOT_ELSEW_CLASSIFIED
+Drug-induced gout	DRUGADVERS_GOUT
+Drug-induced dystonia	DRUGADVERS_DYSTON
+Drug-induced aplastic anaemia	DRUGADVERS_APLAST_ANAEM
+Drug-induced adrenocortical insufficiency	DRUGADVERS_ADRENOCORTICAL_INSUFFICIENCY
+Drug-induced acute pancreatitis	DRUGADVERS_ACUTE_PANCREATIT
+Other and unspecified disorders of white blood cells	D3_WHITEBLOODCELLNAS
+Thrombocytopenia, unspecified	D3_THROMBOCYTOPENIANAS
+Other and unspecified diseases of spleen	D3_SPLEENNAS
+Diseases of spleen	D3_SPLEENDISEASE
+Secondary sideroblastic anaemia	D3_SIDEROANASCND
+Other sideroblastic anaemias	D3_SIDEROANAMIEAOTHER
+Hereditary sideroblastic anaemia	D3_SIDEROANAEMIAHERED
+Sickle-cell disorders	D3_SICKLECELLDIS
+Secondary thrombocytopenia	D3_SCNDTHROMBOCYTOPENIA
+Secondary polycythaemia	D3_SCNDPOLYCYTHAEMIA
+Severe combined immunodeficiency [SCID] with reticular dysgenesis	D3_SCIDA
+Qualitative platelet defects	D3_QUALIPATELETDEF
+Purpura and other haemorrhagic conditions	D3_PURPURA_AND3_OTHER_HAEMORRHAGIC
+Other disorders of white blood cells	D3_OTHERWHITECELL
+Other specified diseases with participation of lymphoreticular and reticulohistiocytic tissue	D3_OTHDISLYMPHORETANDRETICULOHIST
+Other nutritional anaemias	D3_NUTRIANAEMIAOTHER
+Nonhereditary hypogammaglobulinemia	D3_NONHEREDHYPOGAMMA
+Other nonautoimmune haemolytic anaemias	D3_NOCT_HAEMOGLOBINURIA
+Kela reimbursement Agammaglobulinemia (D80-84)	D3_KELA_IMMUDEF
+Idiopathic thrombocytopenic purpura	D3_ITP
+Infarction of spleen	D3_INFARCTSPLEEN
+Immunodeficiency associated with other major defects	D3_IMMUDEFWITHMAJORDEF
+Other or unspecified immunodeficiency	D3_IMMUDEFNAS
+Other and unspecified immunodeficiencies with predominantly antibody defects	D3_IMMUDEFANTIBODYNAS
+Immunodeficiencies	D3_IMMUDEF
+Hypersplenism	D3_HYPERSPLENISM
+Hereditary factor VIII deficiency	D3_HEREDFVIIIDEF
+Haemorrhagic disorder due to circulating anticoagulants	D3_HAEMORRHAGCIRGUANTICO
+Haemolytic anaemias	D3_HAEMOLYTICANAEMIA
+Familial erythrocytosis	D3_FAMIERYTHROCYTOCIS
+Disseminated intravascular coagulation [defibrination syndrome]	D3_DISSEINTRAVASCCOAG
+Cyst of spleen	D3_CYSTSPLEEN
+Common variable immunodeficiency with predominant abnormalities of B-cell numbers and function	D3_CVID_BCELL
+Other or unspecified common variable immunodeficiency	D3_CVIDNAS
+Cryoglobulinemia	D3_CRYOGLOBU
+Combined immunodeficiencies	D3_COMBIMMUDEF
+Other and unspecified diseases of blood and blood-forming organs	D3_BLOODNAS
+Folate deficiency anaemia	D3_ANAEMIA_FOLATEDEF
+Anaemia in chronic diseases classified elsewhere	D3_ANAEMIAINCHRONICDISEASE
+Other autoimmune haemolytic anaemias	D3_AIHA_OTHER
+Acquired pure red cell aplasia [erythroblastopenia]	D3_ACQPUREREDCLLAPLASIA
+Other and unspecified acquired haemolytic anaemias	D3_ACQHAEMOLYTICANAEMIANAS
+Acquired coagulation factor deficiency	D3_ACQCOAFACDEF
+Pseudopolyposis of colon	COLONPSEUDOP
+Cytomegaloviral pneumonitis	CMV_PNEUMONIA
+Other/unspecified crystal arthropathies	CHRYSTAL_NOS
+Chronic drug-induced interstitial lung disorders	CHRONIC_DRUGADVERS_INTERSTITIAL_LUNG_DISORD
+Mature T/NK-cell lymphomas, hilmo (controls excluding all cancers)	CD2_TNK_LYMPHOMA_EXALLC
+Other and unspecified malignant neoplasms of lymphoid, haematopoietic and related tissue (controls excluding all cancers)	CD2_PRIMARY_LYMPHOID_HEMATOPOIETIC_NAS_EXALLC
+Other leukaemias of specified cell type (controls excluding all cancers)	CD2_OTHER_LEUKAEMIA_SPECIFIED_EXALLC
+Monocytic leukaemia (controls excluding all cancers)	CD2_MONOCYTIC_LEUKAEMIA_EXALLC
+Leukaemia of unspecified cell type (controls excluding all cancers)	CD2_LEUKAEMIA_NAS_EXALLC
+Carcinoma in situ of vagina (controls excluding all cancers)	CD2_INSITU_VAGINA_EXALLC
+Carcinoma in situ of rectum (controls excluding all cancers)	CD2_INSITU_RECTUM_EXALLC
+Carcinoma in situ of penis (controls excluding all cancers)	CD2_INSITU_PENIS_EXALLC
+Carcinoma in situ of oral cavity and pharynx (controls excluding all cancers)	CD2_INSITU_OROPHARYNX_EXALLC
+Carcinoma in situ of oral cavity (controls excluding all cancers)	CD2_INSITU_ORALCAVITY_EXALLC
+Carcinoma in situ of larynx (controls excluding all cancers)	CD2_INSITU_LARYNX_EXALLC
+Carcinoma in situ of colon (controls excluding all cancers)	CD2_INSITU_COLON_EXALLC
+Carcinoma in situ of breast, lobular (controls excluding all cancers)	CD2_INSITU_BREAST_LOBULAR_EXALLC
+Carcinoma in situ of breast (controls excluding all cancers)	CD2_INSITU_BREAST_EXALLC
+Benign neoplasm: Eye, unspecified (controls excluding all cancers)	CD2_EYE_NOS_EXALLC
+Other benign neoplasm of uterus: Other parts/unspecified	CD2_BENIGN_UTERUS_NOS
+Benign neoplasm: Uterine tubes and ligaments	CD2_BENIGN_UTERINE_TUBES_LIGAMENTS
+Benign neoplasm: Urinary organ, other/unspecified	CD2_BENIGN_URINARY_NOS
+Benign neoplasm: Tonsil	CD2_BENIGN_TONSIL
+Benign neoplasm: Tongue	CD2_BENIGN_TONGUE
+Benign neoplasm: Thymus	CD2_BENIGN_THYMUS
+Benign neoplasm: Small intestine	CD2_BENIGN_SMALL_INTESTINE
+Benign neoplasm: Scrotum	CD2_BENIGN_SCROTUM
+Benign neoplasm: other/unspecified salivary gland	CD2_BENIGN_SALIVARY_NOS
+Benign neoplasm: Ribs, sternum and clavicle	CD2_BENIGN_RIBS_STERNUM_CLAVICLE
+Benign neoplasm of soft tissue of retroperitoneum and peritoneum	CD2_BENIGN_RETROPERITONEUM_PERITONEUM
+Benign neoplasm: Respiratory system, unspecified	CD2_BENIGN_RESPIRATORY_NOS
+Benign neoplasm: Renal pelvis	CD2_BENIGN_RENALPELVIS
+Benign neoplasm: Prostate	CD2_BENIGN_PROSTATE
+Benign neoplasm: Pineal gland	CD2_BENIGN_PINEAL
+Benign neoplasm: Pharynx, unspecified	CD2_BENIGN_PHARYNX_NOS
+Benign neoplasm: Penis	CD2_BENIGN_PENIS
+Benign neoplasm: Pelvic bones, sacrum and coccyx	CD2_BENIGN_PELVIC_BONES_SACRUM_COCCYX
+Benign neoplasm: Pancreas	CD2_BENIGN_PANCREAS
+Benign neoplasm of other and ill-defined parts of digestive system	CD2_BENIGN_OTHERDIGESTIVE
+Benign neoplasm: Other parts of oropharynx	CD2_BENIGN_OROPHA_OTHER
+Benign neoplasm: Orbit, unspecified	CD2_BENIGN_ORBIT_NOS
+Benign neoplasm: Oesophagus	CD2_BENIGN_OESOPHAGUS
+Benign neoplasm of mouth and pharynx	CD2_BENIGN_MOUTH_PHARYNX
+Benign neoplasm: Spinal meninges	CD2_BENIGN_MENINGES_SPINAL
+Beningn neoplasm: Meninges, unspecified	CD2_BENIGN_MENINGES_NOS
+Melanocytic naevi of scalp and neck	CD2_BENIGN_MELANOCYTIC_SCALPNECK
+Melanocytic naevi of lip	CD2_BENIGN_MELANOCYTIC_LIP
+Melanocytic naevi of other and unspecified parts of face	CD2_BENIGN_MELANOCYTIC_FACE
+Melanocytic naevi of eyelid, including canthus	CD2_BENIGN_MELANOCYTIC_EYELID
+Benign neoplasm of male genital organs	CD2_BENIGN_MALE_GEN
+Benign neoplasm: Lymph nodes	CD2_BENIGN_LYMPHNODES
+Lymphangioma, anys site	CD2_BENIGN_LYMPHANGIOMA
+Benign neoplasm: Liver	CD2_BENIGN_LIVER
+Benign lipomatous neoplasm of other sites/unspecified	CD2_BENIGN_LIPO_NOS
+Benign lipomatous neoplasm of  of intra-abdominal organs	CD2_BENIGN_LIPO_INTRATHO
+Benign neoplasm: Kidney	CD2_BENIGN_KIDNEY
+Benign neoplasm: Other specified/unspecified intrathoracic organs (+ respiratory system NOS of Icd-9)	CD2_BENIGN_INTRATHORACIC_NOS
+Benign neoplasm of other and unspecified intrathoracic organs	CD2_BENIGN_INTRATHORACIC
+Benign neoplasm: Hypopharynx	CD2_BENIGN_HYPOPHARYNX
+Haemangioma, any site	CD2_BENIGN_HEMANGIOMA
+Haemangioma and lymphangioma, any site	CD2_BENIGN_HEAMANGIOMA_LYMPHANGIOMA
+Benign neoplasm: Floor of mouth	CD2_BENIGN_FLOOROFMOUTH
+Benign neoplasm of other and unspecified female genital organs	CD2_BENIGN_FEMALE_GEN_OTH
+Benign neoplasm: Female genital organ, unspecified	CD2_BENIGN_FEMALE_GEN_NOS
+Benign neoplasm: Extrahepatic bile ducts	CD2_BENIGN_EXTRAHEPATIC_BILE
+Benign neoplasm: Epididymis	CD2_BENIGN_EPIDIDYMIS
+Benign neoplasm: Endocrine gland, other/unspecified	CD2_BENIGN_ENDOCRINE_NOS
+Benign neoplasm of middle ear and respiratory system	CD2_BENIGN_EAR_RESP
+Benign neoplasm: Cornea	CD2_BENIGN_CORNEA
+Benign neoplasm: Connective and other soft tissue of trunk, unspecified	CD2_BENIGN_CONNSOFT_TRUNK
+Benign neoplasm: Connective and other soft tissue of pelvis	CD2_BENIGN_CONNSOFT_PELVIS
+Benign neoplasm: Connective and other soft tissue of abdomen	CD2_BENIGN_CONNSOFT_ABD
+Other benign neoplasms of connective and other soft tissue	CD2_BENIGN_CONNECTIVE_SOFT
+Benign neoplasm: Conjunctiva	CD2_BENIGN_CONJUNCTIVA
+Benign neoplasm: Ciliary body	CD2_BENIGN_CILIARY
+Other benign neoplasm of uterus: Cervix uteri	CD2_BENIGN_CERVIX_UTERI
+Benign neoplasm: Carotid body	CD2_BENIGN_CAROTIDBODY
+Benign neoplasm: Bronchus and lung	CD2_BENIGN_BRONCHUS_LUNG
+Benign neoplasm: Brain, supratentorial	CD2_BENIGN_BRAIN_SUPRATENT
+Benign neoplasm: Brain, unspecified	CD2_BENIGN_BRAIN_NOS
+Benign neoplasm: Brain, infratentorial	CD2_BENIGN_BRAIN_INFRATENT
+Benign neoplasm: Bones of skull and face	CD2_BENIGN_BONE_SKULL_FACE
+Benign neoplasm: Lower jaw bone	CD2_BENIGN_BONE_LOWER_JAW
+Benign neoplasm: Bone and articular cartilage, unspecified	CD2_BENIGN_BONE_CARTILAGE_NOS
+Benign neoplasm: Bladder	CD2_BENIGN_BLADDER
+Benign neoplasm: Anus and anal canal	CD2_BENIGN_ANUS_ANAL_CANAL
+Cardiomyopathy due to drugs and other external agents	CARDIOMYOPATHY_DRUGS_OTHER_EXTER_AGENTS
+Wilms' tumor, excluding all cancers (controls excluding all cancers)	C3_WILMS_TUMOR_EXALLC
+Wilms' tumor	C3_WILMS_TUMOR
+Malignant neoplasm of vulva, excluding all cancers (controls excluding all cancers)	C3_VULVA_EXALLC
+Malignant neoplasm of vagina, excluding all cancers (controls excluding all cancers)	C3_VAGINA_EXALLC
+Malignant cancer of tonsil and base of tongue, excluding all cancers (controls excluding all cancers)	C3_TONSIL_BASETONGUE_EXALLC
+Medullary carcinoma of thyroid gland, excluding all cancers (controls excluding all cancers)	C3_THYROID_MEDULLARY_EXALLC
+Malignant neoplasm of spinal cord, cranial nerves and other parts of central nervous system, excluding all cancers (controls excluding all cancers)	C3_SPINAL_CORD_CRANIAL_AND_OTHER_CNS_EXALLC
+Rhabdomyosarcoma, excluding all cancers (controls excluding all cancers)	C3_RHABDOMYOSARCOMA_EXALLC
+Malignant neoplasm of renal pelvis, excluding all cancers (controls excluding all cancers)	C3_RENAL_PELVIS_EXALLC
+Neuroendocrine tumor and carcinoma of rectum, excluding all cancers (controls excluding all cancers)	C3_RECTUM_NEUROENDOCRINE_EXALLC
+Malignant neoplasm of penis, excluding all cancers (controls excluding all cancers)	C3_PENIS_EXALLC
+Malignant neoplasm of parotid gland, excluding all cancers (controls excluding all cancers)	C3_PAROTIDGLAND_EXALLC
+Granulosa cell carcinoma of ovary, excluding all cancers (controls excluding all cancers)	C3_OVARY_GRANULOSA_EXALLC
+Malignant neoplasm of ovary, excluding all cancers (controls excluding all cancers)	C3_OVARY_EXALLC
+Endometroid carcinoma of ovary, excluding all cancers (controls excluding all cancers)	C3_OVARY_ENDOMETROID_EXALLC
+Osteosarcoma, excluding all cancers (controls excluding all cancers)	C3_OSTEOSARCOMA_EXALLC
+Malignant neoplasm of nasopharynx, excluding all cancers (controls excluding all cancers)	C3_NASOPHARYNX_EXALLC
+Myelodysplastic syndrome, excluding all cancers (controls excluding all cancers)	C3_MYELODYSP_SYNDR_EXALLC
+Malignant neoplasm of meninges, excluding all cancers (controls excluding all cancers)	C3_MENINGES_EXALLC
+Neuroendocrine tumor and carcinoma of lung, excluding all cancers (controls excluding all cancers)	C3_LUNG_NEUROENDO_EXALLC
+Liposarcoma, excluding all cancers (controls excluding all cancers)	C3_LIPOSARCOMA_EXALLC
+Leiomyosarcoma, excluding all cancers (controls excluding all cancers)	C3_LEIOMYOSARCOMA_EXALLC
+Chromophobe cell carcinoma of kidney, excluding all cancers (controls excluding all cancers)	C3_KIDNEY_CHROMOPHOBE_EXALLC
+Kaposi sarcoma, excluding all cancers (controls excluding all cancers)	C3_KAPOSI_SARCOMA_EXALLC
+Gastrointestinal stromal tumor and sarcoma, excluding all cancers (controls excluding all cancers)	C3_GASTRINT_STROM_EXALLC
+Fibrosarcoma, excluding all cancers (controls excluding all cancers)	C3_FIBROSARCOMA_EXALLC
+Ependymoma, excluding all cancers (controls excluding all cancers)	C3_EPENDYDOMA_EXALLC
+Malignant neoplasm of corpus uteri, excluding all cancers (controls excluding all cancers)	C3_CORPUS_UTERI_EXALLC
+Colorectal neuroendocrine tumor and carcinoma, excluding all cancers (controls excluding all cancers)	C3_COLORECTAL_NEUROENDO_EXALLC
+Rare circulating lymphoid malignancy	C3_CIRCULATING_LYMPHOID
+Adenocarcinomas of cervix, excluding all cancers (controls excluding all cancers)	C3_CERVIX_ADENO_EXALLC
+Malignant neoplasm of bone and articular cartilage, excluding all cancers (controls excluding all cancers)	C3_BONE_CARTILAGE_EXALLC
+Malignant neoplasm of anus and anal canal, excluding all cancers (controls excluding all cancers)	C3_ANUS_ANALCANAL_EXALLC
+Acute myeloid leukaemia and myelodysplastic syndromes, excluding all cancers (controls excluding all cancers)	C3_AML_MDS_EXALLC
+Acute myeloid leukaemia and myelodysplastic syndromes	C3_AML_MDS
+Acute myeloid leukaemia, excluding all cancers (controls excluding all cancers)	C3_AML_EXALLC
+Acute lymphocytic leukaemia, excluding all cancers (controls excluding all cancers)	C3_ALL_EXALLC
+Malignant neoplasm of adrenal gland, excluding all cancers (controls excluding all cancers)	C3_ADRENAL_GLAND_EXALLC
+Other specified/unspecified bacterial intestinal infections	BACT_INTEST_INFECTION_NOS
+Asthma and opportunity respiratory infection	ASTHMA_OPPORTUNIST_INFECTIONS
+Alcohol withdrawal state with delirium 	ALCODELIRIUM
+Acute drug-induced interstitial lung disorder	ACUTE_DRUGADVERS_INTERSTITIAL_LUNG_DISORD
+Allergic bronchopulmonary aspergillosis (ABPA)	ABPA
+Certain zoonotic bacterial diseases	AB1_ZOONOTIC_BACTERIAL
+Viral infections of central nervous system, not elsewhere classified/unspecified	AB1_VIRAN_CNS_INFECTIONS_NOS
+Viral meningitis	AB1_VIRAL_MENINGITIS
+Viral hepatitis	AB1_VIRAL_HEPATITIS
+Viral encephalitis, not elsewhere classified/unspecified	AB1_VIRAL_ENCEPHALITIS_NOS
+Viral infections of the central nervous system	AB1_VIRAL_CNS
+Viral conjunctivitis	AB1_VIRAAL_CONJUNCT
+Typhoid and paratyphoid fevers	AB1_TYPHOIDPARATHYPHOID
+Tularaemia	AB1_TULARAEMIA
+Tuberculosis of other organs, strict	AB1_TUBERCU_OTH_ORG
+Trichomoniasis	AB1_TRICHOMONIASIS
+Toxoplasmosis	AB1_TOXOPLASMOSIS
+Tick-borne viral encephalitis	AB1_TICK_BORNE_ENCEPHALITIS
+Other and unspecified syphilis	AB1_SYPHILIS_NOS
+Syphilis	AB1_SYPHILIS
+Streptococcus and staphylococcus as the cause of diseases classified to other chapters	AB1_STREPTSTAPHYCOCC_INOTHER
+Streptococcal septicaemia	AB1_STREPTO_SEPSIS
+Shigellosis	AB1_SHIGELLOSIS
+Sequelae of tuberculosis	AB1_SEQULAE_TUBERCU
+Sequelae of poliomyelitis	AB1_SEQULAE_POLIO
+Sequelae of other and unspecified infectious and parasitic diseases	AB1_SEQULAE_INF_NOS
+Rickettsioses	AB1_RICKETTSIOSES
+Respiratory tuberculosis, not confirmed	AB1_RESP_TUBERCU_NONCONF
+Protozoal diseases	AB1_PROTOZOAL
+Acute poliomyelitis	AB1_POLIOMYELITIS
+Pneumocystosis	AB1_PNEUMOCYSTOSIS
+Pediculosis and phthiriasis	AB1_PEDICULOSIS_AND_PHTHIRIAASIS
+Other protozoal intestinal diseases	AB1_OTHER_PROTOZOAL
+Other mosquito-borne viral fevers	AB1_OTHER_MOSQUITO_FEVER
+Other infestations	AB1_OTHER_INFESTATIONS
+Human immunodeficiency virus [HIV] disease resulting in other conditions	AB1_OTHER_CONDITIONS
+Other diseases caused by chlamydiae	AB1_OTHER_CHLAMYDIAE
+Other cestode infections	AB1_OTHER_CESTODE
+Other bacterial agents as the cause of diseases classified to other chapters	AB1_OTHER_BACT_INOTHER
+Other mycoses, not elsewhere classified/unspecified	AB1_MYSOSIS_NOS
+Mumps	AB1_MUMPS
+Meningococcal infection	AB1_MENINGOCOCCAL
+Other parasitologically confirmed or unspecified malaria	AB1_MALARIA_NOS
+Plasmodium falciparum malaria	AB1_MALARIA_FALCIPARIUM
+Listeriosis	AB1_LISTERIOSIS
+Late syphilis	AB1_LATE_SYPHILIS
+Unspecified human immunodeficiency virus [HIV] disease	AB1_HIV_NOS
+Human immunodeficiency virus [HIV] disease resulting in infectious and parasitic diseases	AB1_HIV_INFECT_PARASITES
+Acute hepatitis B	AB1_HEPATITIS_B
+Acute hepatitis A	AB1_HEPATITIS_A
+Helminthiases	AB1_HELMINTIASES
+Gonococcal infection	AB1_GONOCOCCAL
+Early syphilis	AB1_EARLY_SYPHILIS
+Diphtheria	AB1_DIBTHERIA
+Dengue fever [classical dengue]	AB1_DENGUE_FEVER
+Other sexually transmitted chlamydial diseases	AB1_CHLAMYDIA_OTHER
+Candidiasis	AB1_CANDIDIASIS
+Bacterial, viral and other infectious agents	AB1_BACT_BIR_OTHER_INF_AGENTS
+Atypical virus infections of central nervous system	AB1_ATYPICAL_CNS_VIRUS
+Aspergillosis	AB1_ASPERGILLOSIS
+Anogenital herpesviral [herpes simplex] infection	AB1_ANOGENITAL_HERPES_SIMPLEX
+Amoebiasis	AB1_AMOEBIASIS
+Actinomycosis	AB1_ACTINOMYCOSIS
+Miliary tuberculosis	AB1TUBERCU_MILIARY
