@@ -1,5 +1,3 @@
-// FinnGen Catalog Plot Script - modified to use local API endpoint
-
 function renderFinnGenPlot() {
   // Grab LocusZoom region from the element with id "lz-1"
   var regionData = document.getElementById('lz-1').dataset.region;
@@ -10,16 +8,15 @@ function renderFinnGenPlot() {
   var parts = regionData.split(':');
   var chr = parts[0];
 
-  // Get the selected FinnGen endpoint or default to "E4_DIABETES"
+  // Get the selected FinnGen endpoint
   var endpointSelect = document.getElementById('endpoint-select');
-  var selectedEndpoint = endpointSelect ? endpointSelect.value : "E4_DIABETES";
+  var selectedEndpoint = endpointSelect.value;
 
-  // Build the URL for your new local API endpoint.
   // This URL uses the selected endpoint and passes the region (in "chr:start-end" format)
   var apiUrl = window.model.urlprefix + "/api/finngen/" + selectedEndpoint + "?region=" + regionData;
   document.getElementById("finngen-gwas-catalog").innerHTML = "<p>Loading...</p>";
   
-  // Fetch data from the local API endpoint
+  // Fetch data from the API endpoint
   fetch(apiUrl, { method: 'GET' })
     .then(function(response) {
       if (!response.ok) {

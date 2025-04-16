@@ -20,6 +20,30 @@
       window.model.urlprefix = {{ config.URLPREFIX|tojson }};
       window.model.hg_build_number = {{ config.HG_BUILD_NUMBER }};
       window.model.grch_build_number = {{ config.GRCH_BUILD_NUMBER }};
+      document.addEventListener('DOMContentLoaded', function () {
+        const modeToggle = document.getElementById('mode-toggle');
+        const modeIcon = document.getElementById('mode-icon');
+        modeToggle.addEventListener('click', function () {
+          document.body.classList.toggle('dark-mode');
+          if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+            modeIcon.classList.remove('bi-moon-fill');
+            modeIcon.classList.add('bi-sun-fill');
+          } else {
+            localStorage.setItem('theme', 'light');
+            modeIcon.classList.remove('bi-sun-fill');
+            modeIcon.classList.add('bi-moon-fill');
+          }
+        });
+
+        // check if the user has a saved theme or if the system prefers dark mode
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.body.classList.add('dark-mode');
+          modeIcon.classList.remove('bi-moon-fill');
+          modeIcon.classList.add('bi-sun-fill');
+        }
+      });
     </script>
 
     <link href="{{ url_for('.static', filename='common.css') }}" rel="stylesheet" type="text/css">
@@ -27,22 +51,18 @@
     {% block in_head %}{% endblock %}
     <link rel="icon" href="{{ url_for('bp.static', filename='favicon.ico') }}" />
     
-    <!-- Additional CSS to ensure sticky footer -->
+    <!-- Additional CSS for sticky footer -->
     <style>
-      /* Ensure the html and body take full height */
       html, body {
         height: 100%;
       }
-      /* Use Flexbox to align content and footer */
       body {
         display: flex;
         flex-direction: column;
       }
-      /* Main content area grows to fill available space */
       .content {
         flex: 1;
       }
-      /* Optionally center footer content */
       footer .container {
         text-align: center;
       }
@@ -52,7 +72,6 @@
   <body>
     <nav class="navbar navbar-light bg-light">
       <div class="container-fluid">
-        <!-- Left side: Brand and search form -->
         <div class="d-flex align-items-center">
           {% block navbar_left %}
           <a class="navbar-brand fw-bold text-dark fs-5 mb-0" href="{{ url_for('.homepage') }}">PheWeb</a>
@@ -64,13 +83,18 @@
           {% endblock %}
         </div>
         
-        <!-- Right side: Navigation links shown horizontally -->
         <ul class="navbar-nav d-flex flex-row ms-auto mb-0">
           <li class="nav-item me-3">
             <a class="nav-link fw-bold text-dark" href="{{ url_for('.phenotypes_page') }}">Phenotypes</a>
           </li>
           <li class="nav-item me-3">
             <a class="nav-link fw-bold text-dark" href="{{ url_for('.top_hits_page') }}">Top hits</a>
+          </li>
+          <li class="nav-item">
+            <!-- Button with bootstrap icon -->
+            <button id="mode-toggle" class="btn btn-secondary">
+              <i id="mode-icon" class="bi bi-moon-fill"></i>
+            </button>
           </li>
           {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
@@ -81,11 +105,10 @@
       </div>
     </nav>   
     
-    <!-- Main content area -->
     <div class="content container-fluid">
       {% with messages = get_flashed_messages() %}
         {% if messages %}
-          <br><br> {# Prevent content from being hidden behind the navbar #}
+          <br><br>
           {% for message in messages %}
             <div class="alert alert-danger" role="alert"><b>Error:</b> {{ message }}</div>
           {% endfor %}
