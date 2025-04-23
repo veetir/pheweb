@@ -9,17 +9,11 @@ function renderFinnGenPlot() {
   }
   var parts = regionData.split(':');
   var chr = parts[0];
-
-  // Get the selected FinnGen endpoint or default to "E4_DIABETES"
   var endpointSelect = document.getElementById('endpoint-select');
   var selectedEndpoint = endpointSelect ? endpointSelect.value : "E4_DIABETES";
-
-  // Build the URL for your new local API endpoint.
-  // This URL uses the selected endpoint and passes the region (in "chr:start-end" format)
   var apiUrl = window.model.urlprefix + "/api/finngen/" + selectedEndpoint + "?region=" + regionData;
   document.getElementById("finngen-gwas-catalog").innerHTML = "<p>Loading...</p>";
   
-  // Fetch data from the local API endpoint
   fetch(apiUrl, { method: 'GET' })
     .then(function(response) {
       if (!response.ok) {
@@ -34,8 +28,6 @@ function renderFinnGenPlot() {
         updateFinnGenButton();
         return;
       }
-
-      // Prepare arrays for Plotly.
       var x = associations.map(function(record) {
         return record.position;
       });
@@ -49,7 +41,6 @@ function renderFinnGenPlot() {
       var sigThreshold = -Math.log10(0.05);
       var gwasThreshold = -Math.log10(5e-8);
 
-      // Define the Plotly trace
       var trace = {
         x: x,
         y: y,
@@ -69,7 +60,6 @@ function renderFinnGenPlot() {
           "<extra></extra>"
       };
 
-      // A matching layout for consistent x-axis alignment
       var layout = {
         title: { text: "FinnGen Associations (" + selectedEndpoint + ")", font: { size: 14 } },
         showlegend: false,
@@ -151,7 +141,7 @@ function renderFinnGenPlot() {
       // Clear existing text if any
       document.getElementById("finngen-gwas-catalog").innerHTML = "";
 
-      // 1) Get the current LocusZoom region (to preserve the existing region)
+      // Get the current LocusZoom region (to preserve the existing region)
       var lzStart, lzEnd, lzChr;
       if (window.plot && window.plot.state) {
         lzStart = window.plot.state.start;
@@ -159,7 +149,7 @@ function renderFinnGenPlot() {
         lzChr   = window.plot.state.chr;
       }
 
-      // 2) Render the new FinnGen plot
+      // Render the new FinnGen plot
       Plotly.newPlot('finngen-gwas-catalog', [trace], layout)
         .then(function() {
           var plotDiv = document.getElementById('finngen-gwas-catalog');
@@ -176,18 +166,15 @@ function renderFinnGenPlot() {
             }
           });
 
-          // 3) Force the new chart to use the existing region from LocusZoom
-          //    (if available; otherwise it just uses the layout defaults)
+          // Use the existing region from LocusZoom if available
           if (typeof lzStart !== 'undefined' && typeof lzEnd !== 'undefined') {
             Plotly.relayout('finngen-gwas-catalog', {
               'xaxis.range': [lzStart, lzEnd],
-              // If you want to also use the LZ chromosome, update the axis title:
               'xaxis.title': 'Chromosome ' + (lzChr || chr) + ' (Mb)'
             });
           }
 
-          // 4) Because we are programmatically relayout-ing, no "plotly_relayout" event fires
-          //    So we also manually sync the other chart to the same region
+          // Sync
           if (typeof lzStart !== 'undefined' && typeof lzEnd !== 'undefined') {
             Plotly.relayout('plotly-gwas-catalog', {
               'xaxis.range': [lzStart, lzEnd],
@@ -195,8 +182,7 @@ function renderFinnGenPlot() {
             });
           }
 
-          // 5) (Optional) Attach user-based sync events
-          //    If a user pans or zooms in the FinnGen chart, update LZ
+          // If a user pans or zooms in the FinnGen chart, update LZ
           plotDiv.on('plotly_relayout', function(evtData) {
             var xStart = evtData['xaxis.range[0]'];
             var xEnd   = evtData['xaxis.range[1]'];
@@ -218,7 +204,7 @@ function renderFinnGenPlot() {
             }
           });
 
-          // 6) Also attach LocusZoom->Plotly sync if needed
+          // LocusZoom->Plotly sync
           if (window.plot && window.plot.on) {
             window.plot.on('state_changed', function() {
               var currentState = window.plot.state;
@@ -230,7 +216,7 @@ function renderFinnGenPlot() {
           }
         });
 
-      // Finally, update the FinnGen button link
+      // Update the FinnGen button link
       updateFinnGenButton();
     })
     .catch(function(error) {
@@ -239,13 +225,13 @@ function renderFinnGenPlot() {
     });
 }
 
-// Create or update the FinnGen, Risteys, & Endpoint Browser results buttons.
+// Create or update the FinnGen, Risteys, & Endpoint Browser results buttons
 function updateFinnGenButton() {
   var endpointSelect = document.getElementById('endpoint-select');
   if (!endpointSelect) return;
   var selectedEndpoint = endpointSelect.value;
   
-  // Build the URLs using the selected endpoint.
+  // Build the URLs using the selected endpoint
   var finngenUrl = (selectedEndpoint && selectedEndpoint.trim() !== "")
     ? "https://results.finngen.fi/pheno/" + selectedEndpoint 
     : "https://results.finngen.fi/";
@@ -261,28 +247,26 @@ function updateFinnGenButton() {
     ? "View " + selectedEndpoint + " in:" 
     : "";
 
-  // Get the container element where the plot is rendered.
+  // Get the container element where the plot is rendered
   var container = document.getElementById("finngen-gwas-catalog");
 
-  // Create or update a container for the common text and buttons.
+  // Create or update a container for the common text and buttons
   var btnContainer = document.getElementById("finngen-buttons");
   if (!btnContainer) {
     btnContainer = document.createElement("div");
     btnContainer.id = "finngen-buttons";
     btnContainer.style.marginTop = "10px";
-    // Insert the container immediately after the plot container.
     container.parentNode.insertBefore(btnContainer, container.nextSibling);
   }
-  // Clear any old contents.
   btnContainer.innerHTML = "";
   
-  // Create a span for the common text.
+  // Common text
   var commonTextSpan = document.createElement("span");
   commonTextSpan.id = "finngen-common-text";
   commonTextSpan.textContent = commonText + " ";
   btnContainer.appendChild(commonTextSpan);
   
-  // Create the FinnGen button.
+  // FinnGen button
   var finngenBtn = document.createElement("a");
   finngenBtn.id = "finngen-link";
   finngenBtn.className = "btn";
@@ -292,7 +276,7 @@ function updateFinnGenButton() {
   finngenBtn.target = "_blank";
   btnContainer.appendChild(finngenBtn);
   
-  // Create the Risteys button.
+  // Risteys button
   var risteysBtn = document.createElement("a");
   risteysBtn.id = "risteys-link";
   risteysBtn.className = "btn";
@@ -303,7 +287,7 @@ function updateFinnGenButton() {
   risteysBtn.style.marginLeft = "10px";
   btnContainer.appendChild(risteysBtn);
 
-  // Create the Endpoint Browser button.
+  // Endpoint Browser button
   var browserBtn = document.createElement("a");
   browserBtn.id = "endpoint-browser-link";
   browserBtn.className = "btn";
@@ -333,7 +317,7 @@ function updateEndpointLabel(endpointsList) {
 }
 
 
-// Load endpoints from endpoints.csv and populate the dropdown.
+// Load endpoints from endpoints.csv and populate the dropdown
 function loadEndpoints() {
   fetch(window.endpointsTsvUrl)
     .then(response => {
@@ -369,7 +353,7 @@ function loadEndpoints() {
 
       window.allEndpoints = endpoints;
 
-      // Update the label to show the total count of endpoints.
+      // Update the label to show the total count of endpoints
       updateEndpointLabel(endpoints);
 
       let select = document.getElementById('endpoint-select');
@@ -390,19 +374,19 @@ function loadEndpoints() {
     .catch(error => console.error(error));
 }
 
-// Set up fuzzy search for endpoints.
+// Fuzzy search for endpoints
 function setupEndpointSearch() {
   let searchInput = document.getElementById('endpoint-search');
   let select = document.getElementById('endpoint-select');
   if (!searchInput || !select || !window.allEndpoints) return;
 
-  // Helper function to normalize a term.
+  // Normalize terms
   function normalizeTerm(term) {
     return term
       .toLowerCase()
       .replace(/['’]/g, '')
-      .replace(/_/g, '') // remove underscores
-      .replace(/s$/, '') // strip trailing plural 's'
+      .replace(/_/g, '')
+      .replace(/s$/, '')
       .trim();
   }
 
@@ -427,7 +411,6 @@ function setupEndpointSearch() {
     } else if (filtered.length > 0) {
       select.value = filtered[0];
     }
-    // Re-render the plot with the newly selected endpoint.
     renderFinnGenPlot();
     updateFinnGenButton();
   });
@@ -436,9 +419,7 @@ function setupEndpointSearch() {
 // Initialize everything on DOM load
 document.addEventListener("DOMContentLoaded", function() {
   loadEndpoints();
-  // Delay the fuzzy search setup slightly, if needed
   setTimeout(setupEndpointSearch, 500);
-
   renderFinnGenPlot();
 
   var select = document.getElementById('endpoint-select');
