@@ -72,12 +72,17 @@
           <li class="nav-item me-3">
             <a class="nav-link fw-bold text-dark" href="{{ url_for('.top_hits_page') }}">Top hits</a>
           </li>
-          {% if current_user and current_user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link fw-bold text-dark" href="{{ url_for('.logout') }}">Logout ({{ current_user.email }})</a>
+          <li class="nav-item me-3 d-flex align-items-center">
+            <a href="https://github.com/veetir/pheweb/" 
+               target="_blank" 
+               class="nav-link text-muted d-flex align-items-center p-0" 
+               style="text-decoration: none;"
+               data-bs-toggle="tooltip" 
+               title="PheWeb GRCh{{ config.GRCH_BUILD_NUMBER }}">
+              <i class="bi bi-github" style="font-size: 1rem;"></i>
+            </a>
           </li>
-          {% endif %}
-        </ul>
+        </ul>        
       </div>
     </nav>   
     
@@ -93,22 +98,6 @@
       {% endwith %}
       {% block contained %}
       {% endblock %}
-    </div>
-    
-    <footer class="footer py-3 bg-light">
-      <div class="container text-center">
-        <small class="text-muted">
-          <a href="https://github.com/veetir/pheweb/" 
-             target="_blank" 
-             class="text-muted" 
-             style="text-decoration: none;"
-             data-bs-toggle="tooltip" 
-             data-bs-placement="top" 
-             title="PheWeb GRCh{{ config.GRCH_BUILD_NUMBER }}">
-            <i class="bi bi-github" style="font-size: 1rem;"></i>
-          </a>
-        </small>
-      </div>
-    </footer>       
+    </div>      
   </body>
 </html>
