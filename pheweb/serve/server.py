@@ -46,6 +46,7 @@ import sqlite3
 from typing import Dict, Tuple, List, Any, Optional
 import urllib.parse
 import requests
+import subprocess
 
 bp = Blueprint("bp", __name__, template_folder="templates", static_folder="static")
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "static"))
@@ -138,6 +139,55 @@ def transform_column_to_rows(data_dict: dict) -> list:
     for row in rows[:5]:
         print(row)
     return rows
+
+
+@bp.route("/api/finngen-susie")
+def api_finngen_susie():
+    region = request.args.get("region")
+    if not region:
+        return (
+            jsonify({"error": "Missing region parameter, expected format 'chr:start-end'"}),
+            400,
+        )
+
+    endpoint_filter = request.args.get("endpoint")
+    bed_path = os.path.join(
+        conf.get_data_dir(), "endpoints-susie-merged.bed.gz"
+    )
+
+    try:
+        result = subprocess.run(
+            ["tabix", "-p", "bed", "-0", bed_path, region],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        return jsonify({"error": exc.stderr.strip() or str(exc)}), 500
+
+    data = []
+    for line in result.stdout.strip().splitlines():
+        if not line:
+            continue
+        fields = line.split("\t")
+        if len(fields) < 9:
+            continue
+        record = {
+            "trait": fields[3],
+            "cs": fields[4],
+            "start": int(fields[1]),
+            "end": int(fields[2]),
+            "vpos": int(fields[5]),
+            "prob": float(fields[6]),
+            "good_cs": fields[7] in ("1", "true", "True"),
+            "gene_most_severe": fields[8],
+        }
+        if endpoint_filter and record["trait"] != endpoint_filter:
+            continue
+        data.append(record)
+
+    return jsonify({"data": data})
 
 @bp.route("/api/finngen/<endpoint>")
 @check_auth
