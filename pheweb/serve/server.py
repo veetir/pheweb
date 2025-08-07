@@ -167,25 +167,35 @@ def api_finngen_susie():
         return jsonify({"error": exc.stderr.strip() or str(exc)}), 500
 
     data = []
-    for line in result.stdout.strip().splitlines():
-        if not line:
-            continue
+    for line in result.stdout.splitlines():
         fields = line.split("\t")
-        if len(fields) < 9:
+        if len(fields) < 22:
             continue
-        record = {
-            "trait": fields[3],
-            "cs": fields[4],
-            "start": int(fields[1]),
-            "end": int(fields[2]),
-            "vpos": int(fields[5]),
-            "prob": float(fields[6]),
-            "good_cs": fields[7] in ("1", "true", "True"),
-            "gene_most_severe": fields[8],
-        }
-        if endpoint_filter and record["trait"] != endpoint_filter:
+
+        trait   = fields[3]
+        cs      = fields[5]
+        start   = int(fields[1])
+        end     = int(fields[2])
+        v_str   = fields[13]
+        vpos    = int(v_str.split(":")[1])
+        prob    = float(fields[18])
+        good_cs = fields[11].lower() in ("1","true","t")
+        gene    = fields[21]
+
+        if endpoint_filter and trait != endpoint_filter:
             continue
-        data.append(record)
+
+        data.append({
+            "trait": trait,
+            "cs": cs,
+            "start": start,
+            "end": end,
+            "vpos": vpos,
+            "variant": v_str, 
+            "prob": prob,
+            "good_cs": good_cs,
+            "gene_most_severe": gene
+        })
 
     return jsonify({"data": data})
 
