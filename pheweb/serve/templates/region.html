@@ -60,8 +60,21 @@
       <div id="lz-1" class="lz-container-responsive" data-region={{ region }}></div>
     </div>
 
-<div id="susie-header" style="padding: 8px 20px; text-align: center;">
-  <h3 style="margin: 0; font-size: 1.1em;">FinnGen SuSiE</h3>
+<div class="row">
+  <div class="col-xs-12">
+    <div id="susie-header" 
+          style="display:flex; align-items:center; margin:0 60px 8px;">
+      <!-- FinnGen logo -->
+      <a href="https://www.finngen.fi/en" target="_blank" 
+          style="margin-right:12px; display:inline-block; line-height:0;">
+        <img src="{{ url_for('bp.static', filename='images/finngen.png') }}"
+              alt="FinnGen Logo"
+              style="height:24px; width:auto;">
+      </a>
+      <!-- Title -->
+      <h3 style="margin:0; font-size:1.1em;">FinnGen SuSiE</h3>
+    </div>
+  </div>
 </div>
 
 <div id="susie-controls"
