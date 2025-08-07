@@ -2,6 +2,10 @@ function csColour(row) {
   return row.good_cs ? '#1f77b4' : '#aec7e8';
 }
 
+function isDrug(row) {
+  return row.trait.startsWith('ATC_');
+}
+
 function classifyRow(row) {
   return 'endpoint_' + (row.good_cs ? 'good' : 'low');
 }
@@ -25,6 +29,14 @@ function renderFinnGenSusie() {
     })
     .then(function(json) {
       var rows = json.data || json;
+    var showEP = document.getElementById('show-endpoints').checked;
+    var showDG = document.getElementById('show-drugs').checked;
+
+    rows = rows.filter(function(r) {
+    return isDrug(r) ? showDG
+                    : showEP;
+    });
+
       if (!rows || !rows.length) {
         container.innerHTML = 'No SuSiE results in this region.';
         return;
@@ -210,4 +222,8 @@ document.addEventListener('DOMContentLoaded', function(){
   renderFinnGenSusie();
   var sel = document.getElementById('endpoint-select');
   if (sel) sel.addEventListener('change', renderFinnGenSusie);
+  var epToggle = document.getElementById('show-endpoints');
+  var dgToggle = document.getElementById('show-drugs');
+  if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
+  if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
 });
