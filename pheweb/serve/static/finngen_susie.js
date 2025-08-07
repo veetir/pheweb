@@ -130,7 +130,6 @@ function renderFinnGenSusie() {
       // Layout
       var chr = region.split(':')[0];
       var layout = {
-        title:      { text: 'FinnGen SuSiE', font: { size: 16 } },
         showlegend: true,
         xaxis:      {
           title: 'Chromosome ' + chr + ' position',

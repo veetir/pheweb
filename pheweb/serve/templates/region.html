@@ -60,8 +60,12 @@
       <div id="lz-1" class="lz-container-responsive" data-region={{ region }}></div>
     </div>
 
-  <div id="susie-controls"
-     style="padding:4px 8px; font-size:0.9em; border-top:1px solid #ddd;">
+<div id="susie-header" style="padding: 8px 20px; text-align: center;">
+  <h3 style="margin: 0; font-size: 1.1em;">FinnGen SuSiE</h3>
+</div>
+
+<div id="susie-controls"
+     style="padding:4px 8px; font-size:0.9em; border-top:1px solid #ddd; margin: 0 60px;">
   <label style="margin-right:1em;">
     <input type="checkbox" id="show-endpoints" checked>
     Show endpoints
@@ -71,22 +75,22 @@
     Show drugs
   </label>
 </div>
-  <div id="finngen-susie-wrapper" 
-       style="width:100%; max-height:400px; overflow-y:auto;">
-    <div id="finngen-susie" style="width:100%;"></div>
-  </div>
 
-  </div>
-    <div id="susie-summary"
-       style="
-         padding: 4px 8px;
-         font-size: 0.9em;
-         border-bottom: 1px solid #ddd;
-         overflow-x: auto;
-         white-space: nowrap;
-         margin: 0 60px; 
-       ">
-  </div>
+<div id="finngen-susie-wrapper" 
+     style="width:100%; max-height:400px; overflow-y:auto; margin: 0 60px;">
+  <div id="finngen-susie" style="width:100%;"></div>
+</div>
+
+<div id="susie-summary"
+     style="
+       padding: 4px 8px;
+       font-size: 0.9em;
+       border-bottom: 1px solid #ddd;
+       overflow-x: auto;
+       white-space: nowrap;
+       margin: 0 60px; 
+     ">
+</div>
 
   <div id="plotly-gwas-catalog" style="width:100%; height:500px;"></div>
 
