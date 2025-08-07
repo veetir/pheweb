@@ -161,14 +161,32 @@ function renderFinnGenSusie() {
         + (count === 1 ? '' : 's') + ': ';
 
         uniqueEndpoints.forEach(function(ep) {
-        var pill = document.createElement('span');
-        pill.textContent        = ep;
-        pill.style.display      = 'inline-block';
-        pill.style.padding      = '2px 8px';
-        pill.style.marginRight  = '6px';
-        pill.style.borderRadius = '12px';
-        pill.style.background   = '#f0f0f0';
-        summaryEl.appendChild(pill);
+        // decide URL
+        var href;
+        var m = ep.match(/^ATC_(.+)_IRN$/);
+        if (m) {
+            // drug
+            var code = m[1];
+            href = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
+        } else {
+            // non‐drug endpoint
+            href = 'https://results.finngen.fi/pheno/' + encodeURIComponent(ep);
+        }
+
+        // build the “pill” as a link
+        var a = document.createElement('a');
+        a.href        = href;
+        a.target      = '_blank';
+        a.textContent = ep;
+        a.style.display      = 'inline-block';
+        a.style.padding      = '2px 8px';
+        a.style.marginRight  = '6px';
+        a.style.borderRadius = '12px';
+        a.style.background   = '#f0f0f0';
+        a.style.textDecoration = 'underline';
+        a.style.color        = '#007bff';
+
+        summaryEl.appendChild(a);
         });
 
       // Render
