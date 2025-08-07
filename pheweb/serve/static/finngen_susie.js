@@ -146,6 +146,13 @@ function renderFinnGenSusie() {
         margin:     { t:34, b:40, l:120, r:20 },
         height:     200 + 25*labels.length,
         shapes:     shapes,
+        legend: {
+            orientation: 'h',
+            x: 0,
+            y: 1,
+            xanchor: 'left',  
+            yanchor: 'bottom'
+        },
         plot_bgcolor: 'white'
       };
 
