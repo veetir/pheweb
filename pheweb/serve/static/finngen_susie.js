@@ -163,7 +163,7 @@ function renderFinnGenSusie() {
         var count = uniqueEndpoints.length;
         summaryEl.innerHTML =
           '<strong>' + count + '</strong> overlapping endpoint' + (count===1?'':'s') +
-          ' <a href="#" class="info-link" title="Number of unique endpoints '
+          ' <a href="#" class="info-link" title="Endpoints '
           + ' whose credible-sets overlap the current region."><img src="' +
           window.model.urlprefix + '/static/images/info.svg" class="info-icon"'
           + ' style="vertical-align:middle; margin-left:-6px; position:relative;' 
