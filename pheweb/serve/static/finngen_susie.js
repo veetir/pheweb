@@ -101,17 +101,9 @@ function renderFinnGenSusie() {
           mode: 'lines',
           line: { color: c.color, width: 4 },
           hoverinfo: 'skip',
-          showlegend: false
-        });
-        // markers
-        traces.push({
-          x: c.markerX,
-          y: c.markerY,
-          mode: 'markers',
-          marker: { size: c.markerSize, color: c.color },
           name: c.name,
           legendgroup: key,
-          hoverinfo: 'skip'       // TURN OFF hover here
+          showlegend: true
         });
       });
 
