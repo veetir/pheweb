@@ -165,9 +165,8 @@ function renderFinnGenSusie() {
           '<strong>' + count + '</strong> overlapping endpoint' + (count===1?'':'s') +
           ' <a href="#" class="info-link" title="Endpoints '
           + ' whose credible-sets overlap the current region."><img src="' +
-          window.model.urlprefix + '/static/images/info.svg" class="info-icon"'
-          + ' style="vertical-align:middle; margin-left:-6px; position:relative;' 
-          + 'top:-2px;" alt="Info"></a>: ';
+          window.model.urlprefix + '/static/images/info.svg" class="info-icon info-icon-inline info-icon-inline-lg"'
+          + ' alt="Info"></a>: ';
 
 
         uniqueEndpoints.forEach(function(ep) {
@@ -188,13 +187,7 @@ function renderFinnGenSusie() {
         a.href        = href;
         a.target      = '_blank';
         a.textContent = ep;
-        a.style.display      = 'inline-block';
-        a.style.padding      = '2px 8px';
-        a.style.marginRight  = '6px';
-        a.style.borderRadius = '12px';
-        a.style.background   = '#f0f0f0';
-        a.style.textDecoration = 'underline';
-        a.style.color        = '#007bff';
+        a.className = 'susie-pill';
 
         summaryEl.appendChild(a);
         });
