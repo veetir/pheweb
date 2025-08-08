@@ -88,9 +88,14 @@
     <input type="checkbox" id="show-drugs" checked>
     Show drugs
   </label>
-  <label>
+  <label style="margin-right:1em;">
     <input type="checkbox" id="show-low-quality">
     Show low-quality CS
+    <a href="#" class="info-link"
+      title="Credible sets where good_cs is false indicating an unreliable CS.">
+      <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
+          alt="Info" style="vertical-align:middle; margin-left:-4px; position:relative; top:-2px;" class="info-icon">
+    </a>
   </label>
 </div>
 
