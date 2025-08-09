@@ -164,7 +164,7 @@ function renderFinnGenSusie() {
         summaryEl.innerHTML =
           '<strong>' + count + '</strong> overlapping endpoint' + (count===1?'':'s') +
           ' <a href="#" class="info-link" title="Endpoints '
-          + ' whose credible-sets overlap the current region."><img src="' +
+          + 'whose credible-sets overlap the current region"><img src="' +
           window.model.urlprefix + '/static/images/info.svg" class="info-icon info-icon-inline info-icon-inline-lg"'
           + ' alt="Info"></a>: ';
 
@@ -246,6 +246,15 @@ document.addEventListener('DOMContentLoaded', function(){
   var epToggle = document.getElementById('show-endpoints');
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
+
+  var summary = document.getElementById('susie-summary');
+  if (summary) {
+    summary.addEventListener('wheel', function(e) {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      summary.scrollLeft += e.deltaY;
+    }, { passive: false });
+  }
 
   if (sel)      sel.addEventListener('change', renderFinnGenSusie);
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
