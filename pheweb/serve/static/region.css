@@ -176,6 +176,8 @@ h1 {
 }
 
 .btn:hover {
+    background-color: #3500d38e;
+    color: #FFFFFF;
     transform: scale(1.03);
 }
 
@@ -240,9 +242,4 @@ h1 {
 
 .susie-pill {
     margin: 0 6px 0 0;
-}
-
-.susie-pill:hover {
-    background-color: #3500d38e;
-    color: #FFFFFF;
 }
