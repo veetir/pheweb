@@ -251,5 +251,14 @@ document.addEventListener('DOMContentLoaded', function(){
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
+
+  var summary = document.getElementById('susie-summary');
+  if (summary) {
+    summary.addEventListener('wheel', function(e) {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      summary.scrollLeft += e.deltaY;
+    }, { passive: false });
+  }
 });
 

@@ -1,3 +1,21 @@
+/* Shared colors and spacing */
+:root {
+    --accent: #3500D3;
+    --card-bg: #fff;
+    --card-border: #ddd;
+    --gap: 1rem;
+}
+
+/* Lightweight card container */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.05);
+    margin-bottom: 1.5rem;
+    padding: var(--gap);
+}
+
 .lz-toolbar.lz-plot-toolbar {
     text-align: center;
 }
@@ -14,14 +32,14 @@
     overflow-x: auto;
 }
 
+
 #endpoint-row-wrapper {
     display: flex;
-    align-items: center;
-    gap: 30px;
+    align-items: flex-start;
+    gap: 2rem;
     flex-wrap: nowrap;
     width: 100%;
-    margin-bottom: 20px;    
-  }
+}
 
   #finngen-logo-wrapper {
     flex: 0 0 auto;
@@ -37,14 +55,23 @@
 }
 
 #endpoint-controls label {
-    display: block;
-    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    font-weight: 600;
+}
+#endpoint-controls {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    font-size: 14px;
+    flex: 0 0 auto;
+    max-width: 300px;
 }
 #endpoint-search,
 #endpoint-select {
     width: 100%;
     max-width: 300px;
-    margin-top: 4px;    
 }
 #endpoint-controls-wrapper {
     display: flex;
@@ -58,13 +85,20 @@
     object-fit: contain;
 }
 
-#endpoint-controls {
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
-    flex: 0 0 auto;
-    max-width: 300px;
-  }
+/* Basic form styling */
+input[type="text"],
+select {
+    padding: .5rem;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+input[type="text"]:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(53,0,211,.2);
+    outline: none;
+}
 @media (max-width: 768px) {
     #endpoint-controls-wrapper {
       flex-direction: column;
@@ -161,34 +195,34 @@ h1 {
     cursor: not-allowed;
 }
 
+
 .btn {
-    background-color: #3500d38e;
-    color: #FFFFFF;
-    padding: 4px 6px;
+    background-color: var(--accent);
+    color: #fff;
+    padding: 4px 10px;
     margin: 5px;
     text-decoration: none;
     border: none;
-    border-radius: 2px;
+    border-radius: 4px;
     cursor: pointer;
     display: inline-block;
     font-size: 14px;
-    transition: transform 0.1s ease-in-out;
+    transition: transform 0.1s ease-in-out, background-color 0.2s;
 }
 
 .btn:hover {
-    background-color: #3500d38e;
-    color: #FFFFFF;
+    background-color: #4b26d5;
     transform: scale(1.03);
 }
 
 #susie-header {
     display: flex;
     align-items: center;
-    margin: 0 60px 8px;
+    gap: .75rem;
+    margin-bottom: .5rem;
 }
 
 #susie-header a {
-    margin-right: 12px;
     display: inline-block;
     line-height: 0;
 }
@@ -204,21 +238,25 @@ h1 {
 }
 
 #susie-controls {
-    padding: 4px 8px;
-    font-size: 0.9em;
-    border-top: 1px solid #ddd;
-    margin: 0 60px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .5rem 1rem;
+    font-size: .9em;
+    border-top: 1px solid var(--card-border);
 }
 
 #susie-controls label {
-    margin-right: 1em;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    margin-right: 0;
 }
 
 #finngen-susie-wrapper {
     width: 100%;
     max-height: 400px;
     overflow-y: auto;
-    margin: 0 60px;
 }
 
 #finngen-susie {
@@ -226,12 +264,16 @@ h1 {
 }
 
 #susie-summary {
-    padding: 4px 8px;
-    font-size: 0.9em;
-    border-bottom: 1px solid #ddd;
+    display: flex;
+    gap: .5rem;
     overflow-x: auto;
-    white-space: nowrap;
-    margin: 0 60px;
+    padding: .5rem 1rem;
+    font-size: 0.9em;
+    border-top: 1px solid var(--card-border);
+    scrollbar-width: thin;
+}
+#susie-summary::-webkit-scrollbar {
+    height: 8px;
 }
 
 #plotly-gwas-catalog,

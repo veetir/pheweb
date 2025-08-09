@@ -57,85 +57,79 @@
   <br>
   <div class="row">
     <div class="col-xs-12">
-      <div id="lz-1" class="lz-container-responsive" data-region={{ region }}></div>
+      <div class="card">
+        <div id="lz-1" class="lz-container-responsive" data-region={{ region }}></div>
+      </div>
     </div>
+  </div>
 
-<div class="row">
-  <div class="col-xs-12">
+  <div class="card" id="susie-card">
     <div id="susie-header">
       <!-- FinnGen logo -->
       <a href="https://www.finngen.fi/en" target="_blank">
-        <img src="{{ url_for('bp.static', filename='images/finngen.png') }}"
-              alt="FinnGen Logo">
+        <img src="{{ url_for('bp.static', filename='images/finngen.png') }}" alt="FinnGen Logo">
       </a>
       <!-- Title -->
       <h3>FinnGen SuSiE</h3>
     </div>
-  </div>
-</div>
 
-<div id="susie-controls">
-  <label>
-    <input type="checkbox" id="show-endpoints" checked>
-    Show endpoints
-  </label>
-  <label>
-    <input type="checkbox" id="show-drugs" checked>
-    Show drugs
-  </label>
-  <label>
-    <input type="checkbox" id="show-low-quality">
-    Show low-quality CS
-    <a href="#" class="info-link"
-      title="Credible sets where good_cs is false indicating an unreliable CS.">
-      <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
-          alt="Info" class="info-icon info-icon-inline">
-    </a>
-  </label>
-</div>
-
-<div id="finngen-susie-wrapper">
-  <div id="finngen-susie"></div>
-</div>
-
-
-<div id="susie-summary"></div>
-
-  <div id="plotly-gwas-catalog"></div>
-
-  <div id="endpoint-row-wrapper">
-    <div id="finngen-logo-wrapper">
-      <a href="https://www.finngen.fi/en" target="_blank">
-        <img src="{{ url_for('bp.static', filename='images/finngen.png') }}" 
-             alt="FinnGen Logo" class="finngen-logo">
-      </a>
+    <div id="susie-controls">
+      <label>
+        <input type="checkbox" id="show-endpoints" checked>
+        Show endpoints
+      </label>
+      <label>
+        <input type="checkbox" id="show-drugs" checked>
+        Show drugs
+      </label>
+      <label>
+        <input type="checkbox" id="show-low-quality">
+        Show low-quality CS
+        <a href="#" class="info-link" title="Credible sets where good_cs is false indicating an unreliable CS.">
+          <img src="{{ url_for('bp.static', filename='images/info.svg') }}" alt="Info" class="info-icon info-icon-inline">
+        </a>
+      </label>
     </div>
-  
-    <div id="endpoint-controls-and-traits">
-      <div id="endpoint-controls">
-        <label for="endpoint-search">
-          Search FinnGen Endpoints
-          <a href="https://www.finngen.fi/en/access_results" 
-             target="_blank" 
-             title="Using FinnGen R12 Data"
-             class="info-link">
-            <img src="{{ url_for('bp.static', filename='images/info.svg') }}" 
-                 alt="Info" 
-                 class="info-icon">
-          </a>
-        </label>
-        <input type="text" id="endpoint-search" placeholder="Type to search..." />
-        <label for="endpoint-select" id="endpoint-select-label"></label>
-        <select id="endpoint-select"></select>
+
+    <div id="finngen-susie-wrapper">
+      <div id="finngen-susie"></div>
+    </div>
+
+    <div id="susie-summary"></div>
+  </div>
+
+  <div class="card">
+    <div id="plotly-gwas-catalog"></div>
+  </div>
+
+  <div class="card" id="finngen-catalog-card">
+    <div id="endpoint-row-wrapper">
+      <div id="finngen-logo-wrapper">
+        <a href="https://www.finngen.fi/en" target="_blank">
+          <img src="{{ url_for('bp.static', filename='images/finngen.png') }}" alt="FinnGen Logo" class="finngen-logo">
+        </a>
       </div>
-      <div id="wordclouds">
-        <div id="ukbb-wordcloud" class="wordcloud-box"></div>
-        <div id="gwas-wordcloud" class="wordcloud-box"></div>
+
+      <div id="endpoint-controls-and-traits">
+        <div id="endpoint-controls">
+          <label for="endpoint-search">
+            Search FinnGen Endpoints
+            <a href="https://www.finngen.fi/en/access_results" target="_blank" title="Using FinnGen R12 Data" class="info-link">
+              <img src="{{ url_for('bp.static', filename='images/info.svg') }}" alt="Info" class="info-icon">
+            </a>
+          </label>
+          <input type="text" id="endpoint-search" placeholder="Type to search..." />
+          <label for="endpoint-select" id="endpoint-select-label"></label>
+          <select id="endpoint-select"></select>
+        </div>
+        <div id="wordclouds">
+          <div id="ukbb-wordcloud" class="wordcloud-box"></div>
+          <div id="gwas-wordcloud" class="wordcloud-box"></div>
+        </div>
       </div>
     </div>
+
+    <div id="finngen-gwas-catalog"></div>
   </div>
-  
-  
-  <div id="finngen-gwas-catalog"></div>
 </div>
 {% endblock %}
