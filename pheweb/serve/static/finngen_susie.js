@@ -187,7 +187,7 @@ function renderFinnGenSusie() {
         a.href        = href;
         a.target      = '_blank';
         a.textContent = ep;
-        a.className = 'susie-pill';
+        a.className = 'btn susie-pill';
 
         summaryEl.appendChild(a);
         });

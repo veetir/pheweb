@@ -172,6 +172,13 @@ h1 {
     cursor: pointer;
     display: inline-block;
     font-size: 14px;
+    transition: transform 0.1s ease-in-out;
+}
+
+.btn:hover {
+    background-color: #3500d38e;
+    color: #FFFFFF;
+    transform: scale(1.03);
 }
 
 #susie-header {
@@ -234,11 +241,5 @@ h1 {
 }
 
 .susie-pill {
-    display: inline-block;
-    padding: 2px 8px;
-    margin-right: 6px;
-    border-radius: 12px;
-    background: #f0f0f0;
-    text-decoration: underline;
-    color: #007bff;
+    margin: 0 6px 0 0;
 }
