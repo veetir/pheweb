@@ -60,8 +60,8 @@ function renderFinnGenSusie() {
 
       // Bucket data by good/low endpoint quality
       var categories = {
-        endpoint_good: { lineX:[], lineY:[], markerX:[], markerY:[], markerSize:[], color: csColour({good_cs:true}),  name: 'Endpoint (good)' },
-        endpoint_low:  { lineX:[], lineY:[], markerX:[], markerY:[], markerSize:[], color: csColour({good_cs:false}), name: 'Endpoint (low quality)' }
+        endpoint_good: { lineX:[], lineY:[], markerX:[], markerY:[], markerSize:[], color: csColour({good_cs:true}),  name: 'Credible set' },
+        endpoint_low:  { lineX:[], lineY:[], markerX:[], markerY:[], markerSize:[], color: csColour({good_cs:false}), name: 'Credible set (low quality)' }
       };
       var shapes = [];
 
