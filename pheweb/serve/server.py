@@ -43,6 +43,7 @@ import json
 import os
 import os.path
 import sqlite3
+from collections import Counter
 from typing import Dict, Tuple, List, Any, Optional
 import urllib.parse
 import requests
@@ -728,7 +729,21 @@ else:
 
 @bp.route("/")
 def homepage():
-    return render_template("index.html")
+    try:
+        with open(get_filepath("phenotypes_summary")) as f:
+            phenos = json.load(f)
+    except Exception:
+        phenos = []
+    total_phenotypes = len(phenos)
+    category_counts = Counter(
+        p.get("category", "Uncategorized") for p in phenos
+    )
+    category_counts = sorted(category_counts.items(), key=lambda x: x[0])
+    return render_template(
+        "index.html",
+        total_phenotypes=total_phenotypes,
+        category_counts=category_counts,
+    )
 
 
 @bp.route("/favicon.ico")
