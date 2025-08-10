@@ -135,9 +135,6 @@ def transform_column_to_rows(data_dict: dict) -> list:
     for i in range(record_count):
         record = { field: data_dict[field][i] for field in fields }
         rows.append(record)
-    print("Head (first 5 rows):")
-    for row in rows[:5]:
-        print(row)
     return rows
 
 
