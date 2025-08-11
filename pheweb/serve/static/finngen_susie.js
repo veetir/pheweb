@@ -73,7 +73,11 @@ function renderFinnGenSusie() {
       // Build y-axis labels
       var labels = [];
       rows.forEach(function(r) {
-        var lab = r.trait + ' (' + r.cs[0] + (r.cs.length>1 ? ' ×' + r.cs.length : '') + ')';
+        if (r.cs.length>1) {
+           var lab = r.trait + ' (' + (r.cs.length>1 ? ' ×' + r.cs.length : '') + ')';
+        } else {
+          var lab = r.trait;
+        }
         r.label = lab;
         if (labels.indexOf(lab) === -1) labels.push(lab);
       });
