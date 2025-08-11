@@ -1,5 +1,8 @@
 *This file only includes changes that are relevant to people running a pheweb site.*
 
+## Unreleased
+- Combine redundant credible-set intervals in Finngen SuSiE plot
+
 ## 1.3.15
 - Fixes `pheweb cluster`.
 
