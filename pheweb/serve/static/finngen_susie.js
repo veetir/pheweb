@@ -29,30 +29,52 @@ function renderFinnGenSusie() {
     })
     .then(function(json) {
       var rows = json.data || json;
-    var showEP = document.getElementById('show-endpoints').checked;
-    var showDG = document.getElementById('show-drugs').checked;
-    var showLQ = document.getElementById('show-low-quality').checked;
+      var showEP = document.getElementById('show-endpoints').checked;
+      var showDG = document.getElementById('show-drugs').checked;
+      var showLQ = document.getElementById('show-low-quality').checked;
 
-    rows = rows.filter(function(r) {
-    return isDrug(r) ? showDG
-                    : showEP;
-    });
-    if (!showLQ) {
-      rows = rows.filter(function(r){
-        return r.good_cs;
+      rows = rows.filter(function(r) {
+        return isDrug(r) ? showDG : showEP;
       });
-    } 
-
+      if (!showLQ) {
+        rows = rows.filter(function(r){
+          return r.good_cs;
+        });
+      }
 
       if (!rows || !rows.length) {
         container.innerHTML = 'No SuSiE results in this region.';
         return;
       }
 
+      // Group identical credible-set intervals per endpoint and quality
+      var grouped = {};
+      rows.forEach(function(r){
+        var key = [r.trait, r.start, r.end, r.good_cs].join('|');
+        if (!grouped[key]) {
+          grouped[key] = {
+            trait: r.trait,
+            start: r.start,
+            end: r.end,
+            good_cs: r.good_cs,
+            cs: [],
+            vpos: [],
+            variant: [],
+            prob: []
+          };
+        }
+        grouped[key].cs.push(r.cs);
+        grouped[key].vpos.push(r.vpos);
+        grouped[key].variant.push(r.variant);
+        grouped[key].prob.push(r.prob);
+      });
+      rows = Object.values(grouped);
+
       // Build y-axis labels
       var labels = [];
       rows.forEach(function(r) {
-        var lab = r.trait + ' (' + r.cs + ')';
+        var lab = r.trait + ' (' + r.cs[0] + (r.cs.length>1 ? ' ×' + r.cs.length : '') + ')';
+        r.label = lab;
         if (labels.indexOf(lab) === -1) labels.push(lab);
       });
       var yIndex = {};
@@ -66,7 +88,7 @@ function renderFinnGenSusie() {
       var shapes = [];
 
       rows.forEach(function(r) {
-        var lab    = r.trait + ' (' + r.cs + ')';
+        var lab    = r.label;
         var y      = yIndex[lab];
         var bucket = categories[classifyRow(r)];
 
@@ -74,17 +96,19 @@ function renderFinnGenSusie() {
         bucket.lineX.push(r.start, r.end, null);
         bucket.lineY.push(y,      y,     null);
 
-        // endpoint marker
-        bucket.markerX.push(r.vpos);
-        bucket.markerY.push(y);
-        bucket.markerSize.push((r.prob||0)*20 + 5);
+        // endpoint marker(s)
+        r.vpos.forEach(function(vpos, idx){
+          bucket.markerX.push(vpos);
+          bucket.markerY.push(y);
+          bucket.markerSize.push((r.prob[idx]||0)*20 + 5);
 
-        // little guide-line at the row (yref:'y')
-        shapes.push({
-          type: 'line',
-          x0: r.vpos, x1: r.vpos,
-          yref: 'y',  y0: y,   y1: y,
-          line: { color: bucket.color, width: 1, dash: 'dot' }
+          // little guide-line at the row (yref:'y')
+          shapes.push({
+            type: 'line',
+            x0: vpos, x1: vpos,
+            yref: 'y',  y0: y,   y1: y,
+            line: { color: bucket.color, width: 1, dash: 'dot' }
+          });
         });
       });
 
@@ -110,10 +134,12 @@ function renderFinnGenSusie() {
       // 3) top‐variant crosses in dark red, hover shows variant string
       var variantX = [], variantY = [], variantText = [];
       rows.forEach(function(r){
-        var lab = r.trait + ' (' + r.cs + ')';
-        variantX.push(r.vpos);
-        variantY.push(yIndex[lab]);
-        variantText.push(r.variant);  
+        var lab = r.label;
+        r.vpos.forEach(function(vpos, idx){
+          variantX.push(vpos);
+          variantY.push(yIndex[lab]);
+          variantText.push(r.variant[idx]);
+        });
       });
       traces.push({
         x: variantX,
