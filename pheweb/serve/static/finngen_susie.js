@@ -73,16 +73,47 @@ function renderFinnGenSusie() {
       // Build y-axis labels
       var labels = [];
       rows.forEach(function(r) {
-        if (r.cs.length>1) {
-           var lab = r.trait + ' (' + (r.cs.length>1 ? ' ×' + r.cs.length : '') + ')';
-        } else {
-          var lab = r.trait;
-        }
+        var lab = r.cs.length>1 ? r.trait + ' (' + ' ×' + r.cs.length + ')' : r.trait;
         r.label = lab;
         if (labels.indexOf(lab) === -1) labels.push(lab);
       });
+
+      // Helper to wrap long labels onto multiple lines
+      function wrapLabel(text, maxLen) {
+        var words = text.split(/\s+/);
+        var lines = [];
+        var current = '';
+        words.forEach(function(w){
+          var test = current ? current + ' ' + w : w;
+          if (test.length > maxLen) {
+            if (current) lines.push(current);
+            current = w;
+          } else {
+            current = test;
+          }
+        });
+        if (current) lines.push(current);
+        return lines.join('<br>');
+      }
+
+      // Determine positions for each label based on wrapped line count
+      var maxLineLen = 30;
+      var tickvals = [];
+      var ticktext = [];
       var yIndex = {};
-      labels.forEach(function(l, i) { yIndex[l] = i + 1; });
+      var yCursor = 0;  // counts virtual rows
+      labels.forEach(function(l){
+        var wrapped = wrapLabel(l, maxLineLen);
+        var lineCnt = wrapped.split('<br>').length;
+        var start = yCursor;
+        var end   = yCursor + lineCnt;
+        var center = (start + end) / 2;
+        tickvals.push(center);
+        ticktext.push(wrapped);
+        yIndex[l] = center;
+        yCursor = end;
+      });
+      var totalLines = yCursor;
 
       // Bucket data by good/low endpoint quality
       var categories = {
@@ -167,19 +198,20 @@ function renderFinnGenSusie() {
           zerolinecolor: 'black'
         },
         yaxis: {
-          tickvals:  labels.map((_,i)=>i+1),
-          ticktext:  labels,
+          tickvals:  tickvals,
+          ticktext:  ticktext,
           showgrid:  false,
-          autorange: 'reversed'
+          autorange: 'reversed',
+          automargin: true
         },
         margin:     { t:34, b:40, l:120, r:20 },
-        height:     200 + 25*labels.length,
+        height:     200 + 25*totalLines,
         shapes:     shapes,
         legend: {
             orientation: 'h',
             x: 0,
             y: 1,
-            xanchor: 'left',  
+            xanchor: 'left',
             yanchor: 'bottom'
         },
         plot_bgcolor: 'white'
@@ -237,6 +269,10 @@ function renderFinnGenSusie() {
       plotDiv.style.margin = '0 auto';
       layout.width = lzWidth;
       Plotly.newPlot(plotDiv, traces, layout, {responsive: true}).then(function(){
+        // add full label tooltips
+        var ticks = plotDiv.querySelectorAll('.yaxislayer-above text');
+        ticks.forEach(function(t, idx){ t.setAttribute('title', labels[idx]); });
+
         // sync with locuszoom state...
         if (window.plot && window.plot.state) {
           var s = window.plot.state;

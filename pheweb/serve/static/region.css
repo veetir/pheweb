@@ -10,9 +10,12 @@
 
 .lz-container-responsive,
 #plotly-gwas-catalog,
-#finngen-gwas-catalog,
-#finngen-susie {
+#finngen-gwas-catalog {
     overflow-x: hidden;
+}
+
+#finngen-susie {
+    overflow: visible;
 }
 
 #endpoint-row-wrapper {
