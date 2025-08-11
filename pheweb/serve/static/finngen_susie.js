@@ -156,10 +156,18 @@ function renderFinnGenSusie() {
       };
 
         var endpoints = labels.map(function(l) {
-        return l.replace(/\s*\(.*\)$/, '');  
+        return l.replace(/\s*\(.*\)$/, '');
         });
         var uniqueEndpoints = Array.from(new Set(endpoints));
         var summaryEl = document.getElementById('susie-summary');
+        var controlsEl = document.getElementById('susie-controls');
+        var lzWidth = document.getElementById('lz-1').clientWidth;
+        summaryEl.style.maxWidth = lzWidth + 'px';
+        summaryEl.style.margin = '0 auto';
+        if (controlsEl) {
+          controlsEl.style.maxWidth = lzWidth + 'px';
+          controlsEl.style.margin = '0 auto';
+        }
         var count = uniqueEndpoints.length;
         summaryEl.innerHTML =
           '<strong>' + count + '</strong> overlapping endpoint' + (count===1?'':'s') +
@@ -195,7 +203,8 @@ function renderFinnGenSusie() {
       // Render
       container.innerHTML = '';
       var plotDiv = document.getElementById('finngen-susie');
-      var lzWidth = document.getElementById('lz-1').clientWidth;
+      plotDiv.style.maxWidth = lzWidth + 'px';
+      plotDiv.style.margin = '0 auto';
       layout.width = lzWidth;
       Plotly.newPlot(plotDiv, traces, layout, {responsive: true}).then(function(){
         // sync with locuszoom state...
@@ -237,6 +246,9 @@ function renderFinnGenSusie() {
         window.addEventListener('resize', function(){
           var newWidth = document.getElementById('lz-1').clientWidth;
           Plotly.relayout(plotDiv, {width: newWidth});
+          summaryEl.style.maxWidth = newWidth + 'px';
+          if (controlsEl) controlsEl.style.maxWidth = newWidth + 'px';
+          plotDiv.style.maxWidth = newWidth + 'px';
         });
       });
     })
@@ -253,15 +265,6 @@ document.addEventListener('DOMContentLoaded', function(){
   var epToggle = document.getElementById('show-endpoints');
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
-
-  var summary = document.getElementById('susie-summary');
-  if (summary) {
-    summary.addEventListener('wheel', function(e) {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      summary.scrollLeft += e.deltaY;
-    }, { passive: false });
-  }
 
   if (sel)      sel.addEventListener('change', renderFinnGenSusie);
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
