@@ -201,23 +201,17 @@ def api_finngen_susie():
 def api_finngen(endpoint: str):
     """
     This endpoint accepts a query parameter "region" in the format "chr:start-end"
-    and instead of using a local tabix query, it makes an external API call to FinnGen.
     
     The external API expects a URL-encoded filter string that describes the region.
     For example:
        analysis in 3 and chromosome in '20' and position ge 35187976 and position le 35687976
-    is URL encoded and inserted into the FinnGen API URL.
-    
-    Finally, the column-based API response is transformed into a row-based list,
-    optionally filtered (here by p-value <= 0.05) so that the output matches what
-    your JavaScript code is expecting.
     """
     region = request.args.get("region")
     if not region:
         return jsonify({"error": "Missing region parameter, expected format 'chr:start-end'"}), 400
 
     try:
-        # Parse region data, expected in the "chr:start-end" format.
+        # Parse region data, expected in the "chr:start-end" format
         parts = region.split(":")
         if len(parts) != 2:
             return jsonify({"error": "Invalid region format (expected 'chr:start-end')"}), 400
@@ -227,16 +221,16 @@ def api_finngen(endpoint: str):
             return jsonify({"error": "Invalid region coordinates (expected 'start-end')"}), 400
         pos_start, pos_end = coords[0], coords[1]
         
-        # Construct the filter query string as required by FinnGen.
+        # Construct the filter query string as required by FinnGen
         filter_query = (
             f"analysis in 3 and chromosome in '{chrom}' and position ge {pos_start} and position le {pos_end}"
         )
-        # URL encode the filter parameter.
+        # URL encode the filter parameter
         encoded_filter = urllib.parse.quote(filter_query)
 
-        # Build the external API URL.
+        # Build the external API URL
         external_api_url = f"https://results.finngen.fi/api/region/{endpoint}/lz-results/?filter={encoded_filter}"
-        # Log or print the URL if desired:
+        # Log or print the URL if desired
         print("Calling FinnGen external API:", external_api_url)
         
         # Fetch data from the external API.
@@ -245,7 +239,7 @@ def api_finngen(endpoint: str):
         
         external_json = external_response.json()
         
-        # The external API returns a column-oriented structure under key "data".
+        # The external API returns a column-oriented structure under key "data"
         if "data" in external_json:
             transformed_data = transform_column_to_rows(external_json["data"])
         else:
@@ -254,7 +248,7 @@ def api_finngen(endpoint: str):
         return jsonify({"data": transformed_data})
     
     except Exception as e:
-        # On error, return a JSON error message.
+        # On error, return a JSON error message
         return jsonify({"error": str(e)}), 500
 
 @bp.route("/api/autocomplete")
