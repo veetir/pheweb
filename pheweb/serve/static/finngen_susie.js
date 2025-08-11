@@ -156,10 +156,18 @@ function renderFinnGenSusie() {
       };
 
         var endpoints = labels.map(function(l) {
-        return l.replace(/\s*\(.*\)$/, '');  
+        return l.replace(/\s*\(.*\)$/, '');
         });
         var uniqueEndpoints = Array.from(new Set(endpoints));
         var summaryEl = document.getElementById('susie-summary');
+        var controlsEl = document.getElementById('susie-controls');
+        var lzWidth = document.getElementById('lz-1').clientWidth;
+        summaryEl.style.maxWidth = lzWidth + 'px';
+        summaryEl.style.margin = '0 auto';
+        if (controlsEl) {
+          controlsEl.style.maxWidth = lzWidth + 'px';
+          controlsEl.style.margin = '0 auto';
+        }
         var count = uniqueEndpoints.length;
         summaryEl.innerHTML =
           '<strong>' + count + '</strong> overlapping endpoint' + (count===1?'':'s') +
@@ -194,7 +202,11 @@ function renderFinnGenSusie() {
 
       // Render
       container.innerHTML = '';
-      Plotly.newPlot('finngen-susie', traces, layout).then(function(){
+      var plotDiv = document.getElementById('finngen-susie');
+      plotDiv.style.maxWidth = lzWidth + 'px';
+      plotDiv.style.margin = '0 auto';
+      layout.width = lzWidth;
+      Plotly.newPlot(plotDiv, traces, layout, {responsive: true}).then(function(){
         // sync with locuszoom state...
         if (window.plot && window.plot.state) {
           var s = window.plot.state;
@@ -231,6 +243,13 @@ function renderFinnGenSusie() {
             });
           });
         }
+        window.addEventListener('resize', function(){
+          var newWidth = document.getElementById('lz-1').clientWidth;
+          Plotly.relayout(plotDiv, {width: newWidth});
+          summaryEl.style.maxWidth = newWidth + 'px';
+          if (controlsEl) controlsEl.style.maxWidth = newWidth + 'px';
+          plotDiv.style.maxWidth = newWidth + 'px';
+        });
       });
     })
     .catch(function(err){
