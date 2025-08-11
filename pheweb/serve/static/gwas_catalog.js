@@ -284,10 +284,12 @@ function renderPlotlyCatalogPlot() {
       }
       
       // Render the Plotly plot.
-      Plotly.newPlot('plotly-gwas-catalog', [traceUKBB, traceEBI], layout)
+      var plotDiv = document.getElementById('plotly-gwas-catalog');
+      var lzWidth = document.getElementById('lz-1').clientWidth;
+      layout.width = lzWidth;
+      Plotly.newPlot(plotDiv, [traceUKBB, traceEBI], layout, {responsive: true})
         .then(function() {
           // Attach a click event listener so that clicking a point opens the PubMed page.
-          var plotDiv = document.getElementById('plotly-gwas-catalog');
 
           // Clicking a point => open PubMed page
           plotDiv.on('plotly_click', function(data) {
@@ -325,6 +327,10 @@ function renderPlotlyCatalogPlot() {
           });
           renderWordCloud(ukbbCustom, 'ukbb-wordcloud', 'ukbb');
           renderWordCloud(ebiCustom, 'gwas-wordcloud', 'gwas');
+          window.addEventListener('resize', function() {
+            var newWidth = document.getElementById('lz-1').clientWidth;
+            Plotly.relayout(plotDiv, {width: newWidth});
+          });
         });
     })
     .catch(function(error) {

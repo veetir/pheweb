@@ -150,9 +150,11 @@ function renderFinnGenPlot() {
       }
 
       // Render the new FinnGen plot
-      Plotly.newPlot('finngen-gwas-catalog', [trace], layout)
+      var plotDiv = document.getElementById('finngen-gwas-catalog');
+      var lzWidth = document.getElementById('lz-1').clientWidth;
+      layout.width = lzWidth;
+      Plotly.newPlot(plotDiv, [trace], layout, {responsive: true})
         .then(function() {
-          var plotDiv = document.getElementById('finngen-gwas-catalog');
           
           // Click event to go to dbSNP page
           plotDiv.on('plotly_click', function(evtData) {
@@ -214,6 +216,10 @@ function renderFinnGenPlot() {
               });
             });
           }
+          window.addEventListener('resize', function() {
+            var newWidth = document.getElementById('lz-1').clientWidth;
+            Plotly.relayout(plotDiv, {width: newWidth});
+          });
         });
 
       // Update the FinnGen button link

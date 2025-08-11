@@ -194,7 +194,10 @@ function renderFinnGenSusie() {
 
       // Render
       container.innerHTML = '';
-      Plotly.newPlot('finngen-susie', traces, layout).then(function(){
+      var plotDiv = document.getElementById('finngen-susie');
+      var lzWidth = document.getElementById('lz-1').clientWidth;
+      layout.width = lzWidth;
+      Plotly.newPlot(plotDiv, traces, layout, {responsive: true}).then(function(){
         // sync with locuszoom state...
         if (window.plot && window.plot.state) {
           var s = window.plot.state;
@@ -231,6 +234,10 @@ function renderFinnGenSusie() {
             });
           });
         }
+        window.addEventListener('resize', function(){
+          var newWidth = document.getElementById('lz-1').clientWidth;
+          Plotly.relayout(plotDiv, {width: newWidth});
+        });
       });
     })
     .catch(function(err){
