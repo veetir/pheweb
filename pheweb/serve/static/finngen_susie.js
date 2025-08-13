@@ -78,7 +78,7 @@ function renderFinnGenSusie() {
   var summaryEl = document.getElementById('susie-summary');
 
   if (!showEP && !showDG) {
-    container.innerHTML = 'No SuSiE results in this region. Toggle endpoints or drugs to display results.';
+    container.innerHTML = 'Toggle endpoints or drugs to display results.';
     if (summaryEl) summaryEl.innerHTML = '';
     return;
   }
@@ -313,7 +313,7 @@ function renderFinnGenSusie() {
 
           if (m) {
               a.classList.add('btn-drug');
-              a.title = 'drug endpoint';
+              a.title = 'Drug endpoint';
               // Drug endpoints: keep old behaviour and link to ATC website
               var code = m[1];
               a.href   = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
