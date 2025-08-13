@@ -196,6 +196,29 @@ def api_finngen_susie():
 
     return jsonify({"data": data})
 
+@functools.lru_cache()
+def _load_atc_map() -> Dict[str, str]:
+    """Return mapping of ATC codes to long names."""
+    path = os.path.join(conf.get_data_dir(), "atc.txt")
+    mapping: Dict[str, str] = {}
+    if not os.path.exists(path):
+        return mapping
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("Id"):
+                continue
+            parts = line.split("\t")
+            if len(parts) >= 2:
+                mapping[parts[0]] = parts[1]
+    return mapping
+
+
+@bp.route("/api/atc")
+def api_atc_codes():
+    """Serve mapping from ATC code to human-readable name."""
+    return jsonify(_load_atc_map())
+
 @bp.route("/api/finngen/<endpoint>")
 @check_auth
 def api_finngen(endpoint: str):
