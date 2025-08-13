@@ -10,6 +10,31 @@ function classifyRow(row) {
   return 'endpoint_' + (row.good_cs ? 'good' : 'low');
 }
 
+function updateToggleStates() {
+  var epToggle = document.getElementById('show-endpoints');
+  var dgToggle = document.getElementById('show-drugs');
+  var lqToggle = document.getElementById('show-low-quality');
+  var atcToggle = document.getElementById('show-atc-codes');
+
+  if (atcToggle) {
+    var dgChecked = dgToggle && dgToggle.checked;
+    atcToggle.disabled = !dgChecked;
+    if (!dgChecked) atcToggle.checked = false;
+    if (atcToggle.parentElement) {
+      atcToggle.parentElement.classList.toggle('disabled', !dgChecked);
+    }
+  }
+
+  if (lqToggle) {
+    var disableLq = !(dgToggle && dgToggle.checked) && !(epToggle && epToggle.checked);
+    lqToggle.disabled = disableLq;
+    if (disableLq) lqToggle.checked = false;
+    if (lqToggle.parentElement) {
+      lqToggle.parentElement.classList.toggle('disabled', disableLq);
+    }
+  }
+}
+
 // cache of ATC code mapping fetched from the backend
 var atcMapPromise = null;
 function getAtcMap() {
@@ -41,6 +66,23 @@ function renderFinnGenSusie() {
   var apiUrl = window.model.urlprefix + '/api/finngen-susie?region=chr' + region;
   var container = document.getElementById('finngen-susie');
   if (!container) return;
+  updateToggleStates();
+  var showEP = document.getElementById('show-endpoints');
+  showEP = showEP ? showEP.checked : false;
+  var showDG = document.getElementById('show-drugs');
+  showDG = showDG ? showDG.checked : false;
+  var showLQ = document.getElementById('show-low-quality');
+  showLQ = showLQ ? showLQ.checked : false;
+  var showCodesEl = document.getElementById('show-atc-codes');
+  var showCodes = showCodesEl ? showCodesEl.checked : false;
+  var summaryEl = document.getElementById('susie-summary');
+
+  if (!showEP && !showDG) {
+    container.innerHTML = 'No SuSiE results in this region. Toggle endpoints or drugs to display results.';
+    if (summaryEl) summaryEl.innerHTML = '';
+    return;
+  }
+
   container.innerHTML = '<p>Loading...</p>';
 
   Promise.all([
@@ -54,11 +96,6 @@ function renderFinnGenSusie() {
       var json = results[0];
       var atcMap = results[1];
       var rows = json.data || json;
-      var showEP = document.getElementById('show-endpoints').checked;
-      var showDG = document.getElementById('show-drugs').checked;
-      var showLQ = document.getElementById('show-low-quality').checked;
-      var showCodesEl = document.getElementById('show-atc-codes');
-      var showCodes = showCodesEl ? showCodesEl.checked : false;
 
       rows = rows.filter(function(r) {
         return isDrug(r) ? showDG : showEP;
@@ -71,6 +108,7 @@ function renderFinnGenSusie() {
 
       if (!rows || !rows.length) {
         container.innerHTML = 'No SuSiE results in this region.';
+        if (summaryEl) summaryEl.innerHTML = '';
         return;
       }
 
@@ -249,7 +287,7 @@ function renderFinnGenSusie() {
           return r.trait;
         });
         var uniqueEndpoints = Array.from(new Set(endpoints));
-        var summaryEl = document.getElementById('susie-summary');
+        summaryEl = document.getElementById('susie-summary');
         var controlsEl = document.getElementById('susie-controls');
         var lzWidth = document.getElementById('lz-1').clientWidth;
         summaryEl.style.maxWidth = lzWidth + 'px';
@@ -275,6 +313,7 @@ function renderFinnGenSusie() {
 
           if (m) {
               a.classList.add('btn-drug');
+              a.title = 'drug endpoint';
               // Drug endpoints: keep old behaviour and link to ATC website
               var code = m[1];
               a.href   = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
@@ -365,6 +404,7 @@ function renderFinnGenSusie() {
     })
     .catch(function(err){
       container.innerHTML = 'No SuSiE results in this region.';
+      if (summaryEl) summaryEl.innerHTML = '';
       console.error(err);
     });
 }
