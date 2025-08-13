@@ -274,6 +274,7 @@ function renderFinnGenSusie() {
           a.className = 'btn susie-pill';
 
           if (m) {
+              a.classList.add('btn-drug');
               // Drug endpoints: keep old behaviour and link to ATC website
               var code = m[1];
               a.href   = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
