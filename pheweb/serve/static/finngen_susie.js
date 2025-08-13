@@ -22,8 +22,8 @@ function getAtcMap() {
   return atcMapPromise;
 }
 
-function displayEndpoint(ep, atcMap, useNames) {
-  if (!useNames) return ep;
+function displayEndpoint(ep, atcMap, showCodes) {
+  if (showCodes) return ep;
   var m = ep.match(/^ATC_(.+)_IRN$/);
   if (m && atcMap[m[1]]) {
     return atcMap[m[1]];
@@ -57,8 +57,8 @@ function renderFinnGenSusie() {
       var showEP = document.getElementById('show-endpoints').checked;
       var showDG = document.getElementById('show-drugs').checked;
       var showLQ = document.getElementById('show-low-quality').checked;
-      var showNamesEl = document.getElementById('show-atc-names');
-      var showNames = showNamesEl ? showNamesEl.checked : true;
+      var showCodesEl = document.getElementById('show-atc-codes');
+      var showCodes = showCodesEl ? showCodesEl.checked : false;
 
       rows = rows.filter(function(r) {
         return isDrug(r) ? showDG : showEP;
@@ -100,7 +100,7 @@ function renderFinnGenSusie() {
       // Build y-axis labels
       var labels = [];
       rows.forEach(function(r) {
-        var name = displayEndpoint(r.trait, atcMap, showNames);
+        var name = displayEndpoint(r.trait, atcMap, showCodes);
         var lab = r.cs.length>1 ? name + ' (' + ' ×' + r.cs.length + ')' : name;
         r.label = lab;
         if (labels.indexOf(lab) === -1) labels.push(lab);
@@ -270,7 +270,7 @@ function renderFinnGenSusie() {
         uniqueEndpoints.forEach(function(ep) {
           var m = ep.match(/^ATC_(.+)_IRN$/);
           var a = document.createElement('a');
-          a.textContent = displayEndpoint(ep, atcMap, showNames);
+          a.textContent = displayEndpoint(ep, atcMap, showCodes);
           a.className = 'btn susie-pill';
 
           if (m) {
@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var epToggle = document.getElementById('show-endpoints');
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
-  var atcToggle = document.getElementById('show-atc-names');
+  var atcToggle = document.getElementById('show-atc-codes');
 
   var summary = document.getElementById('susie-summary');
   if (summary) {
