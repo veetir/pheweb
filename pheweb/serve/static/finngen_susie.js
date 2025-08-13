@@ -10,6 +10,27 @@ function classifyRow(row) {
   return 'endpoint_' + (row.good_cs ? 'good' : 'low');
 }
 
+// cache of ATC code mapping fetched from the backend
+var atcMapPromise = null;
+function getAtcMap() {
+  if (!atcMapPromise) {
+    var url = window.model.urlprefix + '/api/atc';
+    atcMapPromise = fetch(url)
+      .then(function(resp){ return resp.ok ? resp.json() : {}; })
+      .catch(function(){ return {}; });
+  }
+  return atcMapPromise;
+}
+
+function displayEndpoint(ep, atcMap, showCodes) {
+  if (showCodes) return ep;
+  var m = ep.match(/^ATC_(.+)_IRN$/);
+  if (m && atcMap[m[1]]) {
+    return atcMap[m[1]];
+  }
+  return ep;
+}
+
 function renderFinnGenSusie() {
   var regionEl = document.getElementById('lz-1');
   if (!regionEl || !regionEl.dataset.region) {
@@ -22,16 +43,22 @@ function renderFinnGenSusie() {
   if (!container) return;
   container.innerHTML = '<p>Loading...</p>';
 
-  fetch(apiUrl)
-    .then(function(response) {
-      if (!response.ok) throw new Error("Failed to fetch SuSiE data");
-      return response.json();
-    })
-    .then(function(json) {
+  Promise.all([
+    fetch(apiUrl).then(function(resp){
+      if (!resp.ok) throw new Error("Failed to fetch SuSiE data");
+      return resp.json();
+    }),
+    getAtcMap()
+  ])
+    .then(function(results) {
+      var json = results[0];
+      var atcMap = results[1];
       var rows = json.data || json;
       var showEP = document.getElementById('show-endpoints').checked;
       var showDG = document.getElementById('show-drugs').checked;
       var showLQ = document.getElementById('show-low-quality').checked;
+      var showCodesEl = document.getElementById('show-atc-codes');
+      var showCodes = showCodesEl ? showCodesEl.checked : false;
 
       rows = rows.filter(function(r) {
         return isDrug(r) ? showDG : showEP;
@@ -73,7 +100,8 @@ function renderFinnGenSusie() {
       // Build y-axis labels
       var labels = [];
       rows.forEach(function(r) {
-        var lab = r.cs.length>1 ? r.trait + ' (' + ' ×' + r.cs.length + ')' : r.trait;
+        var name = displayEndpoint(r.trait, atcMap, showCodes);
+        var lab = r.cs.length>1 ? name + ' (' + ' ×' + r.cs.length + ')' : name;
         r.label = lab;
         if (labels.indexOf(lab) === -1) labels.push(lab);
       });
@@ -217,8 +245,8 @@ function renderFinnGenSusie() {
         plot_bgcolor: 'white'
       };
 
-        var endpoints = labels.map(function(l) {
-        return l.replace(/\s*\(.*\)$/, '');
+        var endpoints = rows.map(function(r) {
+          return r.trait;
         });
         var uniqueEndpoints = Array.from(new Set(endpoints));
         var summaryEl = document.getElementById('susie-summary');
@@ -240,42 +268,43 @@ function renderFinnGenSusie() {
 
 
         uniqueEndpoints.forEach(function(ep) {
-        var m = ep.match(/^ATC_(.+)_IRN$/);
-        var a = document.createElement('a');
-        a.textContent = ep;
-        a.className = 'btn susie-pill';
+          var m = ep.match(/^ATC_(.+)_IRN$/);
+          var a = document.createElement('a');
+          a.textContent = displayEndpoint(ep, atcMap, showCodes);
+          a.className = 'btn susie-pill';
 
-        if (m) {
-            // Drug endpoints: keep old behaviour and link to ATC website
-            var code = m[1];
-            a.href   = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
-            a.target = '_blank';
-        } else {
-            // Non-drug endpoints: populate FinnGen catalog search
-            a.href = '#';
-            a.addEventListener('click', function(ev){
-                ev.preventDefault();
-                var searchBox = document.getElementById('endpoint-search');
-                if (searchBox) {
-                    searchBox.value = ep;
-                    var inputEvt = new Event('input', { bubbles: true });
-                    searchBox.dispatchEvent(inputEvt);
-                    var select = document.getElementById('endpoint-select');
-                    if (select) {
-                        select.value = ep;
-                        if (typeof renderFinnGenPlot === 'function') {
-                            renderFinnGenPlot();
-                        }
-                        if (typeof updateFinnGenButton === 'function') {
-                            updateFinnGenButton();
-                        }
-                    }
-                    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-                }
-            });
-        }
+          if (m) {
+              a.classList.add('btn-drug');
+              // Drug endpoints: keep old behaviour and link to ATC website
+              var code = m[1];
+              a.href   = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
+              a.target = '_blank';
+          } else {
+              // Non-drug endpoints: populate FinnGen catalog search
+              a.href = '#';
+              a.addEventListener('click', function(ev){
+                  ev.preventDefault();
+                  var searchBox = document.getElementById('endpoint-search');
+                  if (searchBox) {
+                      searchBox.value = ep;
+                      var inputEvt = new Event('input', { bubbles: true });
+                      searchBox.dispatchEvent(inputEvt);
+                      var select = document.getElementById('endpoint-select');
+                      if (select) {
+                          select.value = ep;
+                          if (typeof renderFinnGenPlot === 'function') {
+                              renderFinnGenPlot();
+                          }
+                          if (typeof updateFinnGenButton === 'function') {
+                              updateFinnGenButton();
+                          }
+                      }
+                      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                  }
+              });
+          }
 
-        summaryEl.appendChild(a);
+          summaryEl.appendChild(a);
         });
 
       // Render
@@ -347,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var epToggle = document.getElementById('show-endpoints');
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
+  var atcToggle = document.getElementById('show-atc-codes');
 
   var summary = document.getElementById('susie-summary');
   if (summary) {
@@ -361,5 +391,6 @@ document.addEventListener('DOMContentLoaded', function(){
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
+  if (atcToggle) atcToggle.addEventListener('change', renderFinnGenSusie);
 });
 

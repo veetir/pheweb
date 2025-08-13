@@ -185,6 +185,16 @@ h1 {
     transform: scale(1.03);
 }
 
+.btn.btn-drug {
+    background-color: #71E68F;
+    color: #FFFFFF;
+}
+
+.btn.btn-drug:hover {
+    background-color: #71E68F;
+    color: #FFFFFF;
+}
+
 #susie-header {
     display: flex;
     align-items: center;
