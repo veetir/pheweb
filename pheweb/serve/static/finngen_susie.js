@@ -240,24 +240,40 @@ function renderFinnGenSusie() {
 
 
         uniqueEndpoints.forEach(function(ep) {
-        // decide URL
-        var href;
         var m = ep.match(/^ATC_(.+)_IRN$/);
-        if (m) {
-            // drug
-            var code = m[1];
-            href = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
-        } else {
-            // non‐drug endpoint
-            href = 'https://results.finngen.fi/pheno/' + encodeURIComponent(ep);
-        }
-
-        // build the “pill” as a link
         var a = document.createElement('a');
-        a.href        = href;
-        a.target      = '_blank';
         a.textContent = ep;
         a.className = 'btn susie-pill';
+
+        if (m) {
+            // Drug endpoints: keep old behaviour and link to ATC website
+            var code = m[1];
+            a.href   = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
+            a.target = '_blank';
+        } else {
+            // Non-drug endpoints: populate FinnGen catalog search
+            a.href = '#';
+            a.addEventListener('click', function(ev){
+                ev.preventDefault();
+                var searchBox = document.getElementById('endpoint-search');
+                if (searchBox) {
+                    searchBox.value = ep;
+                    var inputEvt = new Event('input', { bubbles: true });
+                    searchBox.dispatchEvent(inputEvt);
+                    var select = document.getElementById('endpoint-select');
+                    if (select) {
+                        select.value = ep;
+                        if (typeof renderFinnGenPlot === 'function') {
+                            renderFinnGenPlot();
+                        }
+                        if (typeof updateFinnGenButton === 'function') {
+                            updateFinnGenButton();
+                        }
+                    }
+                    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                }
+            });
+        }
 
         summaryEl.appendChild(a);
         });
