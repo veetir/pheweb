@@ -228,6 +228,11 @@ h1 {
     margin-right: 1em;
 }
 
+#susie-controls label.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 #finngen-susie-wrapper {
     width: 100%;
     max-height: 400px;
