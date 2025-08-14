@@ -93,18 +93,19 @@ h1 {
 .info-link {
     margin-left: 8px;
     vertical-align: middle;
+    cursor: help;
 }
   
 .info-icon {
-    height: 18px;
-    width: 18px;
+    height: 14px;
+    width: 14px;
 }
 
 .info-icon-inline {
     vertical-align: middle;
     position: relative;
-    top: -2px;
-    margin-left: -4px;
+    top: -3px;
+    margin-left: -5px;
 }
 
 .info-icon-inline-lg {
