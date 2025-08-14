@@ -166,7 +166,7 @@ h1 {
 }
 
 .btn {
-    background-color: #3500d38e;
+    background-color: #5D33DB;
     color: #FFFFFF;
     padding: 4px 6px;
     margin: 5px;
@@ -180,18 +180,18 @@ h1 {
 }
 
 .btn:hover {
-    background-color: #3500d38e;
+    background-color: #5D33DB;
     color: #FFFFFF;
     transform: scale(1.03);
 }
 
 .btn.btn-drug {
-    background-color: #71E68F;
+    background-color: #106527;
     color: #FFFFFF;
 }
 
 .btn.btn-drug:hover {
-    background-color: #71E68F;
+    background-color: #106527;
     color: #FFFFFF;
 }
 
