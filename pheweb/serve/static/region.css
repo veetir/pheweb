@@ -27,6 +27,13 @@
     margin-bottom: 20px;
 }
 
+#endpoint-controls-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
 #finngen-logo-wrapper {
     flex: 0 0 auto;
 }
@@ -37,6 +44,7 @@
     font-size: 14px;
     flex: 1 1 300px;
     max-width: 300px;
+    min-width: 0;
 }
 
 #endpoint-controls label {
@@ -47,22 +55,7 @@
 #endpoint-select {
     width: 100%;
     max-width: 300px;
-    margin-top: 4px;    
-}
-#endpoint-controls-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-@media (max-width: 768px) {
-    #endpoint-controls-wrapper {
-      flex-direction: column;
-      align-items: center;
-    }
-    #endpoint-controls {
-      align-items: center;
-    }
+    margin-top: 4px;
 }
 
 h1 {
@@ -151,6 +144,12 @@ h1 {
     #wordclouds {
         order: -1;
         width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .wordcloud-box {
+        flex: 1 1 100%;
     }
 }
 
