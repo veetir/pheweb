@@ -300,7 +300,8 @@ function renderFinnGenSusie() {
         summaryEl.innerHTML =
           '<strong>' + count + '</strong> overlapping endpoint' + (count===1?'':'s') +
           ' <a href="#" class="info-link" title="Endpoints '
-          + 'whose credible-sets overlap the current region"><img src="' +
+          + 'that have at least one credible set that intersects'
+          + ' the current region"><img src="' +
           window.model.urlprefix + '/static/images/info.svg" class="info-icon info-icon-inline info-icon-inline-lg"'
           + ' alt="Info"></a>: ';
 
