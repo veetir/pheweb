@@ -107,29 +107,28 @@
 
   <div id="plotly-gwas-catalog"></div>
 
-  <div id="endpoint-row-wrapper">
-    <div id="finngen-logo-wrapper">
-      <a href="https://www.finngen.fi/en" target="_blank">
-        <img src="{{ url_for('bp.static', filename='images/finngen.png') }}" 
-             alt="FinnGen Logo" class="finngen-logo">
-      </a>
-    </div>
-  
-    <div id="endpoint-controls-and-traits">
-      <div id="endpoint-controls">
-        <label for="endpoint-search">
-          Search FinnGen Endpoints
-        </label>
-        <input type="text" id="endpoint-search" placeholder="Type to search..." />
-        <label for="endpoint-select" id="endpoint-select-label"></label>
-        <select id="endpoint-select"></select>
+    <div id="endpoint-row-wrapper">
+      <div id="endpoint-controls-wrapper">
+        <div id="finngen-logo-wrapper">
+          <a href="https://www.finngen.fi/en" target="_blank">
+            <img src="{{ url_for('bp.static', filename='images/finngen.png') }}"
+                 alt="FinnGen Logo" class="finngen-logo">
+          </a>
+        </div>
+        <div id="endpoint-controls">
+          <label for="endpoint-search">
+            Search FinnGen Endpoints
+          </label>
+          <input type="text" id="endpoint-search" placeholder="Type to search..." />
+          <label for="endpoint-select" id="endpoint-select-label"></label>
+          <select id="endpoint-select"></select>
+        </div>
       </div>
       <div id="wordclouds">
         <div id="ukbb-wordcloud" class="wordcloud-box"></div>
         <div id="gwas-wordcloud" class="wordcloud-box"></div>
       </div>
     </div>
-  </div>
   
   
   <div id="finngen-gwas-catalog"></div>
