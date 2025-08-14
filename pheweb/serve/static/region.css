@@ -22,9 +22,9 @@
     display: flex;
     align-items: center;
     gap: 30px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     width: 100%;
-    margin-bottom: 20px;    
+    margin-bottom: 20px;
   }
 
   #finngen-logo-wrapper {
@@ -38,6 +38,7 @@
     gap: 30px;
     flex: 1;
     min-width: 0;
+    flex-wrap: wrap;
 }
 
 #endpoint-controls label {
@@ -150,10 +151,31 @@ h1 {
 #wordclouds {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 20px;
-    flex: 1 1 auto;
+    flex: 1 1 300px;
     min-width: 0;
+}
+
+.wordcloud-box {
+    flex: 1 1 300px;
+    min-width: 250px;
+}
+
+@media (max-width: 1200px) {
+    #endpoint-controls-and-traits {
+        flex-direction: column;
+    }
+    #wordclouds {
+        order: -1;
+        width: 100%;
+        margin-top: 0;
+    }
+    #endpoint-controls {
+        max-width: none;
+        width: 100%;
+    }
 }
 
 .error-label {

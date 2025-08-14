@@ -220,6 +220,16 @@ function renderPlotlyCatalogPlot() {
         // Sort descending by count and take the top 50 words
         wordsArray.sort((a, b) => b.count - a.count);
         wordsArray = wordsArray.slice(0, 50);
+
+        const container = document.getElementById(containerId);
+        if (!wordsArray.length) {
+          if (container) {
+            container.style.display = 'none';
+          }
+          return;
+        } else if (container) {
+          container.style.display = '';
+        }
       
         // Use a logarithmic scale for font sizes to prevent domination.
         const minFont = 12;
@@ -238,7 +248,6 @@ function renderPlotlyCatalogPlot() {
         const color = dataset === "ukbb" ? "#9632b8" : "#d43f3a";
       
         // Define dimensions for the word cloud.
-        const container = document.getElementById(containerId);
         const width = container.clientWidth || 600;
         const height = 120;
       
@@ -325,6 +334,15 @@ function renderPlotlyCatalogPlot() {
           });
           renderWordCloud(ukbbCustom, 'ukbb-wordcloud', 'ukbb');
           renderWordCloud(ebiCustom, 'gwas-wordcloud', 'gwas');
+
+          const ukbbWC = document.getElementById('ukbb-wordcloud');
+          const gwasWC = document.getElementById('gwas-wordcloud');
+          if (ukbbWC && gwasWC && ukbbWC.style.display === 'none' && gwasWC.style.display === 'none') {
+            const wcWrapper = document.getElementById('wordclouds');
+            if (wcWrapper) {
+              wcWrapper.style.display = 'none';
+            }
+          }
         });
     })
     .catch(function(error) {
