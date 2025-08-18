@@ -137,8 +137,6 @@ To distribute jobs across a cluster, follow [these instructions](etc/detailed-lo
 
 To include VEP annotations, follow [these instructions](etc/detailed-loading-instructions.md#annotating-with-vep).
 
-If something breaks and you can't understand the error message or it's something that PheWeb should support by default, [open an issue on github](https://github.com/statgen/pheweb/issues/new) or email me.
-
 ### 6. Serve the website
 
 Run `pheweb serve --open`.
