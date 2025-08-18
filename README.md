@@ -4,21 +4,26 @@ If you have questions or comments, check out the [UMich PheWeb Google Group](htt
 ![screenshot of PheWAS plot](https://cloud.githubusercontent.com/assets/862089/25474725/3edbe256-2b02-11e7-8abb-0ca26d406b11.png)
 
 # How to Cite PheWeb
-If you use the PheWeb code base for your work, please cite our paper:
+If you use the PheWeb code base for your work, please cite the PheWeb paper:
 
 Gagliano Taliun, S.A., VandeHaar, P. et al. Exploring and visualizing large-scale genetic associations by using PheWeb. *Nat Genet* 52, 550–552 (2020).
 
 # How to Build a PheWeb for your Data
 
-If this is broken, [open an issue on github](https://github.com/statgen/pheweb/issues/new) and hopefully I can help.
-
 ### 1. Install PheWeb
+
+**Option A**: 
 
 ```bash
 pip3 install pheweb
 ```
-
 - If that doesn't work, follow [the detailed install instructions](etc/detailed-install-instructions.md#detailed-install-instructions).
+
+**Option B**: Docker image
+
+```bash
+docker pull veetir/pheweb:github
+```
 
 ### 2. Create a directory and `config.py` for your new dataset
 
