@@ -616,98 +616,110 @@ function populate_streamtable(variants) {
       // Filter for variants marked as "peak" and sort by p-value
       var data = _.sortBy(_.where(variants, { peak: true }), _.property('pval'));
   
+      var hasMAF = data.some(function(d) { return d.maf !== undefined; });
+      var hasAF = data.some(function(d) { return d.af !== undefined; });
+
+      var columns = [
+        {
+          // Variant column with custom rendering:
+          // Shows "chrom: pos ref / alt (rsids)" as a clickable link.
+          data: null,
+          title: 'Variant',
+          render: function (data, type, row, meta) {
+            var variantText =
+              data.chrom +
+              ':' +
+              data.pos.toLocaleString() +
+              ' ' +
+              data.ref +
+              ' / ' +
+              data.alt;
+            if (data.rsids) {
+              variantText += ' (' + data.rsids.split(',').join(', ') + ')';
+            }
+            return (
+              '<a style="color:black" href="' +
+              window.model.urlprefix +
+              '/variant/' +
+              data.chrom +
+              '-' +
+              data.pos +
+              '-' +
+              data.ref +
+              '-' +
+              data.alt +
+              '">' +
+              variantText +
+              '</a>'
+            );
+          }
+        },
+        {
+          // Nearest Gene(s) column – italicized formatting.
+          data: 'nearest_genes',
+          title: 'Nearest Gene(s)',
+          render: function(data, type, row, meta) {
+              var genes = data.split(",");
+              return genes.map(function(gene) {
+                return '<a style="color:black" href="' + window.model.urlprefix +
+                       '/gene/' + gene + '?include=' + row.chrom + '-' + row.pos + '">' +
+                       '<i>' + gene + '</i></a>';
+              }).join(', ');
+            }
+        }
+      ];
+
+      if (hasMAF) {
+        columns.push({
+          data: 'maf',
+          title: 'MAF',
+          render: function (data, type, row, meta) {
+            return data !== undefined ? parseFloat(data).toPrecision(2) : "";
+          }
+        });
+      }
+
+      if (hasAF) {
+        columns.push({
+          data: 'af',
+          title: 'AF',
+          render: function (data, type, row, meta) {
+            return data !== undefined ? parseFloat(data).toPrecision(2) : "";
+          }
+        });
+      }
+
+      columns.push(
+        {
+          // P-value column – display using exponential notation, with a special case for p-value 0.
+          data: 'pval',
+          title: 'P-value',
+          render: function (data, type, row, meta) {
+            return data == 0 ? '≤1e-320' : parseFloat(data).toExponential(1);
+          }
+        },
+        {
+          // Effect Size (se) – shows beta with standard error in parentheses, if available.
+          data: null,
+          title: 'Effect Size (se)',
+          render: function (data, type, row, meta) {
+            var betaText =
+              data.beta !== undefined ? parseFloat(data.beta).toPrecision(2) : "";
+            if (data.sebeta) {
+              betaText += " (" + parseFloat(data.sebeta).toPrecision(2) + ")";
+            }
+            return betaText;
+          }
+        }
+      );
+
       // Initialize DataTables on your table with id="stream_table"
       var table = $('#stream_table').DataTable({
         // Use the filtered, sorted array as the data source
         data: data,
         // Remove DataTables’ default search box (we use our own custom input)
         dom: 'lrtip',
-        columns: [
-          {
-            // Variant column with custom rendering:
-            // Shows "chrom: pos ref / alt (rsids)" as a clickable link.
-            data: null,
-            title: 'Variant',
-            render: function (data, type, row, meta) {
-              var variantText =
-                data.chrom +
-                ':' +
-                data.pos.toLocaleString() +
-                ' ' +
-                data.ref +
-                ' / ' +
-                data.alt;
-              if (data.rsids) {
-                variantText += ' (' + data.rsids.split(',').join(', ') + ')';
-              }
-              return (
-                '<a style="color:black" href="' +
-                window.model.urlprefix +
-                '/variant/' +
-                data.chrom +
-                '-' +
-                data.pos +
-                '-' +
-                data.ref +
-                '-' +
-                data.alt +
-                '">' +
-                variantText +
-                '</a>'
-              );
-            }
-          },
-          {
-            // Nearest Gene(s) column – italicized formatting.
-            data: 'nearest_genes',
-            title: 'Nearest Gene(s)',
-            render: function(data, type, row, meta) {
-                var genes = data.split(",");
-                return genes.map(function(gene) {
-                  return '<a style="color:black" href="' + window.model.urlprefix +
-                         '/gene/' + gene + '?include=' + row.chrom + '-' + row.pos + '">' +
-                         '<i>' + gene + '</i></a>';
-                }).join(', ');
-              }
-          },
-          {
-            // MAF column – use maf, af, or ac as available.
-            data: null,
-            title: 'MAF',
-            render: function (data, type, row, meta) {
-              if (data.maf) {
-                return parseFloat(data.maf).toPrecision(2);
-              } else if (data.af) {
-                return Math.min(data.af, 1 - data.af).toPrecision(2);
-              } else if (data.ac) {
-                return data.ac;
-              } else {
-                return "";
-              }
-            }
-          },
-          {
-            // P-value column – display using exponential notation, with a special case for p-value 0.
-            data: 'pval',
-            title: 'P-value',
-            render: function (data, type, row, meta) {
-              return data == 0 ? '≤1e-320' : parseFloat(data).toExponential(1);
-            }
-          },
-          {
-            // Effect Size (se) – shows beta with standard error in parentheses, if available.
-            data: null,
-            title: 'Effect Size (se)',
-            render: function (data, type, row, meta) {
-              var betaText =
-                data.beta !== undefined ? parseFloat(data.beta).toPrecision(2) : "";
-              if (data.sebeta) {
-                betaText += " (" + parseFloat(data.sebeta).toPrecision(2) + ")";
-              }
-              return betaText;
-            }
-          }
-        ],
+        columns: columns,
         // Configure pagination and disable page length change (set fixed page size)
         pageLength: 10,
         lengthChange: false,
