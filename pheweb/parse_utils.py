@@ -143,7 +143,7 @@ per_assoc_fields: Dict[str, Dict[str, Any]] = {
         "display": "MAF",
     },
     "af": {
-        "aliases": ["FRQ"],
+        "aliases": ["A1FREQ", "FRQ"],
         "type": float,
         "range": [0, 1],
         "proportion_sigfigs": 2,
