@@ -45,12 +45,13 @@ The file must have columns for:
 
 | column description | name    | other allowed column names | allowed values |
 | ---                | ---     | ---                        | --- |
-| chromosome         | `chrom` | `#chrom`, `chr`            | 1-22, `X`, `Y`, `M`, `MT`, `chr1`, etc |
+| chromosome         | `chrom` | `#chrom`, `chr`            | 1-25, `X`, `Y`, `M`, `MT`, `chr1`, etc |
 | position           | `pos`   | `beg`, `begin`, `bp`       | integer |
 | reference allele   | `ref`   | `reference`                | must match reference genome |
 | alternate allele   | `alt`   | `alternate`                | anything |
 | p-value            | `pval`  | `pvalue`, `p`, `p.value`   | number in [0,1] |
 
+*Note*: Numeric chromosome labels 23, 24, and 25 are automatically interpreted as X, Y, and MT (with M also treated as MT).
 
 You may also have columns for:
 
@@ -82,18 +83,25 @@ Inside of your data directory, you need a file named `pheno-list.json` that look
 
 ```json
 [
- {
-  "assoc_files": ["/home/peter/data/ear-length.gz"],
-  "phenocode": "ear-length"
- },
- {
-  "assoc_files": ["/home/peter/data/a1c.X.gz","/home/peter/data/a1c.autosomal.gz"],
-  "phenocode": "A1C"
- }
+  {
+    "assoc_files": ["/home/peter/data/ear-length.gz"],
+    "phenocode": "ear-length",
+    "phenostring": "Ear Length",
+    "category": "Anthropometric"
+  },
+  {
+    "assoc_files": [
+      "/home/peter/data/a1c.X.gz",
+      "/home/peter/data/a1c.autosomal.gz"
+    ],
+    "phenocode": "A1C",
+    "phenostring": "Hemoglobin A1C",
+    "category": "Metabolic"
+  }
 ]
 ```
 
-Each phenotype needs `assoc_files` (a list of paths to association files) and `phenocode` (a string representing your phenotype that is used in filenames and URLs, comprised of `[A-Za-z0-9_~-]`).
+Each phenotype **needs** `assoc_files` (a list of paths to association files) and `phenocode` (a string representing your phenotype that is used in filenames and URLs, comprised of `[A-Za-z0-9_~-]`).
 
 If you want, you can also include:
 
