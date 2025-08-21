@@ -138,6 +138,15 @@ h1 {
 .wordcloud-box {
     flex: 1 1 300px;
     min-width: 250px;
+    box-sizing: border-box;
+    overflow: hidden; 
+}
+
+.wordcloud-box svg {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
 }
 
 @media (max-width: 1200px) {
