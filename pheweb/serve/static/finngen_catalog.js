@@ -358,27 +358,38 @@ function loadEndpoints() {
 
       let select = document.getElementById('endpoint-select');
       if (select) {
+        select.innerHTML = "";
         endpoints.forEach(ep => {
           let option = document.createElement('option');
           option.value = ep;
           option.textContent = ep;
           select.appendChild(option);
         });
-        // Optionally choose a default
         if (endpoints.includes("E4_DIABETES")) {
           select.value = "E4_DIABETES";
         }
       }
+      if (typeof setupEndpointSearch === 'function') {
+        setupEndpointSearch();
+      }
+      renderFinnGenPlot();
       updateFinnGenButton();
     })
     .catch(error => console.error(error));
 }
 
 // Fuzzy search for endpoints
-function setupEndpointSearch() {
+function setupEndpointSearch(retries = 8, delay = 200) {
   let searchInput = document.getElementById('endpoint-search');
   let select = document.getElementById('endpoint-select');
-  if (!searchInput || !select || !window.allEndpoints) return;
+  if (!searchInput || !select || !window.allEndpoints) {
+    if (retries > 0) {
+      setTimeout(() => setupEndpointSearch(retries - 1, Math.round(delay * 1.2)), delay);
+    } else {
+      console.warn('setupEndpointSearch: prerequisites not ready after retries');
+    }
+    return;
+  }
 
   // Normalize terms
   function normalizeTerm(term) {
@@ -419,9 +430,6 @@ function setupEndpointSearch() {
 // Initialize everything on DOM load
 document.addEventListener("DOMContentLoaded", function() {
   loadEndpoints();
-  setTimeout(setupEndpointSearch, 500);
-  renderFinnGenPlot();
-
   var select = document.getElementById('endpoint-select');
   if (select) {
     select.addEventListener('change', function() {
