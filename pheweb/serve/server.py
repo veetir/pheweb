@@ -252,7 +252,7 @@ def api_finngen(endpoint: str):
         encoded_filter = urllib.parse.quote(filter_query)
 
         # Build the external API URL
-        external_api_url = f"https://results.finngen.fi/api/region/{endpoint}/lz-results/?filter={encoded_filter}"
+        external_api_url = f"https://r12.finngen.fi/api/region/{endpoint}/lz-results/?filter={encoded_filter}"
         # Log or print the URL if desired
         print("Calling FinnGen external API:", external_api_url)
         
