@@ -330,11 +330,21 @@ function renderFinnGenSusie() {
                       searchBox.dispatchEvent(new Event('input', { bubbles: true }));
                   }
                   var select = document.getElementById('endpoint-select');
-                  if (select) {
-                      select.value = ep;
-                      select.dispatchEvent(new Event('change', { bubbles: true }));
+                  if (!select) return;
+                  if (select.value === ep) return; // already selected
+                  var attempts = 0;
+                  function applySelection() {
+                      attempts++;
+                      var optionFound = Array.from(select.options).some(function(o){ return o.value === ep; });
+                      if (optionFound) {
+                          select.value = ep;
+                          select.dispatchEvent(new Event('change', { bubbles: true }));
+                          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                      } else if (attempts < 20) {
+                          setTimeout(applySelection, 50);
+                      }
                   }
-                  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                  setTimeout(applySelection, 350);
               });
           }
 
