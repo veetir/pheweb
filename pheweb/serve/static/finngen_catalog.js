@@ -329,25 +329,32 @@ function loadEndpoints() {
     .then(tsvText => {
       let endpoints = [];
       let lines = tsvText.trim().split('\n');
-      
+
       if (lines.length === 0) {
         throw new Error("TSV file is empty");
       }
 
-      // Parse the header to find the 'endpoint' column index
+      // Parse the header to find the 'endpoint' and 'phenotype' column indices
       const headers = lines[0].split('\t');
       const endpointIndex = headers.findIndex(h => h.trim().toLowerCase() === 'endpoint');
+      const phenotypeIndex = headers.findIndex(h => h.trim().toLowerCase() === 'phenotype');
 
       if (endpointIndex === -1) {
         throw new Error("No 'endpoint' column found in TSV.");
       }
+      if (phenotypeIndex === -1) {
+        throw new Error("No 'phenotype' column found in TSV.");
+      }
 
-      // Process each line to extract the 'endpoint' value
+      // Process each line to extract the 'endpoint' and 'phenotype' values
       for (let i = 1; i < lines.length; i++) {
         const row = lines[i].split('\t');
-        if (row.length > endpointIndex) {
+        if (row.length > endpointIndex && row.length > phenotypeIndex) {
           const endpoint = row[endpointIndex].trim();
-          if (endpoint !== "") endpoints.push(endpoint);
+          const phenotype = row[phenotypeIndex].trim();
+          if (endpoint !== "") {
+            endpoints.push({ endpoint, phenotype });
+          }
         }
       }
 
@@ -361,11 +368,11 @@ function loadEndpoints() {
         select.innerHTML = "";
         endpoints.forEach(ep => {
           let option = document.createElement('option');
-          option.value = ep;
-          option.textContent = ep;
+          option.value = ep.endpoint;
+          option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
           select.appendChild(option);
         });
-        if (endpoints.includes("E4_DIABETES")) {
+        if (endpoints.some(ep => ep.endpoint === "E4_DIABETES")) {
           select.value = "E4_DIABETES";
         }
       }
@@ -391,36 +398,34 @@ function setupEndpointSearch(retries = 8, delay = 200) {
     return;
   }
 
-  // Normalize terms
-  function normalizeTerm(term) {
-    return term
-      .toLowerCase()
-      .replace(/['’]/g, '')
-      .replace(/_/g, '')
-      .replace(/s$/, '')
-      .trim();
-  }
+  const fuse = new Fuse(window.allEndpoints, {
+    keys: ['endpoint', 'phenotype'],
+    threshold: 0.4,
+    ignoreLocation: true,
+  });
 
   searchInput.addEventListener('input', function(e) {
-    let query = normalizeTerm(e.target.value);
-    let filtered = window.allEndpoints.filter(ep => {
-      let normEp = normalizeTerm(ep);
-      return normEp.includes(query) || query.includes(normEp);
-    });
-    
+    let query = e.target.value.trim();
+    let filtered;
+    if (query === '') {
+      filtered = window.allEndpoints;
+    } else {
+      filtered = fuse.search(query).map(res => res.item);
+    }
+
     updateEndpointLabel(filtered);
-    
+
     select.innerHTML = "";
     filtered.forEach(ep => {
       let option = document.createElement('option');
-      option.value = ep;
-      option.textContent = ep;
+      option.value = ep.endpoint;
+      option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
       select.appendChild(option);
     });
-    if (filtered.includes("E4_DIABETES")) {
+    if (filtered.some(ep => ep.endpoint === "E4_DIABETES")) {
       select.value = "E4_DIABETES";
     } else if (filtered.length > 0) {
-      select.value = filtered[0];
+      select.value = filtered[0].endpoint;
     }
     renderFinnGenPlot();
     updateFinnGenButton();
