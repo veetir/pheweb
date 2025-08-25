@@ -358,7 +358,27 @@ function renderFinnGenSusie() {
         var ticks = plotDiv.querySelectorAll('.yaxislayer-above text');
         ticks.forEach(function(t, idx){ t.setAttribute('title', labels[idx]); });
 
-        // sync with locuszoom state...
+        plotDiv.on('plotly_click', function(evt) {
+          try {
+            var pts = evt.points || [];
+            if (!pts.length) return;
+            var v = pts[0].text || '';
+            var m = v.match(/^(?:chr)?([0-9XYMT]+)[:\-]([0-9]+)[:\-]([ACGTN]+)[:\-]([ACGTN]+)$/i);
+            if (m) {
+              var chrom = m[1];
+              var pos   = m[2];
+              var ref   = m[3].toUpperCase();
+              var alt   = m[4].toUpperCase();
+              var url = 'https://gnomad.broadinstitute.org/variant/' + encodeURIComponent(chrom + '-' + pos + '-' + ref + '-' + alt);
+              window.open(url, '_blank');
+              return;
+            }
+          } catch (e) {
+            console.error('Error handling variant click', e);
+          }
+        });
+
+        // sync with locuszoom state
         if (window.plot && window.plot.state) {
           var s = window.plot.state;
           Plotly.relayout('finngen-susie',{
