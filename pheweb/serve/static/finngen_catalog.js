@@ -10,7 +10,12 @@ function renderFinnGenPlot() {
   var parts = regionData.split(':');
   var chr = parts[0];
   var endpointSelect = document.getElementById('endpoint-select');
-  var selectedEndpoint = endpointSelect ? endpointSelect.value : "E4_DIABETES";
+  var selectedEndpoint = endpointSelect ? endpointSelect.value : "";
+  if (!selectedEndpoint) {
+    document.getElementById("finngen-gwas-catalog").innerHTML = "<p>Select an endpoint to view associations.</p>";
+    updateFinnGenButton();
+    return;
+  }
   var apiUrl = window.model.urlprefix + "/api/finngen/" + selectedEndpoint + "?region=" + regionData;
   document.getElementById("finngen-gwas-catalog").innerHTML = "<p>Loading...</p>";
   
@@ -230,22 +235,21 @@ function updateFinnGenButton() {
   var endpointSelect = document.getElementById('endpoint-select');
   if (!endpointSelect) return;
   var selectedEndpoint = endpointSelect.value;
-  
+  if (!selectedEndpoint || selectedEndpoint.trim() === "") {
+    var existing = document.getElementById("finngen-buttons");
+    if (existing) {
+      existing.remove();
+    }
+    return;
+  }
+
   // Build the URLs using the selected endpoint
-  var finngenUrl = (selectedEndpoint && selectedEndpoint.trim() !== "")
-    ? "https://results.finngen.fi/pheno/" + selectedEndpoint 
-    : "https://results.finngen.fi/";
-  var risteysUrl = (selectedEndpoint && selectedEndpoint.trim() !== "")
-    ? "https://risteys.finngen.fi/endpoints/" + selectedEndpoint 
-    : "https://risteys.finngen.fi/";
-  var endpointBrowserUrl = (selectedEndpoint && selectedEndpoint.trim() !== "")
-    ? "https://geneviz.aalto.fi/endpoint_browser_2.0/?view=network&data=" + selectedEndpoint 
-    : "https://geneviz.aalto.fi/endpoint_browser_2.0/";
+  var finngenUrl = "https://results.finngen.fi/pheno/" + selectedEndpoint;
+  var risteysUrl = "https://risteys.finngen.fi/endpoints/" + selectedEndpoint;
+  var endpointBrowserUrl = "https://geneviz.aalto.fi/endpoint_browser_2.0/?view=network&data=" + selectedEndpoint;
 
   // Construct the common text.
-  var commonText = (selectedEndpoint && selectedEndpoint.trim() !== "")
-    ? "View " + selectedEndpoint + " in:" 
-    : "";
+  var commonText = "View " + selectedEndpoint + " in:";
 
   // Get the container element where the plot is rendered
   var container = document.getElementById("finngen-gwas-catalog");
@@ -259,13 +263,13 @@ function updateFinnGenButton() {
     container.parentNode.insertBefore(btnContainer, container.nextSibling);
   }
   btnContainer.innerHTML = "";
-  
+
   // Common text
   var commonTextSpan = document.createElement("span");
   commonTextSpan.id = "finngen-common-text";
   commonTextSpan.textContent = commonText + " ";
   btnContainer.appendChild(commonTextSpan);
-  
+
   // FinnGen button
   var finngenBtn = document.createElement("a");
   finngenBtn.id = "finngen-link";
@@ -275,7 +279,7 @@ function updateFinnGenButton() {
   finngenBtn.title = "View in FinnGen PheWeb";
   finngenBtn.target = "_blank";
   btnContainer.appendChild(finngenBtn);
-  
+
   // Risteys button
   var risteysBtn = document.createElement("a");
   risteysBtn.id = "risteys-link";
@@ -366,21 +370,22 @@ function loadEndpoints() {
       let select = document.getElementById('endpoint-select');
       if (select) {
         select.innerHTML = "";
+        let placeholder = document.createElement('option');
+        placeholder.value = "";
+        placeholder.textContent = "Select an endpoint";
+        placeholder.disabled = true;
+        placeholder.selected = true;
+        select.appendChild(placeholder);
         endpoints.forEach(ep => {
           let option = document.createElement('option');
           option.value = ep.endpoint;
           option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
           select.appendChild(option);
         });
-        if (endpoints.some(ep => ep.endpoint === "E4_DIABETES")) {
-          select.value = "E4_DIABETES";
-        }
       }
       if (typeof setupEndpointSearch === 'function') {
         setupEndpointSearch();
       }
-      renderFinnGenPlot();
-      updateFinnGenButton();
     })
     .catch(error => console.error(error));
 }
@@ -404,31 +409,36 @@ function setupEndpointSearch(retries = 8, delay = 200) {
     ignoreLocation: true,
   });
 
+  let searchTimeout;
   searchInput.addEventListener('input', function(e) {
-    let query = e.target.value.trim();
-    let filtered;
-    if (query === '') {
-      filtered = window.allEndpoints;
-    } else {
-      filtered = fuse.search(query).map(res => res.item);
-    }
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function() {
+      let query = e.target.value.trim();
+      let filtered;
+      if (query === '') {
+        filtered = window.allEndpoints;
+      } else {
+        filtered = fuse.search(query).map(res => res.item);
+      }
 
-    updateEndpointLabel(filtered);
+      updateEndpointLabel(filtered);
 
-    select.innerHTML = "";
-    filtered.forEach(ep => {
-      let option = document.createElement('option');
-      option.value = ep.endpoint;
-      option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
-      select.appendChild(option);
-    });
-    if (filtered.some(ep => ep.endpoint === "E4_DIABETES")) {
-      select.value = "E4_DIABETES";
-    } else if (filtered.length > 0) {
-      select.value = filtered[0].endpoint;
-    }
-    renderFinnGenPlot();
-    updateFinnGenButton();
+      select.innerHTML = "";
+      let placeholder = document.createElement('option');
+      placeholder.value = "";
+      placeholder.textContent = "Select an endpoint";
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      select.appendChild(placeholder);
+
+      filtered.forEach(ep => {
+        let option = document.createElement('option');
+        option.value = ep.endpoint;
+        option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
+        select.appendChild(option);
+      });
+      renderFinnGenPlot();
+    }, 300);
   });
 }
 
