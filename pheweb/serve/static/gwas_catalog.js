@@ -120,7 +120,7 @@ function renderPlotlyCatalogPlot() {
         mode: 'markers',
         type: 'scatter',
         name: 'UKBB',
-        marker: { symbol: 'circle', color: '#9632b8', opacity: 0.4, size: 8 },
+        marker: { symbol: 'circle', color: '#008060', opacity: 0.4, size: 8 },
         customdata: ukbbCustom,
         hovertemplate: tooltipTemplate
       };
@@ -132,7 +132,7 @@ function renderPlotlyCatalogPlot() {
         mode: 'markers',
         type: 'scatter',
         name: 'GWAS Catalog',
-        marker: { symbol: 'diamond', color: '#d43f3a', opacity: 0.7, size: 8 },
+        marker: { symbol: 'diamond', color: '#D33500', opacity: 0.7, size: 8 },
         customdata: ebiCustom,
         hovertemplate: tooltipTemplate
       };
@@ -245,7 +245,7 @@ function renderPlotlyCatalogPlot() {
         });
       
         // Choose a color based on the dataset.
-        const color = dataset === "ukbb" ? "#9632b8" : "#d43f3a";
+        const color = dataset === "ukbb" ? "#006149" : "#A82A00";
       
         // Define dimensions for the word cloud.
         const width = container.clientWidth || 600;

@@ -1,5 +1,5 @@
 function csColour(row) {
-  return row.good_cs ? '#1f77b4' : '#aec7e8';
+  return row.good_cs ? '#3500D3' : '#BAA8F0';
 }
 
 function isDrug(row) {
@@ -246,7 +246,7 @@ function renderFinnGenSusie() {
         x: variantX,
         y: variantY,
         mode: 'markers',
-        marker: { symbol: 'x', size: 10, color: '#D62728' },
+        marker: { symbol: 'x', size: 10, color: '#D33500' },
         name: 'Top variant',
         text: variantText,
         hoverinfo: 'text',
