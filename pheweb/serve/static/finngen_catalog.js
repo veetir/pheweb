@@ -423,6 +423,8 @@ function setupEndpointSearch(retries = 8, delay = 200) {
 
       updateEndpointLabel(filtered);
 
+      const currentSelection = select.value;
+
       select.innerHTML = "";
       let placeholder = document.createElement('option');
       placeholder.value = "";
@@ -437,7 +439,10 @@ function setupEndpointSearch(retries = 8, delay = 200) {
         option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
         select.appendChild(option);
       });
-      renderFinnGenPlot();
+
+      if (filtered.some(ep => ep.endpoint === currentSelection)) {
+        select.value = currentSelection;
+      }
     }, 300);
   });
 }

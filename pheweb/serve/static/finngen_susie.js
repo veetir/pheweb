@@ -327,20 +327,14 @@ function renderFinnGenSusie() {
                   var searchBox = document.getElementById('endpoint-search');
                   if (searchBox) {
                       searchBox.value = ep;
-                      var inputEvt = new Event('input', { bubbles: true });
-                      searchBox.dispatchEvent(inputEvt);
-                      var select = document.getElementById('endpoint-select');
-                      if (select) {
-                          select.value = ep;
-                          if (typeof renderFinnGenPlot === 'function') {
-                              renderFinnGenPlot();
-                          }
-                          if (typeof updateFinnGenButton === 'function') {
-                              updateFinnGenButton();
-                          }
-                      }
-                      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+                      searchBox.dispatchEvent(new Event('input', { bubbles: true }));
                   }
+                  var select = document.getElementById('endpoint-select');
+                  if (select) {
+                      select.value = ep;
+                      select.dispatchEvent(new Event('change', { bubbles: true }));
+                  }
+                  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
               });
           }
 
