@@ -309,7 +309,7 @@ function updateEndpointLabel(endpointsList) {
       endpointLabel.classList.add("error-label");
       endpointSelect.disabled = true;
     } else {
-      endpointLabel.textContent = `Select out of ${count} endpoint${count !== 1 ? "s" : ""}`;
+      endpointLabel.textContent = `${count} matching endpoint${count !== 1 ? "s" : ""}`;
       endpointLabel.classList.remove("error-label");
       endpointSelect.disabled = false;
     }
