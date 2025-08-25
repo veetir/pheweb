@@ -287,7 +287,7 @@ function renderPlotlyCatalogPlot() {
               .on("mouseover", function(d) {
                 const textEl = d3.select(this);
                 textEl.classed('hovered', true);
-                textEl.style("font-size", (d.size * 1.01) + "px");
+                textEl.style("font-size", (d.size * 1.05) + "px");
               })
               .on("mouseout", function(d) {
                 const textEl = d3.select(this);
