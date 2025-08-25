@@ -144,42 +144,12 @@ function renderFinnGenSusie() {
         if (labels.indexOf(lab) === -1) labels.push(lab);
       });
 
-      // Helper to wrap long labels onto multiple lines
-      function wrapLabel(text, maxLen) {
-        var words = text.split(/\s+/);
-        var lines = [];
-        var current = '';
-        words.forEach(function(w){
-          var test = current ? current + ' ' + w : w;
-          if (test.length > maxLen) {
-            if (current) lines.push(current);
-            current = w;
-          } else {
-            current = test;
-          }
-        });
-        if (current) lines.push(current);
-        return lines.join('<br>');
-      }
-
-      // Determine positions for each label based on wrapped line count
-      var maxLineLen = 30;
-      var tickvals = [];
-      var ticktext = [];
+      // assign a vertical index to each label
       var yIndex = {};
-      var yCursor = 0;  // counts virtual rows
-      labels.forEach(function(l){
-        var wrapped = wrapLabel(l, maxLineLen);
-        var lineCnt = wrapped.split('<br>').length;
-        var start = yCursor;
-        var end   = yCursor + lineCnt;
-        var center = (start + end) / 2;
-        tickvals.push(center);
-        ticktext.push(wrapped);
-        yIndex[l] = center;
-        yCursor = end;
+      labels.forEach(function(l, idx){
+        yIndex[l] = idx;
       });
-      var totalLines = yCursor;
+      var totalLines = labels.length;
 
       // Bucket data by good/low endpoint quality
       var categories = {
@@ -253,6 +223,18 @@ function renderFinnGenSusie() {
         showlegend: true
       });
 
+      // 4) endpoint labels placed above each credible-set line
+      traces.push({
+        x: rows.map(function(r){ return r.start; }),
+        y: rows.map(function(r){ return yIndex[r.label] + 0.25; }),
+        text: rows.map(function(r){ return r.label; }),
+        mode: 'text',
+        textposition: 'bottom left',
+        textfont: { size: 11, color: '#333' },
+        hoverinfo: 'text',
+        showlegend: false
+      });
+
       // Layout
       var chr = region.split(':')[0];
       var layout = {
@@ -264,13 +246,11 @@ function renderFinnGenSusie() {
           zerolinecolor: 'black'
         },
         yaxis: {
-          tickvals:  tickvals,
-          ticktext:  ticktext,
-          showgrid:  false,
+          showgrid: false,
           autorange: 'reversed',
-          automargin: true
+          showticklabels: false
         },
-        margin:     { t:34, b:40, l:120, r:20 },
+        margin:     { t:34, b:40, l:20, r:20 },
         height:     200 + 25*totalLines,
         shapes:     shapes,
         legend: {
