@@ -288,6 +288,14 @@ function renderPlotlyCatalogPlot() {
                 searchBox.value = d.text;
                 const inputEvent = new Event('input', { bubbles: true });
                 searchBox.dispatchEvent(inputEvent);
+                const endpointSelect = document.getElementById('endpoint-select');
+                if (endpointSelect) {
+                  endpointSelect.classList.add('highlight-dropdown');
+                  clearTimeout(endpointSelect._highlightTimeout);
+                  endpointSelect._highlightTimeout = setTimeout(function() {
+                    endpointSelect.classList.remove('highlight-dropdown');
+                  }, 2000);
+                }
               });
         }
       }

@@ -58,6 +58,15 @@
     margin-top: 4px;
 }
 
+#endpoint-select {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.highlight-dropdown {
+    box-shadow: 0 0 0 3px hsl(255, 100%, 50%);
+    transform: scale(1.05);
+}
+
 h1 {
     word-break: break-word;
     overflow-wrap: break-word;
