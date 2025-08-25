@@ -58,6 +58,15 @@
     margin-top: 4px;
 }
 
+#endpoint-select {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.highlight-dropdown {
+    box-shadow: 0 0 0 1px hsl(255, 100%, 50%);
+    transform: scale(1.01);
+}
+
 h1 {
     word-break: break-word;
     overflow-wrap: break-word;
@@ -148,6 +157,10 @@ h1 {
   width: 100% !important;
   max-width: 100%;
   height: auto !important;
+}
+
+.wordcloud-word {
+  transition: font-size 0.1s ease;
 }
 
 @media (max-width: 1200px) {

@@ -276,6 +276,7 @@ function renderPlotlyCatalogPlot() {
             .selectAll("text")
               .data(words)
             .enter().append("text")
+              .attr("class", "wordcloud-word")
               .style("font-family", "Impact")
               .style("fill", color)
               .style("cursor", "pointer")
@@ -283,11 +284,35 @@ function renderPlotlyCatalogPlot() {
               .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
               .style("font-size", d => d.size + "px")
               .text(d => d.text)
+              .on("mouseover", function(d) {
+                const textEl = d3.select(this);
+                textEl.classed('hovered', true);
+                textEl.style("font-size", (d.size * 1.05) + "px");
+              })
+              .on("mouseout", function(d) {
+                const textEl = d3.select(this);
+                textEl.classed('hovered', false);
+                textEl.style("font-size", d.size + "px");
+              })
               .on("click", function(d) {
+                const textEl = d3.select(this);
+                textEl.style("font-size", (d.size * 0.95) + "px");
+                setTimeout(function() {
+                  const finalSize = textEl.classed('hovered') ? d.size * 1.01 : d.size;
+                  textEl.style("font-size", finalSize + "px");
+                }, 150);
                 const searchBox = document.getElementById('endpoint-search');
                 searchBox.value = d.text;
                 const inputEvent = new Event('input', { bubbles: true });
                 searchBox.dispatchEvent(inputEvent);
+                const endpointSelect = document.getElementById('endpoint-select');
+                if (endpointSelect) {
+                  endpointSelect.classList.add('highlight-dropdown');
+                  clearTimeout(endpointSelect._highlightTimeout);
+                  endpointSelect._highlightTimeout = setTimeout(function() {
+                    endpointSelect.classList.remove('highlight-dropdown');
+                  }, 2000);
+                }
               });
         }
       }
