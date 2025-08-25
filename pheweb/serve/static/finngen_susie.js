@@ -224,6 +224,7 @@ function renderFinnGenSusie() {
       });
 
       // 4) endpoint labels placed above each credible-set line
+      var labelTraceIndex = traces.length;
       traces.push({
         x: rows.map(function(r){ return r.start; }),
         y: rows.map(function(r){ return yIndex[r.label] + 0.25; }),
@@ -248,9 +249,13 @@ function renderFinnGenSusie() {
         yaxis: {
           showgrid: false,
           autorange: 'reversed',
+          ticks: 'outside',
+          showline: true,
+          ticklen: 6,
+          tickcolor: '#444',
           showticklabels: false
         },
-        margin:     { t:34, b:40, l:20, r:20 },
+        margin:     { t:34, b:40, l:30, r:20 },
         height:     200 + 25*totalLines,
         shapes:     shapes,
         legend: {
@@ -342,6 +347,11 @@ function renderFinnGenSusie() {
         var ticks = plotDiv.querySelectorAll('.yaxislayer-above text');
         ticks.forEach(function(t, idx){ t.setAttribute('title', labels[idx]); });
 
+        function updateLabelPositions(rangeStart) {
+          var xs = rows.map(function(r){ return Math.max(r.start, rangeStart); });
+          Plotly.restyle(plotDiv, {x: [xs]}, [labelTraceIndex]);
+        }
+
         plotDiv.on('plotly_click', function(evt) {
           try {
             var pts = evt.points || [];
@@ -368,7 +378,11 @@ function renderFinnGenSusie() {
           Plotly.relayout('finngen-susie',{
             'xaxis.range': [s.start, s.end],
             'xaxis.title': 'Chromosome ' + (s.chr||chr) + ' position'
+          }).then(function(){
+            updateLabelPositions(s.start);
           });
+        } else {
+          updateLabelPositions(plotDiv.layout.xaxis.range[0]);
         }
         var pd = document.getElementById('finngen-susie');
         pd.on('plotly_relayout', function(evt){
@@ -388,6 +402,7 @@ function renderFinnGenSusie() {
               });
             });
           }
+          if (x0!=null) updateLabelPositions(x0);
         });
         if (window.plot && window.plot.on) {
           window.plot.on('state_changed', function(){
@@ -395,6 +410,8 @@ function renderFinnGenSusie() {
             Plotly.relayout('finngen-susie',{
               'xaxis.range': [s.start, s.end],
               'xaxis.title': 'Chromosome ' + s.chr + ' position'
+            }).then(function(){
+              updateLabelPositions(s.start);
             });
           });
         }
