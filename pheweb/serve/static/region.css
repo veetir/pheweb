@@ -66,7 +66,8 @@ h1 {
 }
 
 .finngen-logo {
-    height: 70px;
+    height: 64px;
+    width: auto;
 }
   
 .info-link {
@@ -215,7 +216,7 @@ h1 {
 }
 
 #susie-header img {
-    height: 24px;
+    height: 64px;
     width: auto;
 }
 
