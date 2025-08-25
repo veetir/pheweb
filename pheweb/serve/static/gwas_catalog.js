@@ -276,6 +276,7 @@ function renderPlotlyCatalogPlot() {
             .selectAll("text")
               .data(words)
             .enter().append("text")
+              .attr("class", "wordcloud-word")
               .style("font-family", "Impact")
               .style("fill", color)
               .style("cursor", "pointer")
@@ -284,6 +285,12 @@ function renderPlotlyCatalogPlot() {
               .style("font-size", d => d.size + "px")
               .text(d => d.text)
               .on("click", function(d) {
+                const textEl = d3.select(this);
+                const originalSize = parseFloat(textEl.style("font-size"));
+                textEl.style("font-size", (originalSize * 0.95) + "px");
+                setTimeout(function() {
+                  textEl.style("font-size", originalSize + "px");
+                }, 150);
                 const searchBox = document.getElementById('endpoint-search');
                 searchBox.value = d.text;
                 const inputEvent = new Event('input', { bubbles: true });

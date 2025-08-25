@@ -159,6 +159,10 @@ h1 {
   height: auto !important;
 }
 
+.wordcloud-word {
+  transition: font-size 0.1s ease;
+}
+
 @media (max-width: 1200px) {
     #wordclouds {
         order: -1;
