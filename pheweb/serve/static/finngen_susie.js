@@ -246,6 +246,7 @@ function renderFinnGenSusie() {
         x: variantX,
         y: variantY,
         mode: 'markers',
+        type: 'scattergl',
         marker: { symbol: 'x', size: 10, color: '#D62728' },
         name: 'Top variant',
         text: variantText,

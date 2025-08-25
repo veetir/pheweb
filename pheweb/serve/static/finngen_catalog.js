@@ -50,7 +50,7 @@ function renderFinnGenPlot() {
         x: x,
         y: y,
         mode: 'markers',
-        type: 'scatter',
+        type: 'scattergl',
         name: selectedEndpoint,
         marker: { color: '#3500D3', opacity: 0.7, size: 8 },
         customdata: customData,
