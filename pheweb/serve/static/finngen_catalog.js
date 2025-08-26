@@ -9,8 +9,8 @@ function renderFinnGenPlot() {
   }
   var parts = regionData.split(':');
   var chr = parts[0];
-  var endpointSelect = document.getElementById('endpoint-select');
-  var selectedEndpoint = endpointSelect ? endpointSelect.value : "";
+  var searchInput = document.getElementById('endpoint-search');
+  var selectedEndpoint = searchInput ? searchInput.value.trim() : "";
   if (!selectedEndpoint) {
     document.getElementById("finngen-gwas-catalog").innerHTML = "<p>Select an endpoint to view associations.</p>";
     updateFinnGenButton();
@@ -232,10 +232,10 @@ function renderFinnGenPlot() {
 
 // Create or update the FinnGen, Risteys, & Endpoint Browser results buttons
 function updateFinnGenButton() {
-  var endpointSelect = document.getElementById('endpoint-select');
-  if (!endpointSelect) return;
-  var selectedEndpoint = endpointSelect.value;
-  if (!selectedEndpoint || selectedEndpoint.trim() === "") {
+  var searchInput = document.getElementById('endpoint-search');
+  if (!searchInput) return;
+  var selectedEndpoint = searchInput.value.trim();
+  if (!selectedEndpoint) {
     var existing = document.getElementById("finngen-buttons");
     if (existing) {
       existing.remove();
@@ -305,17 +305,14 @@ function updateFinnGenButton() {
 
 function updateEndpointLabel(endpointsList) {
   const endpointLabel = document.getElementById('endpoint-select-label');
-  const endpointSelect = document.getElementById('endpoint-select');
   if (endpointLabel) {
     const count = endpointsList.length;
     if (count === 0) {
       endpointLabel.textContent = "No endpoints match the search terms.";
       endpointLabel.classList.add("error-label");
-      endpointSelect.disabled = true;
     } else {
       endpointLabel.textContent = `${count} matching endpoint${count !== 1 ? "s" : ""}`;
       endpointLabel.classList.remove("error-label");
-      endpointSelect.disabled = false;
     }
   }
 }
@@ -367,20 +364,14 @@ function loadEndpoints() {
       // Update the label to show the total count of endpoints
       updateEndpointLabel(endpoints);
 
-      let select = document.getElementById('endpoint-select');
-      if (select) {
-        select.innerHTML = "";
-        let placeholder = document.createElement('option');
-        placeholder.value = "";
-        placeholder.textContent = "Select an endpoint";
-        placeholder.disabled = true;
-        placeholder.selected = true;
-        select.appendChild(placeholder);
+      let datalist = document.getElementById('endpoint-options');
+      if (datalist) {
+        datalist.innerHTML = "";
         endpoints.forEach(ep => {
           let option = document.createElement('option');
           option.value = ep.endpoint;
-          option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
-          select.appendChild(option);
+          option.label = `${ep.endpoint} - ${ep.phenotype}`;
+          datalist.appendChild(option);
         });
       }
       if (typeof setupEndpointSearch === 'function') {
@@ -393,8 +384,8 @@ function loadEndpoints() {
 // Fuzzy search for endpoints
 function setupEndpointSearch(retries = 8, delay = 200) {
   let searchInput = document.getElementById('endpoint-search');
-  let select = document.getElementById('endpoint-select');
-  if (!searchInput || !select || !window.allEndpoints) {
+  let datalist = document.getElementById('endpoint-options');
+  if (!searchInput || !datalist || !window.allEndpoints) {
     if (retries > 0) {
       setTimeout(() => setupEndpointSearch(retries - 1, Math.round(delay * 1.2)), delay);
     } else {
@@ -423,26 +414,13 @@ function setupEndpointSearch(retries = 8, delay = 200) {
 
       updateEndpointLabel(filtered);
 
-      const currentSelection = select.value;
-
-      select.innerHTML = "";
-      let placeholder = document.createElement('option');
-      placeholder.value = "";
-      placeholder.textContent = "Select an endpoint";
-      placeholder.disabled = true;
-      placeholder.selected = true;
-      select.appendChild(placeholder);
-
+      datalist.innerHTML = "";
       filtered.forEach(ep => {
         let option = document.createElement('option');
         option.value = ep.endpoint;
-        option.textContent = `${ep.endpoint} - ${ep.phenotype}`;
-        select.appendChild(option);
+        option.label = `${ep.endpoint} - ${ep.phenotype}`;
+        datalist.appendChild(option);
       });
-
-      if (filtered.some(ep => ep.endpoint === currentSelection)) {
-        select.value = currentSelection;
-      }
     }, 300);
   });
 }
@@ -450,9 +428,9 @@ function setupEndpointSearch(retries = 8, delay = 200) {
 // Initialize everything on DOM load
 document.addEventListener("DOMContentLoaded", function() {
   loadEndpoints();
-  var select = document.getElementById('endpoint-select');
-  if (select) {
-    select.addEventListener('change', function() {
+  var searchInput = document.getElementById('endpoint-search');
+  if (searchInput) {
+    searchInput.addEventListener('change', function() {
       renderFinnGenPlot();
       updateFinnGenButton();
     });

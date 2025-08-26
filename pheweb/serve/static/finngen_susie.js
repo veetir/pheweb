@@ -321,32 +321,18 @@ function renderFinnGenSusie() {
               a.target = '_blank';
           } else {
               // Non-drug endpoints: populate FinnGen catalog search
-              a.href = '#';
-              a.addEventListener('click', function(ev){
-                  ev.preventDefault();
-                  var searchBox = document.getElementById('endpoint-search');
-                  if (searchBox) {
-                      searchBox.value = ep;
-                      searchBox.dispatchEvent(new Event('input', { bubbles: true }));
-                  }
-                  var select = document.getElementById('endpoint-select');
-                  if (!select) return;
-                  if (select.value === ep) return; // already selected
-                  var attempts = 0;
-                  function applySelection() {
-                      attempts++;
-                      var optionFound = Array.from(select.options).some(function(o){ return o.value === ep; });
-                      if (optionFound) {
-                          select.value = ep;
-                          select.dispatchEvent(new Event('change', { bubbles: true }));
-                          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-                      } else if (attempts < 20) {
-                          setTimeout(applySelection, 50);
-                      }
-                  }
-                  setTimeout(applySelection, 350);
-              });
-          }
+          a.href = '#';
+          a.addEventListener('click', function(ev){
+              ev.preventDefault();
+              var searchBox = document.getElementById('endpoint-search');
+              if (searchBox) {
+                  searchBox.value = ep;
+                  searchBox.dispatchEvent(new Event('input', { bubbles: true }));
+                  searchBox.dispatchEvent(new Event('change', { bubbles: true }));
+                  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+              }
+          });
+      }
 
           summaryEl.appendChild(a);
         });
@@ -437,7 +423,7 @@ function renderFinnGenSusie() {
 document.addEventListener('DOMContentLoaded', function(){
   renderFinnGenSusie();
 
-  var sel      = document.getElementById('endpoint-select');
+  var searchInput = document.getElementById('endpoint-search');
   var epToggle = document.getElementById('show-endpoints');
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
@@ -452,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }, { passive: false });
   }
 
-  if (sel)      sel.addEventListener('change', renderFinnGenSusie);
+  if (searchInput) searchInput.addEventListener('change', renderFinnGenSusie);
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);

@@ -51,20 +51,10 @@
     display: block;
     margin-top: 8px;
 }
-#endpoint-search,
-#endpoint-select {
+#endpoint-search {
     width: 100%;
     max-width: 300px;
     margin-top: 4px;
-}
-
-#endpoint-select {
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.highlight-dropdown {
-    box-shadow: 0 0 0 1px hsl(255, 100%, 50%);
-    transform: scale(1.01);
 }
 
 h1 {
@@ -178,12 +168,6 @@ h1 {
 
 .error-label {
     color: #cc0000;
-}
-
-#endpoint-select:disabled {
-    background-color: #f0f0f0;
-    color: #888;
-    cursor: not-allowed;
 }
 
 .btn {
