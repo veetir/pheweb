@@ -438,7 +438,15 @@ document.addEventListener('DOMContentLoaded', function(){
     }, { passive: false });
   }
 
-  if (searchInput) searchInput.addEventListener('change', renderFinnGenSusie);
+  if (searchInput) {
+    searchInput.addEventListener('change', function(){
+      if (!window.allEndpoints) return;
+      const val = searchInput.value.trim();
+      if (window.allEndpoints.find(ep => ep.endpoint === val)) {
+        renderFinnGenSusie();
+      }
+    });
+  }
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);

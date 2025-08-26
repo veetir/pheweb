@@ -423,6 +423,30 @@ function setupEndpointSearch(retries = 8, delay = 200) {
       });
     }, 300);
   });
+
+  ['focus', 'click'].forEach(evt => {
+    searchInput.addEventListener(evt, function() {
+      // Re-run the filter to repopulate suggestions and show the list
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      if (typeof searchInput.showPicker === 'function') {
+        setTimeout(() => {
+          try { searchInput.showPicker(); } catch (e) { /* ignore */ }
+        }, 310); // wait for datalist to update
+      }
+    });
+  });
+}
+
+function handleEndpointSelection() {
+  var searchInput = document.getElementById('endpoint-search');
+  if (!searchInput || !window.allEndpoints) return;
+  const val = searchInput.value.trim();
+  const match = window.allEndpoints.find(ep => ep.endpoint === val);
+  if (match && window.currentEndpoint !== val) {
+    window.currentEndpoint = val;
+    renderFinnGenPlot();
+    updateFinnGenButton();
+  }
 }
 
 // Initialize everything on DOM load
@@ -430,9 +454,6 @@ document.addEventListener("DOMContentLoaded", function() {
   loadEndpoints();
   var searchInput = document.getElementById('endpoint-search');
   if (searchInput) {
-    searchInput.addEventListener('change', function() {
-      renderFinnGenPlot();
-      updateFinnGenButton();
-    });
+    searchInput.addEventListener('change', handleEndpointSelection);
   }
 });
