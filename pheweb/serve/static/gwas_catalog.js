@@ -223,8 +223,8 @@ function renderPlotlyCatalogPlot() {
         }
 
         // Use a logarithmic scale for font sizes to prevent domination
-        const minFont = 14;
-        const maxFont = 28;
+        const minFont = 16;
+        const maxFont = 26;
         const maxCount = d3.max(wordsArray, d => d.count);
         const fontSizeScale = d3.scaleLinear()
                                 .domain([0, Math.log(maxCount + 1)])
@@ -240,7 +240,7 @@ function renderPlotlyCatalogPlot() {
 
         // Define dimensions for the word cloud
         const width = container.clientWidth || 600;
-        const height = 120;
+        const height = 180;
 
         // Remove any existing SVG (for re-rendering purposes)
         d3.select("#" + containerId).select("svg").remove();
@@ -249,7 +249,7 @@ function renderPlotlyCatalogPlot() {
         const layout = d3.layout.cloud()
             .size([width, height])
             .words(wordsArray)
-            .padding(7)
+            .padding(4)
             .rotate(() => 0)
             .fontSize(d => d.size)
             .on("end", draw);
