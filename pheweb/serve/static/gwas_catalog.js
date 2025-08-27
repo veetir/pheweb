@@ -6,10 +6,10 @@ function renderPlotlyCatalogPlot() {
   var start = coords[0];
   var end = coords[1];
 
-  // Build the filter string dynamically using the region values.
+  // Build the filter string dynamically using the region values
   var filterStr = "id in 4,7 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
 
-  // Define the API endpoint and parameters.
+  // Define the API endpoint and parameters
   var url = "https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/";
   var params = {
     format: "objects",
@@ -18,7 +18,7 @@ function renderPlotlyCatalogPlot() {
     build: "GRCh38"
   };
 
-  // Construct the URL with encoded parameters.
+  // Construct the URL with encoded parameters
   var queryString = Object.keys(params).map(function(key) {
     return key + "=" + encodeURIComponent(params[key]);
   }).join("&");
@@ -38,9 +38,9 @@ function renderPlotlyCatalogPlot() {
         return;
       }
 
-        // Arrays for UKBB trace.
+      // Arrays for UKBB trace
       var ukbbX = [], ukbbY = [], ukbbCustom = [];
-        // Arrays for EBI trace.
+      // Arrays for EBI trace
       var ebiX = [], ebiY = [], ebiCustom = [];
 
       results.forEach(function(record) {
@@ -57,14 +57,14 @@ function renderPlotlyCatalogPlot() {
             risk_allele: record.risk_allele || "N/A",
             rsid: record.rsid || "N/A"
           };
-              // If study is UKBB, don't include the PMID.
+          // If study is UKBB, don't include the PMID.
           if (extra.study === "UKBB") {
             extra.studyText = wrapText(extra.study, 60);
           } else {
             extra.studyText = wrapText(extra.study + " (PMID: " + extra.pmid + ")", 60);
           }
 
-              // Based on the catalog id (4 for UKBB), add to the appropriate arrays.
+          // Based on the catalog id (4 for UKBB), add to the appropriate arrays.
           if (record.id === 4) {
             ukbbX.push(pos);
             ukbbY.push(logp);
@@ -81,29 +81,29 @@ function renderPlotlyCatalogPlot() {
         let result = '';
           
         while (text.length > width) {
-            // Look for the last whitespace before the width limit.
+          // Look for the last whitespace before the width limit.
           let breakIndex = text.lastIndexOf(' ', width);
             
-            // If no whitespace is found before width, look forward.
+          // If no whitespace is found before width, look forward
           if (breakIndex === -1) {
             breakIndex = text.indexOf(' ', width);
-              // If there's still no whitespace, break at the end of the string.
+            // If there's still no whitespace, break at the end of the string
             if (breakIndex === -1) {
               breakIndex = text.length;
             }
           }
             
-            // Append the current segment and trim any leading spaces from the rest.
+          // Append the current segment and trim any leading spaces from the rest
           result += text.substring(0, breakIndex) + "<br>";
           text = text.substring(breakIndex).trim();
         }
           
-          // Append any remaining text.
+        // Append any remaining text
         result += text;
         return result;
       }
 
-      // Define a hovertemplate that mimics the LocusZoom tooltip.
+      // Define a hovertemplate that mimics the LocusZoom tooltip
       var tooltipTemplate =
         "<b>%{customdata.studyText}</b><br>" +
         "<b>Top trait:</b> %{customdata.trait}<br>" +
@@ -113,7 +113,7 @@ function renderPlotlyCatalogPlot() {
         "<b>Risk allele:</b> %{customdata.risk_allele}<br>" +
         "<b>rsid:</b> %{customdata.rsid}<extra></extra>";
 
-      // Create trace for UKBB data (circle markers).
+      // Create trace for UKBB data (circle markers)
       var traceUKBB = {
         x: ukbbX,
         y: ukbbY,
@@ -125,7 +125,7 @@ function renderPlotlyCatalogPlot() {
         hovertemplate: tooltipTemplate
       };
 
-      // Create trace for EBI data (diamond markers).
+      // Create trace for EBI data (diamond markers)
       var traceEBI = {
         x: ebiX,
         y: ebiY,
@@ -137,7 +137,7 @@ function renderPlotlyCatalogPlot() {
         hovertemplate: tooltipTemplate
       };
 
-      // Define layout.
+      // Define layout
       var layout = {
         title: { text: "Hits in GWAS Catalog", font: { size: 14 } },
         xaxis: {
@@ -175,25 +175,10 @@ function renderPlotlyCatalogPlot() {
         }
       };
 
-      // Helper function to count trait frequencies and return the top N traits.
-      function getTopTraits(customArray, topN) {
-        const traitCounts = {};
-        customArray.forEach(item => {
-          const trait = item.trait;
-          if (trait) {
-            traitCounts[trait] = (traitCounts[trait] || 0) + 1;
-          }
-        });
-        // Sort traits by frequency (descending)
-        const sortedTraits = Object.keys(traitCounts).sort((a, b) => traitCounts[b] - traitCounts[a]);
-        return sortedTraits.slice(0, topN);
-      }
-
       const EXTRA_STOPWORDS = new Set([
-        'age', 'ages', 'year', 'years', 'male', 'female', 'sex',
-        'study', 'studies', 'risk', 'disease', 'diseases', 'disorder', 'disorders',
-        'trait', 'traits', 'general', 'self', 'ability', 'abilities',
-        'binding', 'level', 'levels', 'mean', 'and', 'for'
+        'year', 'years', 'study', 'studies',
+        'trait', 'traits', 'general', 'self',
+        'binding', 'level', 'levels', 'mean',
       ]);
 
       function renderWordCloud(customArray, containerId, dataset) {
@@ -237,36 +222,35 @@ function renderPlotlyCatalogPlot() {
           container.style.display = '';
         }
 
-        // Use a logarithmic scale for font sizes to prevent domination.
-        const minFont = 12;
-        const maxFont = 26;
+        // Use a logarithmic scale for font sizes to prevent domination
+        const minFont = 14;
+        const maxFont = 28;
         const maxCount = d3.max(wordsArray, d => d.count);
         const fontSizeScale = d3.scaleLinear()
                                 .domain([0, Math.log(maxCount + 1)])
                                 .range([minFont, maxFont]);
 
-        // Apply the scale to compute the size for each word.
+        // Apply the scale to compute the size for each word
         wordsArray.forEach(d => {
           d.size = fontSizeScale(Math.log(d.count + 1));
         });
 
-        // Choose a color based on the dataset.
+        // Choose a color based on the dataset
         const color = dataset === "ukbb" ? "#006149" : "#A82A00";
 
-        // Define dimensions for the word cloud.
+        // Define dimensions for the word cloud
         const width = container.clientWidth || 600;
         const height = 120;
 
         // Remove any existing SVG (for re-rendering purposes)
         d3.select("#" + containerId).select("svg").remove();
 
-        // Create the cloud layout.
+        // Create the cloud layout
         const layout = d3.layout.cloud()
             .size([width, height])
             .words(wordsArray)
             .padding(5)
             .rotate(() => 0)
-            .font("Impact")
             .fontSize(d => d.size)
             .on("end", draw);
 
@@ -283,7 +267,7 @@ function renderPlotlyCatalogPlot() {
               .data(words)
             .enter().append("text")
               .attr("class", "wordcloud-word")
-              .style("font-family", "Impact")
+              .style("font-family", "Helvetica, Arial, sans-serif")
               .style("fill", color)
               .style("cursor", "pointer")
               .attr("text-anchor", "middle")
@@ -323,13 +307,13 @@ function renderPlotlyCatalogPlot() {
         }
       }
       
-      // Render the Plotly plot.
+      // Render the Plotly plot
       Plotly.newPlot('plotly-gwas-catalog', [traceUKBB, traceEBI], layout)
         .then(function() {
-          // Attach a click event listener so that clicking a point opens the PubMed page.
+          // Attach a click event listener so that clicking a point opens the PubMed page
           var plotDiv = document.getElementById('plotly-gwas-catalog');
 
-          // Clicking a point => open PubMed page
+          // Clicking a point opens PubMed page
           plotDiv.on('plotly_click', function(data) {
             var point = data.points[0];
             var custom = point.customdata;
