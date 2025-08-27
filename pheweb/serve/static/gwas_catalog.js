@@ -264,45 +264,44 @@ function renderPlotlyCatalogPlot() {
             .append("g")
               .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
             .selectAll("text")
-              .data(words)
+            .data(words)
             .enter().append("text")
               .attr("class", "wordcloud-word")
-              .style("font-family", "Lato, Helvetica, Arial, sans-serif")
-              .style("font-weight", 500)
+              .attr("role", "button")
+              .attr("tabindex", 0)
               .style("fill", color)
-              .style("cursor", "pointer")
               .attr("text-anchor", "middle")
               .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-              .style("font-size", d => d.size + "px")
+              .style("--base-size", d => d.size + "px")
               .text(d => d.text)
-              .on("mouseover", function(d) {
-                const textEl = d3.select(this);
-                textEl.classed('hovered', true);
-                textEl.style("font-size", (d.size * 1.05) + "px");
-              })
-              .on("mouseout", function(d) {
-                const textEl = d3.select(this);
-                textEl.classed('hovered', false);
-                textEl.style("font-size", d.size + "px");
-              })
-              .on("click", function(d) {
-                const textEl = d3.select(this);
-                textEl.style("font-size", (d.size * 0.95) + "px");
-                setTimeout(function() {
-                  const finalSize = textEl.classed('hovered') ? d.size * 1.01 : d.size;
-                  textEl.style("font-size", finalSize + "px");
-                }, 150);
+              .on("mouseover", function() { d3.select(this).classed('is-hovered', true); })
+              .on("mouseout",  function() { d3.select(this).classed('is-hovered', false); })
+              .on("click", function() {
+                const el = d3.select(this);
+                const d = el.datum();
+
+                el.classed('is-clicked', true);
+                this.addEventListener('animationend', () => el.classed('is-clicked', false), { once: true });
+
                 const searchBox = document.getElementById('endpoint-search');
                 searchBox.value = d.text;
-                const inputEvent = new Event('input', { bubbles: true });
-                searchBox.dispatchEvent(inputEvent);
+                searchBox.dispatchEvent(new Event('input', { bubbles: true }));
+
                 const endpointSelect = document.getElementById('endpoint-select');
                 if (endpointSelect) {
                   endpointSelect.classList.add('highlight-dropdown');
                   clearTimeout(endpointSelect._highlightTimeout);
-                  endpointSelect._highlightTimeout = setTimeout(function() {
+                  endpointSelect._highlightTimeout = setTimeout(() => {
                     endpointSelect.classList.remove('highlight-dropdown');
                   }, 2000);
+                }
+              })
+              .on("keydown", function() {
+                const e = d3.event || window.event;
+                const key = (e && e.key) || e.keyCode;
+                if (key === 'Enter' || key === ' ' || key === 13 || key === 32) {
+                  if (e && e.preventDefault) e.preventDefault();
+                  this.click();
                 }
               });
         }
