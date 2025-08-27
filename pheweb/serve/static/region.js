@@ -416,17 +416,52 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
         (function() {
             var doubleclick_delay_ms = 400;
             var previous_data, previous_milliseconds = 0;
-            window.plot.panels.associationcatalog.on('element_clicked', function(obj) {
-                var data = obj.data, milliseconds = Date.now();
-                if ((data === previous_data) && (milliseconds - previous_milliseconds < doubleclick_delay_ms)) {
-                    window.location.href = (window.model.urlprefix + "/variant/" +
-                                            data["assoc:chr"] + "-" + data["assoc:position"] + "-" +
-                                            data["assoc:ref"] + "-" + data["assoc:alt"]);
+        window.plot.panels.associationcatalog.on('element_clicked', function(obj) {
+            var data = obj.data, milliseconds = Date.now();
+            if ((data === previous_data) && (milliseconds - previous_milliseconds < doubleclick_delay_ms)) {
+                window.location.href = (window.model.urlprefix + "/variant/" +
+                                        data["assoc:chr"] + "-" + data["assoc:position"] + "-" +
+                                        data["assoc:ref"] + "-" + data["assoc:alt"]);
+            }
+            previous_data = data;
+            previous_milliseconds = milliseconds;
+        });
+            window.plot.panels.associationcatalog.on('element_hover', function(obj) {
+                var rsid = obj.data['catalog:rsid'] || obj.data['assoc:rsid'];
+                if (rsid) {
+                    document.dispatchEvent(new CustomEvent('variant-hover', { detail: { rsid: rsid } }));
                 }
-                previous_data = data;
-                previous_milliseconds = milliseconds;
+            });
+            window.plot.panels.associationcatalog.on('element_unhover', function() {
+                document.dispatchEvent(new CustomEvent('variant-unhover'));
             });
         })();
+        document.addEventListener('variant-hover', function(e) {
+            try {
+                var rsid = e.detail.rsid;
+                var panel = window.plot && window.plot.panels && window.plot.panels.associationcatalog;
+                if (!panel) return;
+                var layer = panel.data_layers && panel.data_layers[2];
+                if (!layer || !layer.data) return;
+                layer.data.forEach(function(d) {
+                    var match = (d['catalog:rsid'] === rsid) || (d['assoc:rsid'] === rsid);
+                    layer.setElementStatus(d.id, 'highlighted', match);
+                });
+            } catch (err) {
+                console.error('LZ highlight error', err);
+            }
+        });
+        document.addEventListener('variant-unhover', function() {
+            try {
+                var panel = window.plot && window.plot.panels && window.plot.panels.associationcatalog;
+                if (!panel) return;
+                var layer = panel.data_layers && panel.data_layers[2];
+                if (!layer) return;
+                layer.clearElementStatus('highlighted');
+            } catch (err) {
+                console.error('LZ unhighlight error', err);
+            }
+        });
         window.plot.on("state_changed", function() {
             var currentState = window.plot.state;
             Plotly.relayout("plotly-gwas-catalog", {

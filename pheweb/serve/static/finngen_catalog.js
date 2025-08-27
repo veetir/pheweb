@@ -158,7 +158,29 @@ function renderFinnGenPlot() {
       Plotly.newPlot('finngen-gwas-catalog', [trace], layout)
         .then(function() {
           var plotDiv = document.getElementById('finngen-gwas-catalog');
-          
+          var rsidMap = {};
+          customData.forEach(function(record, idx){
+            if (record.rsid) rsidMap[record.rsid] = idx;
+          });
+          plotDiv.on('plotly_hover', function(evt){
+            if (evt.points && evt.points[0] && evt.points[0].customdata) {
+              var rs = evt.points[0].customdata.rsid;
+              if (rs) document.dispatchEvent(new CustomEvent('variant-hover',{detail:{rsid:rs}}));
+            }
+          });
+          plotDiv.on('plotly_unhover', function(){
+            document.dispatchEvent(new CustomEvent('variant-unhover'));
+          });
+          document.addEventListener('variant-hover', function(e){
+            var idx = rsidMap[e.detail.rsid];
+            if (typeof idx !== 'undefined') {
+              Plotly.Fx.hover(plotDiv, [{curveNumber:0, pointNumber:idx}]);
+            }
+          });
+          document.addEventListener('variant-unhover', function(){
+            Plotly.Fx.unhover(plotDiv);
+          });
+
           // Click event to go to dbSNP page
           plotDiv.on('plotly_click', function(evtData) {
             if (evtData.points && evtData.points.length > 0) {
