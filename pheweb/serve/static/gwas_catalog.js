@@ -208,23 +208,25 @@ function renderPlotlyCatalogPlot() {
         let ukbbWords = countWords(ukbbArray).map(w => ({ ...w, dataset: 'ukbb' }));
         let gwasWords = countWords(gwasArray).map(w => ({ ...w, dataset: 'gwas' }));
 
-        const ukbbCount = Math.min(50, ukbbWords.length);
-        const gwasCount = Math.min(50, gwasWords.length);
+        const targetLength = 50;  
+
+        // Split the target length roughly in half between ukbb and gwas
+        const ukbbCount = Math.floor(targetLength / 2);
+        const gwasCount = Math.floor(targetLength / 2);
 
         let combined = ukbbWords.slice(0, ukbbCount).concat(gwasWords.slice(0, gwasCount));
         let ukbbIndex = ukbbCount;
         let gwasIndex = gwasCount;
 
-        while (combined.length < 100) {
-          if (ukbbCount < 50 && gwasIndex < gwasWords.length) {
+        while (combined.length < targetLength) {
+          if (ukbbCount < Math.floor(targetLength / 2) && gwasIndex < gwasWords.length) {
             combined.push(gwasWords[gwasIndex++]);
-          } else if (gwasCount < 50 && ukbbIndex < ukbbWords.length) {
+          } else if (gwasCount < Math.floor(targetLength / 2) && ukbbIndex < ukbbWords.length) {
             combined.push(ukbbWords[ukbbIndex++]);
           } else {
             break;
           }
-        }
-
+}
         const container = document.getElementById(containerId);
         if (!combined.length) {
           if (container) {
@@ -249,7 +251,7 @@ function renderPlotlyCatalogPlot() {
         const colorMap = { ukbb: '#006149', gwas: '#A82A00' };
 
         const width = container.clientWidth || 600;
-        const height = 180;
+        const height = 100;
 
         d3.select('#' + containerId).select('svg').remove();
 
