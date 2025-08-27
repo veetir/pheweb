@@ -188,35 +188,28 @@ function renderPlotlyCatalogPlot() {
         const sortedTraits = Object.keys(traitCounts).sort((a, b) => traitCounts[b] - traitCounts[a]);
         return sortedTraits.slice(0, topN);
       }
-      
+
       function renderWordCloud(customArray, containerId, dataset) {
-        // Define words to exclude and regex for punctuation
-        const excludeWords = ["use", "at", "in", "not", "of", "or", "and", "with", "disease"];
-        const punctuationRegex = /[.,\/#!$%\^&\*;:{}=\-_`~()"]/g;
-      
-        // Count word frequencies
+        // Count word frequencies using the stopword library for cleanup
         const wordCounts = {};
         customArray.forEach(record => {
           if (record.trait) {
-            // Remove punctuation from the trait string
-            const cleanTrait = record.trait.replace(punctuationRegex, '');
-            // Split into words by whitespace
-            const words = cleanTrait.split(/\s+/);
-            words.forEach(word => {
-              const lower = word.toLowerCase();
-              if (lower && excludeWords.indexOf(lower) === -1) {
-                wordCounts[lower] = (wordCounts[lower] || 0) + 1;
+            const tokens = (record.trait.toLowerCase().match(/[\p{L}\d]+/gu) || []);
+            const filtered = window.stopword ? stopword.removeStopwords(tokens, stopword.eng) : tokens;
+            filtered.forEach(word => {
+              if (word) {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
               }
             });
           }
         });
-      
+
         // Convert the counts into an array of objects
         let wordsArray = Object.keys(wordCounts).map(word => ({
           text: word,
           count: wordCounts[word]
         }));
-      
+
         // Sort descending by count and take the top 50 words
         wordsArray.sort((a, b) => b.count - a.count);
         wordsArray = wordsArray.slice(0, 50);
@@ -230,7 +223,7 @@ function renderPlotlyCatalogPlot() {
         } else if (container) {
           container.style.display = '';
         }
-      
+
         // Use a logarithmic scale for font sizes to prevent domination.
         const minFont = 12;
         const maxFont = 26;
@@ -238,22 +231,22 @@ function renderPlotlyCatalogPlot() {
         const fontSizeScale = d3.scaleLinear()
                                 .domain([0, Math.log(maxCount + 1)])
                                 .range([minFont, maxFont]);
-      
+
         // Apply the scale to compute the size for each word.
         wordsArray.forEach(d => {
           d.size = fontSizeScale(Math.log(d.count + 1));
         });
-      
+
         // Choose a color based on the dataset.
         const color = dataset === "ukbb" ? "#006149" : "#A82A00";
-      
+
         // Define dimensions for the word cloud.
         const width = container.clientWidth || 600;
         const height = 120;
-      
+
         // Remove any existing SVG (for re-rendering purposes)
         d3.select("#" + containerId).select("svg").remove();
-      
+
         // Create the cloud layout.
         const layout = d3.layout.cloud()
             .size([width, height])
@@ -263,9 +256,9 @@ function renderPlotlyCatalogPlot() {
             .font("Impact")
             .fontSize(d => d.size)
             .on("end", draw);
-      
+
         layout.start();
-      
+
         // Draw function: render the words into an SVG
         function draw(words) {
           d3.select("#" + containerId).append("svg")
@@ -357,18 +350,18 @@ function renderPlotlyCatalogPlot() {
               });
             }
           });
-          renderWordCloud(ukbbCustom, 'ukbb-wordcloud', 'ukbb');
-          renderWordCloud(ebiCustom, 'gwas-wordcloud', 'gwas');
+            renderWordCloud(ukbbCustom, 'ukbb-wordcloud', 'ukbb');
+            renderWordCloud(ebiCustom, 'gwas-wordcloud', 'gwas');
 
-          const ukbbWC = document.getElementById('ukbb-wordcloud');
-          const gwasWC = document.getElementById('gwas-wordcloud');
-          if (ukbbWC && gwasWC && ukbbWC.style.display === 'none' && gwasWC.style.display === 'none') {
-            const wcWrapper = document.getElementById('wordclouds');
-            if (wcWrapper) {
-              wcWrapper.style.display = 'none';
+            const ukbbWC = document.getElementById('ukbb-wordcloud');
+            const gwasWC = document.getElementById('gwas-wordcloud');
+            if (ukbbWC && gwasWC && ukbbWC.style.display === 'none' && gwasWC.style.display === 'none') {
+              const wcWrapper = document.getElementById('wordclouds');
+              if (wcWrapper) {
+                wcWrapper.style.display = 'none';
+              }
             }
-          }
-        });
+          });
     })
     .catch(function(error) {
       document.getElementById("plotly-gwas-catalog").innerHTML = "Error loading plot: " + error.message;
