@@ -181,39 +181,52 @@ function renderPlotlyCatalogPlot() {
         'binding', 'level', 'levels', 'mean',
       ]);
 
-      function renderWordCloud(customArray, containerId, dataset) {
-        // Count word frequencies using the stopword library for cleanup
-        const wordCounts = {};
-        customArray.forEach(record => {
-          if (record.trait) {
-            const tokens = (record.trait.toLowerCase().match(/[\p{L}\d]+/gu) || []);
-            let filtered = tokens;
-            if (window.sw && window.sw.removeStopwords) {
-              filtered = window.sw.removeStopwords(tokens, window.sw.eng);
+      function renderCombinedWordCloud(ukbbArray, gwasArray, containerId) {
+        function countWords(customArray) {
+          const wordCounts = {};
+          customArray.forEach(record => {
+            if (record.trait) {
+              const tokens = (record.trait.toLowerCase().match(/[\p{L}\d]+/gu) || []);
+              let filtered = tokens;
+              if (window.sw && window.sw.removeStopwords) {
+                filtered = window.sw.removeStopwords(tokens, window.sw.eng);
+              }
+              const cleaned = filtered.filter(word =>
+                word.length > 2 &&
+                !/^\d+$/.test(word) &&
+                !EXTRA_STOPWORDS.has(word)
+              );
+              cleaned.forEach(word => {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
+              });
             }
-            const cleaned = filtered.filter(word =>
-              word.length > 2 &&
-              !/^\d+$/.test(word) &&
-              !EXTRA_STOPWORDS.has(word)
-            );
-            cleaned.forEach(word => {
-              wordCounts[word] = (wordCounts[word] || 0) + 1;
-            });
+          });
+          return Object.keys(wordCounts).map(word => ({ text: word, count: wordCounts[word] }))
+                              .sort((a, b) => b.count - a.count);
+        }
+
+        let ukbbWords = countWords(ukbbArray).map(w => ({ ...w, dataset: 'ukbb' }));
+        let gwasWords = countWords(gwasArray).map(w => ({ ...w, dataset: 'gwas' }));
+
+        const ukbbCount = Math.min(50, ukbbWords.length);
+        const gwasCount = Math.min(50, gwasWords.length);
+
+        let combined = ukbbWords.slice(0, ukbbCount).concat(gwasWords.slice(0, gwasCount));
+        let ukbbIndex = ukbbCount;
+        let gwasIndex = gwasCount;
+
+        while (combined.length < 100) {
+          if (ukbbCount < 50 && gwasIndex < gwasWords.length) {
+            combined.push(gwasWords[gwasIndex++]);
+          } else if (gwasCount < 50 && ukbbIndex < ukbbWords.length) {
+            combined.push(ukbbWords[ukbbIndex++]);
+          } else {
+            break;
           }
-        });
-
-        // Convert the counts into an array of objects
-        let wordsArray = Object.keys(wordCounts).map(word => ({
-          text: word,
-          count: wordCounts[word]
-        }));
-
-        // Sort descending by count and take the top 50 words
-        wordsArray.sort((a, b) => b.count - a.count);
-        wordsArray = wordsArray.slice(0, 50);
+        }
 
         const container = document.getElementById(containerId);
-        if (!wordsArray.length) {
+        if (!combined.length) {
           if (container) {
             container.style.display = 'none';
           }
@@ -222,61 +235,54 @@ function renderPlotlyCatalogPlot() {
           container.style.display = '';
         }
 
-        // Use a logarithmic scale for font sizes to prevent domination
         const minFont = 16;
         const maxFont = 26;
-        const maxCount = d3.max(wordsArray, d => d.count);
+        const maxCount = d3.max(combined, d => d.count);
         const fontSizeScale = d3.scaleLinear()
                                 .domain([0, Math.log(maxCount + 1)])
                                 .range([minFont, maxFont]);
 
-        // Apply the scale to compute the size for each word
-        wordsArray.forEach(d => {
+        combined.forEach(d => {
           d.size = fontSizeScale(Math.log(d.count + 1));
         });
 
-        // Choose a color based on the dataset
-        const color = dataset === "ukbb" ? "#006149" : "#A82A00";
+        const colorMap = { ukbb: '#006149', gwas: '#A82A00' };
 
-        // Define dimensions for the word cloud
         const width = container.clientWidth || 600;
         const height = 180;
 
-        // Remove any existing SVG (for re-rendering purposes)
-        d3.select("#" + containerId).select("svg").remove();
+        d3.select('#' + containerId).select('svg').remove();
 
-        // Create the cloud layout
         const layout = d3.layout.cloud()
             .size([width, height])
-            .words(wordsArray)
+            .words(combined)
             .padding(4)
             .rotate(() => 0)
             .fontSize(d => d.size)
-            .on("end", draw);
+            .on('end', draw);
 
         layout.start();
 
-        // Draw function: render the words into an SVG
         function draw(words) {
-          d3.select("#" + containerId).append("svg")
-              .attr("width", width)
-              .attr("height", height)
-            .append("g")
-              .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-            .selectAll("text")
+          d3.select('#' + containerId).append('svg')
+              .attr('width', width)
+              .attr('height', height)
+            .append('g')
+              .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+            .selectAll('text')
             .data(words)
-            .enter().append("text")
-              .attr("class", "wordcloud-word")
-              .attr("role", "button")
-              .attr("tabindex", 0)
-              .style("fill", color)
-              .attr("text-anchor", "middle")
-              .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-              .style("--base-size", d => d.size + "px")
+            .enter().append('text')
+              .attr('class', 'wordcloud-word')
+              .attr('role', 'button')
+              .attr('tabindex', 0)
+              .style('fill', d => colorMap[d.dataset] || '#000')
+              .attr('text-anchor', 'middle')
+              .attr('transform', d => 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')')
+              .style('--base-size', d => d.size + 'px')
               .text(d => d.text)
-              .on("mouseover", function() { d3.select(this).classed('is-hovered', true); })
-              .on("mouseout",  function() { d3.select(this).classed('is-hovered', false); })
-              .on("click", function() {
+              .on('mouseover', function() { d3.select(this).classed('is-hovered', true); })
+              .on('mouseout',  function() { d3.select(this).classed('is-hovered', false); })
+              .on('click', function() {
                 const el = d3.select(this);
                 const d = el.datum();
 
@@ -296,7 +302,7 @@ function renderPlotlyCatalogPlot() {
                   }, 2000);
                 }
               })
-              .on("keydown", function() {
+              .on('keydown', function() {
                 const e = d3.event || window.event;
                 const key = (e && e.key) || e.keyCode;
                 if (key === 'Enter' || key === ' ' || key === 13 || key === 32) {
@@ -347,12 +353,10 @@ function renderPlotlyCatalogPlot() {
               });
             }
           });
-            renderWordCloud(ukbbCustom, 'ukbb-wordcloud', 'ukbb');
-            renderWordCloud(ebiCustom, 'gwas-wordcloud', 'gwas');
+            renderCombinedWordCloud(ukbbCustom, ebiCustom, 'combined-wordcloud');
 
-            const ukbbWC = document.getElementById('ukbb-wordcloud');
-            const gwasWC = document.getElementById('gwas-wordcloud');
-            if (ukbbWC && gwasWC && ukbbWC.style.display === 'none' && gwasWC.style.display === 'none') {
+            const combinedWC = document.getElementById('combined-wordcloud');
+            if (combinedWC && combinedWC.style.display === 'none') {
               const wcWrapper = document.getElementById('wordclouds');
               if (wcWrapper) {
                 wcWrapper.style.display = 'none';
