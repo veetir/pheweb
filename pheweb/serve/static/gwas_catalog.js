@@ -195,11 +195,10 @@ function renderPlotlyCatalogPlot() {
         customArray.forEach(record => {
           if (record.trait) {
             const tokens = (record.trait.toLowerCase().match(/[\p{L}\d]+/gu) || []);
-            const filtered = window.stopword ? stopword.removeStopwords(tokens, stopword.eng) : tokens;
-            filtered.forEach(word => {
-              if (word) {
-                wordCounts[word] = (wordCounts[word] || 0) + 1;
-              }
+            const filtered = window.stopword ? stopword.removeStopwords(tokens, stopword.en) : tokens;
+            const cleaned = filtered.filter(word => word.length > 2 && !/^\d+$/.test(word));
+            cleaned.forEach(word => {
+              wordCounts[word] = (wordCounts[word] || 0) + 1;
             });
           }
         });
