@@ -249,7 +249,7 @@ function renderPlotlyCatalogPlot() {
         const layout = d3.layout.cloud()
             .size([width, height])
             .words(wordsArray)
-            .padding(5)
+            .padding(7)
             .rotate(() => 0)
             .fontSize(d => d.size)
             .on("end", draw);
@@ -267,7 +267,8 @@ function renderPlotlyCatalogPlot() {
               .data(words)
             .enter().append("text")
               .attr("class", "wordcloud-word")
-              .style("font-family", "Helvetica, Arial, sans-serif")
+              .style("font-family", "Lato, Helvetica, Arial, sans-serif")
+              .style("font-weight", 500)
               .style("fill", color)
               .style("cursor", "pointer")
               .attr("text-anchor", "middle")
