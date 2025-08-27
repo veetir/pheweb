@@ -189,14 +189,28 @@ function renderPlotlyCatalogPlot() {
         return sortedTraits.slice(0, topN);
       }
 
+      const EXTRA_STOPWORDS = new Set([
+        'age', 'ages', 'year', 'years', 'male', 'female', 'sex',
+        'study', 'studies', 'risk', 'disease', 'diseases', 'disorder', 'disorders',
+        'trait', 'traits', 'general', 'self', 'ability', 'abilities',
+        'binding', 'level', 'levels', 'mean', 'and', 'for'
+      ]);
+
       function renderWordCloud(customArray, containerId, dataset) {
         // Count word frequencies using the stopword library for cleanup
         const wordCounts = {};
         customArray.forEach(record => {
           if (record.trait) {
             const tokens = (record.trait.toLowerCase().match(/[\p{L}\d]+/gu) || []);
-            const filtered = window.stopword ? stopword.removeStopwords(tokens, stopword.en) : tokens;
-            const cleaned = filtered.filter(word => word.length > 2 && !/^\d+$/.test(word));
+            let filtered = tokens;
+            if (window.sw && window.sw.removeStopwords) {
+              filtered = window.sw.removeStopwords(tokens, window.sw.eng);
+            }
+            const cleaned = filtered.filter(word =>
+              word.length > 2 &&
+              !/^\d+$/.test(word) &&
+              !EXTRA_STOPWORDS.has(word)
+            );
             cleaned.forEach(word => {
               wordCounts[word] = (wordCounts[word] || 0) + 1;
             });
