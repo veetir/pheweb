@@ -237,7 +237,7 @@ function renderPlotlyCatalogPlot() {
           container.style.display = '';
         }
 
-        const minFont = 16;
+        const minFont = 18;
         const maxFont = 26;
         const maxCount = d3.max(combined, d => d.count);
         const fontSizeScale = d3.scaleLinear()
