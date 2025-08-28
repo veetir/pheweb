@@ -244,7 +244,7 @@ function updateFinnGenButton() {
   }
 
   // Build the URLs using the selected endpoint
-  var finngenUrl = "https://results.finngen.fi/pheno/" + selectedEndpoint;
+  var finngenUrl = "https://r12.finngen.fi/pheno/" + selectedEndpoint;
   var risteysUrl = "https://risteys.finngen.fi/endpoints/" + selectedEndpoint;
   var endpointBrowserUrl = "https://geneviz.aalto.fi/endpoint_browser_2.0/?view=network&data=" + selectedEndpoint;
 
