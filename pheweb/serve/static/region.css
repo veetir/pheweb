@@ -143,6 +143,7 @@ h1 {
     gap: 10px;
     flex: 1 1 300px;
     min-width: 0;
+    margin-top: 24px;
 }
 
 .wordcloud-box {
@@ -159,10 +160,6 @@ h1 {
   height: auto !important;
 }
 
-.wordcloud-word {
-  transition: font-size 0.1s ease;
-}
-
 @media (max-width: 1200px) {
     #wordclouds {
         order: -1;
@@ -175,6 +172,33 @@ h1 {
         flex: 1 1 100%;
     }
 }
+
+.wordcloud-word {
+  font-family: Lato, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: var(--base-size, 18px);
+  transition: font-size 120ms ease, fill 120ms ease;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.wordcloud-word:hover,
+.wordcloud-word.is-hovered {
+  font-size: calc(var(--base-size, 18px) * 1.1);
+}
+
+@keyframes wc-click {
+  0%   { font-size: var(--base-size, 16px); }
+  50%  { font-size: calc(var(--base-size, 16px) * 0.95); }
+  100% { font-size: var(--base-size, 16px); }
+}
+.wordcloud-word.is-clicked {
+  animation: wc-click 150ms ease-out 1;
+}
+
+.wordcloud-word:focus { outline: none; text-decoration: none; }
+.wordcloud-word:focus-visible { text-decoration: underline; }
 
 .error-label {
     color: #cc0000;

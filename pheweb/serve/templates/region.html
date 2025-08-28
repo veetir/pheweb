@@ -17,6 +17,7 @@
 <script src="{{ url_for('.static', filename='region.js') }}"></script>
 <link  href="{{ url_for('.static', filename='region.css') }}" rel="stylesheet" type="text/css">
 <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stopword@3.1.5"></script>
 <script src="{{ url_for('.static', filename='gwas_catalog.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
 <script src="{{ url_for('.static', filename='finngen_catalog.js') }}"></script>
@@ -126,8 +127,7 @@
         </div>
       </div>
       <div id="wordclouds">
-        <div id="ukbb-wordcloud" class="wordcloud-box"></div>
-        <div id="gwas-wordcloud" class="wordcloud-box"></div>
+        <div id="combined-wordcloud" class="wordcloud-box"></div>
       </div>
     </div>
   
