@@ -10,10 +10,22 @@ import json
 import gzip
 import datetime
 from boltons.fileutils import AtomicSaver, mkdir_p
-import pysam
 import itertools, random
 from pathlib import Path
 from typing import List, Callable, Dict, Union, Iterator, Optional, Any
+
+try:  # pragma: no cover - optional dependency
+    import pysam  # type: ignore
+except Exception:  # pragma: no cover - allow module import without pysam
+    pysam = None  # type: ignore
+
+
+def _require_pysam() -> None:
+    """Ensure that :mod:`pysam` is available before using features that depend on it."""
+    if pysam is None:  # pragma: no cover - runtime check
+        raise ImportError(
+            "pysam is required for this operation but is not installed"
+        )
 
 
 def get_generated_path(*path_parts: str) -> str:
@@ -274,6 +286,7 @@ class _vfr_only_per_variant_fields:
 
 @contextmanager
 def IndexedVariantFileReader(phenocode: str):
+    _require_pysam()
     filepath = get_pheno_filepath("pheno_gz", phenocode)
     with read_gzip(filepath) as f:
         reader: Iterator[List[str]] = csv.reader(f, dialect="pheweb-internal-dialect")
@@ -288,12 +301,12 @@ def IndexedVariantFileReader(phenocode: str):
             or field in parse_utils.per_assoc_fields
         ), field
     colidxs = {field: idx for idx, field in enumerate(fields)}
-    with pysam.TabixFile(filepath, parser=None) as tabix_file:
+    with pysam.TabixFile(filepath, parser=None) as tabix_file:  # type: ignore[attr-defined]
         yield _ivfr(tabix_file, colidxs)
 
 
 class _ivfr:
-    def __init__(self, _tabix_file: pysam.TabixFile, _colidxs: Dict[str, int]):
+    def __init__(self, _tabix_file: "pysam.TabixFile", _colidxs: Dict[str, int]):
         self._tabix_file = _tabix_file
         self._colidxs = _colidxs
 
@@ -395,7 +408,8 @@ class MatrixReader:
 
     @contextmanager
     def context(self):
-        with pysam.TabixFile(self._filepath, parser=None) as tabix_file:
+        _require_pysam()
+        with pysam.TabixFile(self._filepath, parser=None) as tabix_file:  # type: ignore[attr-defined]
             yield _mr(
                 tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno
             )
@@ -404,7 +418,7 @@ class MatrixReader:
 class _mr(_ivfr):
     def __init__(
         self,
-        _tabix_file: pysam.TabixFile,
+        _tabix_file: "pysam.TabixFile",
         _colidxs: Dict[str, int],
         _colidxs_for_pheno: Dict[str, Dict[str, int]],
         _info_for_pheno: Dict[str, Dict[str, Any]],
@@ -573,15 +587,16 @@ def write_heterogenous_variantfile(
 
 
 def convert_VariantFile_to_IndexedVariantFile(vf_path: str, ivf_path: str) -> None:
+    _require_pysam()
     make_basedir(ivf_path)
     tmp_path = get_tmp_path(ivf_path)
     tmp_path = "{}/cvt-{}".format(
         os.path.dirname(tmp_path), os.path.basename(tmp_path)
     )  # Avoid using the same tmp path as augment-phenos
-    pysam.tabix_compress(vf_path, tmp_path, force=True)
+    pysam.tabix_compress(vf_path, tmp_path, force=True)  # type: ignore[attr-defined]
     os.rename(tmp_path, ivf_path)
 
-    pysam.tabix_index(
+    pysam.tabix_index(  # type: ignore[attr-defined]
         filename=ivf_path,
         force=True,
         seq_col=0,
