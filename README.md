@@ -161,6 +161,10 @@ To hide the button for downloading top hits and phenotypes, add `download_top_hi
 
 To allow dynamically filtering the manhattan plot, run `pheweb best-of-pheno` and set `show_manhattan_filter_button=True` in `config.py`.
 
+## Static demo and GitHub Pages
+A tiny mock dataset and helper script can build a read-only PheWeb snapshot suitable for GitHub Pages.
+Run `./etc/build_demo_pages.sh <output_dir>` and publish the generated `localhost:5000` folder on your `gh-pages` branch.
+
 # Modifying PheWeb
 
 See instructions [here](etc/detailed-development-instructions.md).
