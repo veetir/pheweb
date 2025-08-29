@@ -446,7 +446,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
     }
 
     maf_ranges.forEach(function(maf_range, i) {
-        maf_range.color = ['#e66101', '#fdb863', '#b2abd2', '#5e3c99'][i];
+        maf_range.color = ['#e66101', '#FD9A21', '#b2abd2', '#9373C9'][i];
     })
 
     $(function() {
