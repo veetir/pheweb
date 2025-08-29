@@ -2,6 +2,61 @@
 
 window.debug = window.debug || {};
 
+// Theme handling
+(function() {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function getStored() {
+        return localStorage.getItem('theme') || 'auto';
+    }
+
+    function preferred(theme) {
+        if (theme === 'auto') {
+            return media.matches ? 'dark' : 'light';
+        }
+        return theme;
+    }
+
+    function apply(theme) {
+        document.documentElement.setAttribute('data-bs-theme', preferred(theme));
+    }
+
+    function updateIcon(theme) {
+        const icon = document.getElementById('theme-toggle-icon');
+        if (!icon) return;
+        icon.classList.remove('bi-circle-half', 'bi-moon-fill', 'bi-sun-fill');
+        if (theme === 'auto') icon.classList.add('bi-circle-half');
+        else if (theme === 'dark') icon.classList.add('bi-moon-fill');
+        else icon.classList.add('bi-sun-fill');
+    }
+
+    function setTheme(theme) {
+        localStorage.setItem('theme', theme);
+        apply(theme);
+        updateIcon(theme);
+    }
+
+    function cycle() {
+        const order = ['auto', 'dark', 'light'];
+        const current = getStored();
+        const next = order[(order.indexOf(current) + 1) % order.length];
+        setTheme(next);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateIcon(getStored());
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.addEventListener('click', cycle);
+    });
+
+    media.addEventListener('change', () => {
+        if (getStored() === 'auto') apply('auto');
+    });
+
+    // expose for debugging if needed
+    window.phewebTheme = {getStored, setTheme};
+})();
+
 // deal with IE11 problems
 if (!Math.log10) { Math.log10 = function(x) { return Math.log(x) / Math.LN10; }; }
 if (!!window.MSInputMethodContext && !!document.documentMode) { /*ie11*/ $('<style type=text/css>.lz-locuszoom {height: 400px;}</style>').appendTo($('head')); }

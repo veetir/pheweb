@@ -4,6 +4,17 @@
     <title>{% include 'title.html' %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+      (function() {
+        const stored = localStorage.getItem('theme') || 'auto';
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        function apply(t) {
+          const theme = t === 'auto' ? (media.matches ? 'dark' : 'light') : t;
+          document.documentElement.setAttribute('data-bs-theme', theme);
+        }
+        apply(stored);
+      })();
+    </script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -50,12 +61,12 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar bg-body-tertiary">
       <div class="container-fluid">
         <!-- Left side: Brand and search form -->
         <div class="d-flex align-items-center">
           {% block navbar_left %}
-          <a class="navbar-brand fw-bold text-dark fs-5 mb-0" href="{{ url_for('.homepage') }}">PheWeb</a>
+          <a class="navbar-brand fw-bold text-body fs-5 mb-0" href="{{ url_for('.homepage') }}">PheWeb</a>
           <div id="navbar_form_container" class="ms-3">
             <form action="{{ url_for('.go') }}" class="d-flex" role="search">
               <input id="navbar-searchbox-input" name="query" class="form-control me-2 typeahead" autocomplete="off" type="text" placeholder="Search...">
@@ -67,24 +78,29 @@
         <!-- Right side: Navigation links shown horizontally -->
         <ul class="navbar-nav d-flex flex-row ms-auto mb-0">
           <li class="nav-item me-3">
-            <a class="nav-link fw-bold text-dark" href="{{ url_for('.phenotypes_page') }}">Phenotypes</a>
+            <a class="nav-link fw-bold text-body" href="{{ url_for('.phenotypes_page') }}">Phenotypes</a>
           </li>
           <li class="nav-item me-3">
-            <a class="nav-link fw-bold text-dark" href="{{ url_for('.top_hits_page') }}">Top hits</a>
+            <a class="nav-link fw-bold text-body" href="{{ url_for('.top_hits_page') }}">Top hits</a>
           </li>
           <li class="nav-item me-3 d-flex align-items-center">
-            <a href="https://github.com/veetir/pheweb/" 
-               target="_blank" 
-               class="nav-link text-muted d-flex align-items-center p-0" 
+            <a href="https://github.com/veetir/pheweb/"
+               target="_blank"
+               class="nav-link text-muted d-flex align-items-center p-0"
                style="text-decoration: none;"
-               data-bs-toggle="tooltip" 
+               data-bs-toggle="tooltip"
                title="PheWeb GRCh{{ config.GRCH_BUILD_NUMBER }}">
               <i class="bi bi-github" style="font-size: 1rem;"></i>
             </a>
           </li>
-        </ul>        
+          <li class="nav-item me-3 d-flex align-items-center">
+            <button id="theme-toggle" class="btn btn-link nav-link p-0" type="button" aria-label="Toggle color mode">
+              <i id="theme-toggle-icon" class="bi"></i>
+            </button>
+          </li>
+        </ul>
       </div>
-    </nav>   
+    </nav>
     
     <!-- Main content area -->
     <div class="content container-fluid">
