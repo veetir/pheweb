@@ -310,7 +310,7 @@
   fill: var(--bs-link-color) !important;
 }
 [data-bs-theme='dark'] .lz-container-responsive path.lz-data_layer-scatter {
-  filter: brightness(1.4) saturate(1.2);
+  filter: brightness(2.2) saturate(1.2);
 }
 [data-bs-theme='dark'] .lz-container-responsive text.lz-data_layer-genes {
   fill: var(--bs-body-color);
