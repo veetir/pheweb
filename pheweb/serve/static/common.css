@@ -134,21 +134,31 @@
 #manhattan_plot_container {
   min-width: 700px;
 }
-#manhattan_plot_container .axis > path.domain {
-  stroke-width: 2px;
-  stroke: #666;
-  fill: none;
+#manhattan_plot_container svg,
+#qq_plot_container svg {
+  background: var(--bs-body-bg);
 }
-#manhattan_plot_container .axis g.tick line {
-  stroke: #666;
-}
-#qq_plot_container .axis path.domain {
-  stroke: black;
-  fill: none;
-}
+
+#manhattan_plot_container .axis > path.domain,
+#manhattan_plot_container .axis g.tick line,
+#qq_plot_container .axis path.domain,
 #qq_plot_container .axis g.tick line {
-  stroke: #666;
+  stroke: var(--bs-body-color);
+}
+
+#manhattan_plot_container .axis > path.domain,
+#qq_plot_container .axis path.domain {
+  stroke-width: 2px;
+  fill: none;
+}
+
+#qq_plot_container .axis g.tick line {
   opacity: 0.3;
+}
+
+#manhattan_plot_container .axis text,
+#qq_plot_container .axis text {
+  fill: var(--bs-body-color);
 }
 
 .pheno-info > p {

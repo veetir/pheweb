@@ -164,7 +164,7 @@ $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
 
 <script type="text/template" id="streamtable-template">
 <tr>
-<td><a style="color:black" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= v.chrom %>-<%= v.pos %>-<%= v.ref %>-<%= v.alt %>">
+<td><a class="text-body" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= v.chrom %>-<%= v.pos %>-<%= v.ref %>-<%= v.alt %>">
     <%= v.chrom %>:<%= v.pos.toLocaleString() %> <%= v.ref %> / <%= v.alt %>
     <% if (v.rsids) { %>(<%= v.rsids.replace(/,/g, ', ') %>)<% } %>
 </a></td>
