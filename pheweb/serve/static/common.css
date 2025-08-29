@@ -368,3 +368,11 @@
 [data-bs-theme='dark'] .icon-download {
   filter: invert(1) brightness(4.8);
 }
+
+/* FinnGen logo: keep colors in light mode, turn white in dark mode */
+.finngen-logo {
+  filter: none;
+}
+[data-bs-theme='dark'] .finngen-logo {
+  filter: brightness(0) invert(1);
+}
