@@ -278,6 +278,37 @@
   color: var(--bs-body-color);
   border: 1px solid var(--bs-border-color);
 }
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip a {
+  color: var(--bs-link-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip button {
+  color: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_right {
+  border-right-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_left {
+  border-left-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_top {
+  border-top-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_bottom {
+  border-bottom-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive path.lz-data_layer-genes,
+[data-bs-theme='dark'] .lz-container-responsive rect.lz-data_layer-genes:not(.lz-clickarea) {
+  stroke: var(--bs-link-color);
+  fill: var(--bs-link-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive text.lz-data_layer-genes {
+  fill: var(--bs-body-color);
+}
 
 /* PheWAS plot adjustments for dark mode */
 [data-bs-theme='dark'] #phewas_plot_container svg {
