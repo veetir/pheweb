@@ -225,3 +225,15 @@
 [data-bs-theme='dark'] .dataTables_wrapper .dataTables_paginate .paginate_button {
   color: var(--bs-body-color) !important;
 }
+
+/* PheWAS plot adjustments for dark mode */
+[data-bs-theme='dark'] #phewas_plot_container svg {
+  background: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] #phewas_plot_container .lz-axis path,
+[data-bs-theme='dark'] #phewas_plot_container .lz-axis line {
+  stroke: var(--bs-body-color);
+}
+[data-bs-theme='dark'] #phewas_plot_container .lz-axis text {
+  fill: var(--bs-body-color);
+}

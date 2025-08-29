@@ -344,7 +344,7 @@ $(document).ready(function() {
           title: 'Phenotype',
           render: function(data, type, row, meta) {
             var label = data.phenostring || data.phenocode;
-            return '<a style="color:black" href="' + window.model.urlprefix + '/pheno/' + data.phenocode + '">' +
+            return '<a class="text-body" href="' + window.model.urlprefix + '/pheno/' + data.phenocode + '">' +
                       label +
                    '</a>';
           }
