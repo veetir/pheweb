@@ -196,6 +196,7 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
 
         gwas_svg.append('text')
             .style('text-anchor', 'middle')
+            .style('fill', 'var(--bs-body-color)')
             .attr('transform', fmt('translate({0},{1})rotate(-90)',
                                    plot_margin.left*.4,
                                    plot_height/2 + plot_margin.top))
@@ -213,7 +214,7 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
 
         var color_by_chrom = d3.scaleOrdinal()
             .domain(get_chrom_offsets().chroms)
-            .range(['#81a1c1', '#5e81ac']);
+            .range(['var(--manhattan-chrom-a)', 'var(--manhattan-chrom-b)']);
         //colors to maybe sample from later:
         //.range(['rgb(120,120,186)', 'rgb(0,0,66)', 'rgb(44,150,220)', 'rgb(40,60,80)', 'rgb(33,127,188)', 'rgb(143,76,176)']);
 
@@ -601,6 +602,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
 
         qq_svg.append('text')
             .style('text-anchor', 'middle')
+            .style('fill', 'var(--bs-body-color)')
             .attr('transform', fmt('translate({0},{1})rotate(-90)',
                                    plot_margin.left*.4,
                                    plot_margin.top + plot_height/2))
@@ -608,6 +610,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
 
         qq_svg.append('text')
             .style('text-anchor', 'middle')
+            .style('fill', 'var(--bs-body-color)')
             .attr('transform', fmt('translate({0},{1})',
                                    plot_margin.left + plot_width/2,
                                    plot_margin.top + plot_height + 40))

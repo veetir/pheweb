@@ -1,4 +1,13 @@
 /* Reconcile bootstrap3 to typeahead.js (the real Typeahead, not bootstrap-typeahead) */
+:root {
+  --manhattan-chrom-a: #4c72b0;
+  --manhattan-chrom-b: #1b4f72;
+}
+
+[data-bs-theme='dark'] {
+  --manhattan-chrom-a: #81a1c1;
+  --manhattan-chrom-b: #5e81ac;
+}
 .twitter-typeahead {
   width: 100%;
 }
