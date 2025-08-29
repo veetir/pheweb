@@ -334,3 +334,16 @@
   color: #fff;
   border: 1px solid var(--bs-border-color);
 }
+
+/* Make PheWAS label callouts inherit theme colors */
+.lz-data_layer-scatter-label text {
+  fill: var(--bs-body-color) !important;
+}
+.lz-data_layer-scatter-label line {
+  stroke: var(--bs-body-color) !important;
+}
+
+/* Soften result count badge in dark mode */
+[data-bs-theme='dark'] #streamtable-found {
+  background-color: var(--bs-gray-700) !important;
+}
