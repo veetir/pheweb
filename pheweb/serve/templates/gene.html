@@ -6,6 +6,7 @@
   window.significant_phenos = {{ significant_phenos|tojson|safe }};
   window.gene_symbol = {{ gene_symbol|tojson|safe }};
   window.model.tooltip_lztemplate = {{ tooltip_lztemplate|tojson }};
+  window.region_page_base_url = {{ url_for('.region_page', phenocode='', region='').rstrip('/')|tojson }};
 </script>
 {# Includes for LocusZoom.js (from CDN) #}
 <link href="https://cdn.jsdelivr.net/npm/locuszoom@{{ config.LZJS_VERSION }}/dist/locuszoom.css" rel="stylesheet" type="text/css" crossorigin="anonymous">
