@@ -34,6 +34,7 @@ window.debug = window.debug || {};
         localStorage.setItem('theme', theme);
         apply(theme);
         updateIcon(theme);
+        document.dispatchEvent(new CustomEvent('pheweb:theme', {detail: {theme: preferred(theme)}}));
     }
 
     function cycle() {
@@ -47,10 +48,14 @@ window.debug = window.debug || {};
         updateIcon(getStored());
         const btn = document.getElementById('theme-toggle');
         if (btn) btn.addEventListener('click', cycle);
+        document.dispatchEvent(new CustomEvent('pheweb:theme', {detail: {theme: preferred(getStored())}}));
     });
 
     media.addEventListener('change', () => {
-        if (getStored() === 'auto') apply('auto');
+        if (getStored() === 'auto') {
+            apply('auto');
+            document.dispatchEvent(new CustomEvent('pheweb:theme', {detail: {theme: preferred('auto')}}));
+        }
     });
 
     // expose for debugging if needed

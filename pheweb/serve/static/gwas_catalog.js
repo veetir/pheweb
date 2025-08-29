@@ -43,6 +43,22 @@ function renderPlotlyCatalogPlot() {
       // Arrays for EBI trace
       var ebiX = [], ebiY = [], ebiCustom = [];
 
+      function getTheme() {
+        var styles = getComputedStyle(document.body);
+        var bg = styles.getPropertyValue('--bs-body-bg').trim() || 'white';
+        var fg = styles.getPropertyValue('--bs-body-color').trim() || 'black';
+        var dark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        return {
+          bg: bg,
+          fg: fg,
+          dark: dark,
+          ukbb: dark ? '#00c6a2' : '#008060',
+          ebi: dark ? '#ff7b33' : '#D33500'
+        };
+      }
+
+      var theme = getTheme();
+
       results.forEach(function(record) {
         var pos = record.pos;
         var logp = record.log_pvalue;
@@ -120,7 +136,7 @@ function renderPlotlyCatalogPlot() {
         mode: 'markers',
         type: 'scatter',
         name: 'UKBB',
-        marker: { symbol: 'circle', color: '#008060', opacity: 0.4, size: 8 },
+        marker: { symbol: 'circle', color: theme.ukbb, opacity: 0.4, size: 8 },
         customdata: ukbbCustom,
         hovertemplate: tooltipTemplate
       };
@@ -132,7 +148,7 @@ function renderPlotlyCatalogPlot() {
         mode: 'markers',
         type: 'scatter',
         name: 'GWAS Catalog',
-        marker: { symbol: 'diamond', color: '#D33500', opacity: 0.7, size: 8 },
+        marker: { symbol: 'diamond', color: theme.ebi, opacity: 0.7, size: 8 },
         customdata: ebiCustom,
         hovertemplate: tooltipTemplate
       };
@@ -144,35 +160,40 @@ function renderPlotlyCatalogPlot() {
           title: "Chromosome " + chr + " (Mb)",
           showgrid: false,
           zeroline: true,
-          zerolinecolor: 'black',
+          zerolinecolor: theme.fg,
           zerolinewidth: 1,
           ticks: 'outside',
           ticklen: 6,
           tickwidth: 1,
-          tickcolor: 'black'
+          tickcolor: theme.fg,
+          linecolor: theme.fg
         },
         yaxis: {
           title: "<b>-log10 p-value</b>",
           showgrid: false,
           zeroline: true,
-          zerolinecolor: 'black',
+          zerolinecolor: theme.fg,
           zerolinewidth: 1,
           showline: true,
           ticks: 'outside',
           ticklen: 6,
           tickwidth: 1,
-          tickcolor: 'black',
+          tickcolor: theme.fg,
+          linecolor: theme.fg,
           rangemode: "tozero"
         },
         height: 500,
         margin: { t: 34, b: 40, l: 50, r: 20 },
-        plot_bgcolor: "white",
+        paper_bgcolor: theme.bg,
+        plot_bgcolor: theme.bg,
         legend: {
           orientation: "h",
           xanchor: "center",
           x: 0.5,
-          y: -0.3
-        }
+          y: -0.3,
+          font: { color: theme.fg }
+        },
+        hoverlabel: { bgcolor: theme.bg, font: { color: theme.fg } }
       };
 
       const EXTRA_STOPWORDS = new Set([
@@ -248,7 +269,7 @@ function renderPlotlyCatalogPlot() {
           d.size = fontSizeScale(Math.log(d.count + 1));
         });
 
-        const colorMap = { ukbb: '#006149', gwas: '#A82A00' };
+        const colorMap = { ukbb: theme.ukbb, gwas: theme.ebi };
 
         const width = container.clientWidth || 600;
         const height = 100;
@@ -277,7 +298,7 @@ function renderPlotlyCatalogPlot() {
               .attr('class', 'wordcloud-word')
               .attr('role', 'button')
               .attr('tabindex', 0)
-              .style('fill', d => colorMap[d.dataset] || '#000')
+              .style('fill', d => colorMap[d.dataset] || theme.fg)
               .attr('text-anchor', 'middle')
               .attr('transform', d => 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')')
               .style('--base-size', d => d.size + 'px')
@@ -364,6 +385,32 @@ function renderPlotlyCatalogPlot() {
                 wcWrapper.style.display = 'none';
               }
             }
+
+            function applyTheme() {
+              theme = getTheme();
+              Plotly.relayout('plotly-gwas-catalog', {
+                paper_bgcolor: theme.bg,
+                plot_bgcolor: theme.bg,
+                font: {color: theme.fg},
+                'xaxis.tickcolor': theme.fg,
+                'xaxis.zerolinecolor': theme.fg,
+                'xaxis.linecolor': theme.fg,
+                'yaxis.tickcolor': theme.fg,
+                'yaxis.zerolinecolor': theme.fg,
+                'yaxis.linecolor': theme.fg,
+                legend: {orientation:'h', xanchor:'center', x:0.5, y:-0.3, font:{color: theme.fg}},
+                hoverlabel: {bgcolor: theme.bg, font:{color: theme.fg}}
+              });
+              Plotly.restyle('plotly-gwas-catalog', {
+                'marker.color': [theme.ukbb, theme.ebi]
+              }, [0,1]);
+              const map = {ukbb: theme.ukbb, gwas: theme.ebi};
+              d3.select('#combined-wordcloud').selectAll('text')
+                .style('fill', d => map[d.dataset] || theme.fg);
+            }
+
+            applyTheme();
+            document.addEventListener('pheweb:theme', applyTheme);
           });
     })
     .catch(function(error) {

@@ -1,5 +1,23 @@
+function getTheme() {
+  var styles = getComputedStyle(document.body);
+  var bg = styles.getPropertyValue('--bs-body-bg').trim() || 'white';
+  var fg = styles.getPropertyValue('--bs-body-color').trim() || 'black';
+  var dark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+  return {
+    bg: bg,
+    fg: fg,
+    dark: dark,
+    good: dark ? '#a47cff' : '#3500D3',
+    low: dark ? '#d8cff8' : '#BAA8F0',
+    variant: dark ? '#ff7b33' : '#D33500',
+    grid: dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'
+  };
+}
+
+var theme = getTheme();
+
 function csColour(row) {
-  return row.good_cs ? '#3500D3' : '#BAA8F0';
+  return row.good_cs ? theme.good : theme.low;
 }
 
 function isDrug(row) {
@@ -57,6 +75,7 @@ function displayEndpoint(ep, atcMap, showCodes) {
 }
 
 function renderFinnGenSusie() {
+  theme = getTheme();
   var regionEl = document.getElementById('lz-1');
   if (!regionEl || !regionEl.dataset.region) {
     console.error("No region data found on element with id 'lz-1'");
@@ -246,7 +265,7 @@ function renderFinnGenSusie() {
         x: variantX,
         y: variantY,
         mode: 'markers',
-        marker: { symbol: 'x', size: 10, color: '#D33500' },
+        marker: { symbol: 'x', size: 10, color: theme.variant },
         name: 'Top variant',
         text: variantText,
         hoverinfo: 'text',
@@ -261,14 +280,19 @@ function renderFinnGenSusie() {
           title: 'Chromosome ' + chr + ' position',
           showgrid: false,
           zeroline: true,
-          zerolinecolor: 'black'
+          zerolinecolor: theme.fg,
+          tickcolor: theme.fg,
+          linecolor: theme.fg
         },
         yaxis: {
           tickvals:  tickvals,
           ticktext:  ticktext,
           showgrid:  false,
           autorange: 'reversed',
-          automargin: true
+          automargin: true,
+          tickcolor: theme.fg,
+          linecolor: theme.fg,
+          zerolinecolor: theme.fg
         },
         margin:     { t:34, b:40, l:120, r:20 },
         height:     200 + 25*totalLines,
@@ -278,9 +302,12 @@ function renderFinnGenSusie() {
             x: 0,
             y: 1,
             xanchor: 'left',
-            yanchor: 'bottom'
+            yanchor: 'bottom',
+            font: {color: theme.fg}
         },
-        plot_bgcolor: 'white'
+        paper_bgcolor: theme.bg,
+        plot_bgcolor: theme.bg,
+        hoverlabel: {bgcolor: theme.bg, font:{color: theme.fg}}
       };
 
         var endpoints = rows.map(function(r) {
@@ -425,6 +452,38 @@ function renderFinnGenSusie() {
           if (controlsEl) controlsEl.style.maxWidth = newWidth + 'px';
           plotDiv.style.maxWidth = newWidth + 'px';
         });
+
+        function applyTheme() {
+          theme = getTheme();
+          var gd = document.getElementById('finngen-susie');
+          var shapes = (gd.layout.shapes || []).map(function(s){
+            var goodColors = ['#3500D3','#a47cff'];
+            var lowColors = ['#BAA8F0','#d8cff8'];
+            if (goodColors.indexOf(s.line.color) !== -1) s.line.color = theme.good;
+            else if (lowColors.indexOf(s.line.color) !== -1) s.line.color = theme.low;
+            return s;
+          });
+          Plotly.relayout('finngen-susie', {
+            paper_bgcolor: theme.bg,
+            plot_bgcolor: theme.bg,
+            font: {color: theme.fg},
+            'xaxis.tickcolor': theme.fg,
+            'xaxis.zerolinecolor': theme.fg,
+            'xaxis.linecolor': theme.fg,
+            'yaxis.tickcolor': theme.fg,
+            'yaxis.zerolinecolor': theme.fg,
+            'yaxis.linecolor': theme.fg,
+            legend: {orientation:'h', x:0, y:1, xanchor:'left', yanchor:'bottom', font:{color: theme.fg}},
+            shapes: shapes,
+            hoverlabel: {bgcolor: theme.bg, font:{color: theme.fg}}
+          });
+          Plotly.restyle('finngen-susie', {'line.color': theme.good}, [0]);
+          Plotly.restyle('finngen-susie', {'line.color': theme.low}, [1]);
+          Plotly.restyle('finngen-susie', {'marker.color': theme.variant}, [2]);
+        }
+
+        applyTheme();
+        document.addEventListener('pheweb:theme', applyTheme);
       });
     })
     .catch(function(err){
