@@ -16,7 +16,7 @@ function populate_streamtable(phenotypes) {
           title: 'Phenotype',
           render: function(data, type, row, meta) {
             var label = data.phenostring || data.phenocode;
-            return '<a style="color:black" href="' + window.model.urlprefix + '/pheno/' + data.phenocode + '">' +
+            return '<a class="text-body" href="' + window.model.urlprefix + '/pheno/' + data.phenocode + '">' +
                      label +
                    '</a>';
           }
@@ -41,7 +41,7 @@ function populate_streamtable(phenotypes) {
             if (data.rsids) {
               variantText += ' (' + data.rsids.split(',').join(', ') + ')';
             }
-            return '<a style="color:black" href="' + window.model.urlprefix + '/variant/' +
+            return '<a class="text-body" href="' + window.model.urlprefix + '/variant/' +
                    data.chrom + '-' + data.pos + '-' + data.ref + '-' + data.alt + '">' +
                    variantText +
                    '</a>';
@@ -60,7 +60,7 @@ function populate_streamtable(phenotypes) {
           render: function(data, type, row, meta) {
             var genes = data.split(",");
             return genes.map(function(gene) {
-              return '<a style="color:black" href="' + window.model.urlprefix +
+              return '<a class="text-body" href="' + window.model.urlprefix +
                      '/gene/' + gene + '?include=' + row.chrom + '-' + row.pos + '">' +
                      '<i>' + gene + '</i></a>';
             }).join(', ');

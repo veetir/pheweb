@@ -1,4 +1,13 @@
 /* Reconcile bootstrap3 to typeahead.js (the real Typeahead, not bootstrap-typeahead) */
+:root {
+  --manhattan-chrom-a: #00003C;
+  --manhattan-chrom-b: #7878BA;
+}
+
+[data-bs-theme='dark'] {
+  --manhattan-chrom-a: #81a1c1;
+  --manhattan-chrom-b: #5e81ac;
+}
 .twitter-typeahead {
   width: 100%;
 }
@@ -134,21 +143,31 @@
 #manhattan_plot_container {
   min-width: 700px;
 }
-#manhattan_plot_container .axis > path.domain {
-  stroke-width: 2px;
-  stroke: #666;
-  fill: none;
+#manhattan_plot_container svg,
+#qq_plot_container svg {
+  background: var(--bs-body-bg);
 }
-#manhattan_plot_container .axis g.tick line {
-  stroke: #666;
-}
-#qq_plot_container .axis path.domain {
-  stroke: black;
-  fill: none;
-}
+
+#manhattan_plot_container .axis > path.domain,
+#manhattan_plot_container .axis g.tick line,
+#qq_plot_container .axis path.domain,
 #qq_plot_container .axis g.tick line {
-  stroke: #666;
+  stroke: var(--bs-body-color);
+}
+
+#manhattan_plot_container .axis > path.domain,
+#qq_plot_container .axis path.domain {
+  stroke-width: 2px;
+  fill: none;
+}
+
+#qq_plot_container .axis g.tick line {
   opacity: 0.3;
+}
+
+#manhattan_plot_container .axis text,
+#qq_plot_container .axis text {
+  fill: var(--bs-body-color);
 }
 
 .pheno-info > p {
@@ -211,8 +230,149 @@
   pointer-events: none;
   z-index: 1;
 }
+[data-bs-theme='dark'] .search-field .search-icon{
+  opacity: 1;
+}
 .search-field .search-input:focus{
   border-color: #5D33DB;
   box-shadow: 0 0 0 .4rem rgba(49,130,206,.25);
   outline: none;
+}
+
+[data-bs-theme='dark'] table.dataTable {
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_info,
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_paginate .paginate_button {
+  color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_length label,
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_filter label {
+  color: #fff !important;
+}
+
+[data-bs-theme='dark'] .dataTables_length select,
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_filter input {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border-color: var(--bs-border-color);
+}
+
+/* LocusZoom plot adjustments for dark mode */
+[data-bs-theme='dark'] .lz-container-responsive svg {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-axis path,
+[data-bs-theme='dark'] .lz-container-responsive .lz-axis line {
+  stroke: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-axis text,
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer text {
+  fill: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-significance path {
+  stroke: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-tooltip {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip a {
+  color: var(--bs-link-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip button {
+  color: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_right {
+  border-right-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_left {
+  border-left-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_top {
+  border-top-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-tooltip-arrow_bottom {
+  border-bottom-color: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] .lz-container-responsive path.lz-data_layer-genes,
+[data-bs-theme='dark'] .lz-container-responsive rect.lz-data_layer-genes {
+  stroke: var(--bs-link-color) !important;
+  fill: var(--bs-link-color) !important;
+}
+[data-bs-theme='dark'] .lz-container-responsive path.lz-data_layer-scatter {
+  filter: brightness(2.2) saturate(1.2);
+}
+[data-bs-theme='dark'] .lz-container-responsive text.lz-data_layer-genes {
+  fill: var(--bs-body-color);
+}
+
+/* PheWAS plot adjustments for dark mode */
+[data-bs-theme='dark'] #phewas_plot_container svg {
+  background: var(--bs-body-bg);
+}
+[data-bs-theme='dark'] #phewas_plot_container .lz-axis path,
+[data-bs-theme='dark'] #phewas_plot_container .lz-axis line {
+  stroke: #fff;
+}
+[data-bs-theme='dark'] #phewas_plot_container .lz-axis text {
+  fill: #fff;
+}
+[data-bs-theme='dark'] #phewas_plot_container .lz-data_layer text {
+  fill: #fff;
+}
+
+[data-bs-theme='dark'] #phewas_plot_container .lz-data_layer-significance path {
+  stroke: #fff;
+}
+
+[data-bs-theme='dark'] #phewas_plot_container .lz-tooltip {
+  background: var(--bs-body-bg);
+  color: #fff;
+  border: 1px solid var(--bs-border-color);
+}
+
+/* Make PheWAS label callouts inherit theme colors */
+.lz-data_layer-scatter-label text {
+  fill: var(--bs-body-color) !important;
+}
+.lz-data_layer-scatter-label line {
+  stroke: var(--bs-body-color) !important;
+}
+
+/* Soften result count badge in dark mode */
+[data-bs-theme='dark'] #streamtable-found {
+  background-color: var(--bs-gray-700) !important;
+}
+
+/* Theme-aware icon coloring */
+.icon-invert {
+  filter: none;
+}
+[data-bs-theme='dark'] .icon-invert {
+  filter: invert(1);
+}
+
+.icon-download {
+  filter: none;
+}
+[data-bs-theme='dark'] .icon-download {
+  filter: invert(1) brightness(4.8);
+}
+
+/* FinnGen logo: keep colors in light mode, turn white in dark mode */
+.finngen-logo {
+  filter: none;
+}
+[data-bs-theme='dark'] .finngen-logo {
+  filter: brightness(0) invert(1);
 }

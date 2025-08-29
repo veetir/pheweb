@@ -127,7 +127,8 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
             .attr("width", svg_width)
             .attr("height", svg_height)
             .style("display", "block")
-            .style("margin", "auto");
+            .style("margin", "auto")
+            .style("background", "var(--bs-body-bg)");
         var gwas_plot = gwas_svg.append("g")
             .attr('id', 'gwas_plot')
             .attr("transform", fmt("translate({0},{1})", plot_margin.left, plot_margin.top));
@@ -195,6 +196,7 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
 
         gwas_svg.append('text')
             .style('text-anchor', 'middle')
+            .style('fill', 'var(--bs-body-color)')
             .attr('transform', fmt('translate({0},{1})rotate(-90)',
                                    plot_margin.left*.4,
                                    plot_height/2 + plot_margin.top))
@@ -212,7 +214,7 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
 
         var color_by_chrom = d3.scaleOrdinal()
             .domain(get_chrom_offsets().chroms)
-            .range(['rgb(120,120,186)', 'rgb(0,0,66)']);
+            .range(['var(--manhattan-chrom-a)', 'var(--manhattan-chrom-b)']);
         //colors to maybe sample from later:
         //.range(['rgb(120,120,186)', 'rgb(0,0,66)', 'rgb(44,150,220)', 'rgb(40,60,80)', 'rgb(33,127,188)', 'rgb(143,76,176)']);
 
@@ -239,7 +241,7 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
             .attr('y1', y_scale(-Math.log10(significance_threshold)))
             .attr('y2', y_scale(-Math.log10(significance_threshold)))
             .attr('stroke-width', '5px')
-            .attr('stroke', 'lightgray')
+            .attr('stroke', 'var(--bs-body-color)')
             .attr('stroke-dasharray', '10,10')
             .on('mouseover', significance_threshold_tooltip.show)
             .on('mouseout', significance_threshold_tooltip.hide);
@@ -277,6 +279,7 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
             .attr('class', 'genename_text')
             .style('font-style', 'italic')
             .attr('text-anchor', 'middle')
+            .style('fill', 'var(--bs-body-color)')
             .attr('transform', function(d) {
                 return fmt('translate({0},{1})',
                            x_scale(get_genomic_position(d)),
@@ -443,7 +446,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
     }
 
     maf_ranges.forEach(function(maf_range, i) {
-        maf_range.color = ['#e66101', '#fdb863', '#b2abd2', '#5e3c99'][i];
+        maf_range.color = ['#e66101', '#FD9A21', '#b2abd2', '#9373C9'][i];
     })
 
     $(function() {
@@ -496,7 +499,8 @@ function create_qq_plot(maf_ranges, qq_ci) {
             .attr("width", svg_width)
             .attr("height", svg_height)
             .style("display", "block")
-            .style("margin", "auto");
+            .style("margin", "auto")
+            .style("background", "var(--bs-body-bg)");
         var qq_plot = qq_svg.append("g")
             .attr('id', 'qq_plot')
             .attr("transform", fmt("translate({0},{1})", plot_margin.left, plot_margin.top));
@@ -520,7 +524,8 @@ function create_qq_plot(maf_ranges, qq_ci) {
                   }).y1( function(d) {
                       return y_scale(Math.max(0, d.y_min - .05));
                   }))
-            .style("fill", "lightgray");
+            .style("fill", "var(--bs-body-color)")
+            .style("opacity", 0.2);
 
         // points
         qq_plot.append('g')
@@ -597,6 +602,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
 
         qq_svg.append('text')
             .style('text-anchor', 'middle')
+            .style('fill', 'var(--bs-body-color)')
             .attr('transform', fmt('translate({0},{1})rotate(-90)',
                                    plot_margin.left*.4,
                                    plot_margin.top + plot_height/2))
@@ -604,6 +610,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
 
         qq_svg.append('text')
             .style('text-anchor', 'middle')
+            .style('fill', 'var(--bs-body-color)')
             .attr('transform', fmt('translate({0},{1})',
                                    plot_margin.left + plot_width/2,
                                    plot_margin.top + plot_height + 40))
@@ -638,7 +645,7 @@ function populate_streamtable(variants) {
               variantText += ' (' + data.rsids.split(',').join(', ') + ')';
             }
             return (
-              '<a style="color:black" href="' +
+              '<a class="text-body" href="' +
               window.model.urlprefix +
               '/variant/' +
               data.chrom +
@@ -661,7 +668,7 @@ function populate_streamtable(variants) {
           render: function(data, type, row, meta) {
               var genes = data.split(",");
               return genes.map(function(gene) {
-                return '<a style="color:black" href="' + window.model.urlprefix +
+                return '<a class="text-body" href="' + window.model.urlprefix +
                        '/gene/' + gene + '?include=' + row.chrom + '-' + row.pos + '">' +
                        '<i>' + gene + '</i></a>';
               }).join(', ');

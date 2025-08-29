@@ -112,13 +112,13 @@ $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
     <div id="streamtable-found" class="badge bg-primary text-light">
     </div>
     {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
-      <span class="download-button">
-        <a href="{{ url_for('.download_pheno', phenocode=phenocode) }}" title="Download summary statistics">
-          <img src="{{ url_for('bp.static', filename='images/download.svg') }}" alt="Download">
-          <span style="display: none;">Download</span>
-        </a>
-      </span>
-    {% endif %}
+        <span class="download-button">
+          <a href="{{ url_for('.download_pheno', phenocode=phenocode) }}" title="Download summary statistics">
+            <img src="{{ url_for('bp.static', filename='images/download.svg') }}" alt="Download" class="icon-download">
+            <span style="display: none;">Download</span>
+          </a>
+        </span>
+      {% endif %}
   </div>
 </div>
 <div class="row stream_table_row">
@@ -164,7 +164,7 @@ $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
 
 <script type="text/template" id="streamtable-template">
 <tr>
-<td><a style="color:black" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= v.chrom %>-<%= v.pos %>-<%= v.ref %>-<%= v.alt %>">
+<td><a class="text-body" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= v.chrom %>-<%= v.pos %>-<%= v.ref %>-<%= v.alt %>">
     <%= v.chrom %>:<%= v.pos.toLocaleString() %> <%= v.ref %> / <%= v.alt %>
     <% if (v.rsids) { %>(<%= v.rsids.replace(/,/g, ', ') %>)<% } %>
 </a></td>

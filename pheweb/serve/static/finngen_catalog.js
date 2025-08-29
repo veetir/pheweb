@@ -46,13 +46,29 @@ function renderFinnGenPlot() {
       var sigThreshold = -Math.log10(0.05);
       var gwasThreshold = -Math.log10(5e-8);
 
+      function getTheme() {
+        var styles = getComputedStyle(document.body);
+        var bg = styles.getPropertyValue('--bs-body-bg').trim() || 'white';
+        var fg = styles.getPropertyValue('--bs-body-color').trim() || 'black';
+        var dark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        return {
+          bg: bg,
+          fg: fg,
+          dark: dark,
+          point: dark ? '#BDA7FF' : '#3500D3',
+          grid: dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'
+        };
+      }
+
+      var theme = getTheme();
+
       var trace = {
         x: x,
         y: y,
         mode: 'markers',
         type: 'scatter',
         name: selectedEndpoint,
-        marker: { color: '#3500D3', opacity: 0.7, size: 8 },
+        marker: { color: theme.point, opacity: 0.7, size: 8 },
         customdata: customData,
         hovertemplate:
           "<b>%{customdata.rsid}<br></b>" +
@@ -73,28 +89,31 @@ function renderFinnGenPlot() {
           title: "Chromosome " + chr + " (Mb)",
           showgrid: false,
           zeroline: true,
-          zerolinecolor: 'black',
+          zerolinecolor: theme.fg,
           zerolinewidth: 1,
           ticks: 'outside',
           ticklen: 6,
           tickwidth: 1,
-          tickcolor: 'black'
+          tickcolor: theme.fg,
+          linecolor: theme.fg
         },
         yaxis: {
           title: "<b>-log10 p-value</b>",
           showgrid: false,
           zeroline: true,
-          zerolinecolor: 'black',
+          zerolinecolor: theme.fg,
           zerolinewidth: 1,
           showline: true,
           ticks: 'outside',
           ticklen: 6,
           tickwidth: 1,
-          tickcolor: 'black',
+          tickcolor: theme.fg,
+          linecolor: theme.fg,
           rangemode: "tozero"
         },
         margin: { t: 34, b: 40, l: 50, r: 20 },
-        plot_bgcolor: "white",
+        paper_bgcolor: theme.bg,
+        plot_bgcolor: theme.bg,
         height: 500,
         shapes: [
           {
@@ -104,7 +123,7 @@ function renderFinnGenPlot() {
             x1: Math.max(...x),
             y1: sigThreshold,
             line: {
-              color: 'grey',
+              color: theme.grid,
               dash: 'dot',
               width: 2
             }
@@ -116,7 +135,7 @@ function renderFinnGenPlot() {
             x1: Math.max(...x),
             y1: gwasThreshold,
             line: {
-              color: 'grey',
+              color: theme.grid,
               dash: 'dot',
               width: 2
             }
@@ -130,7 +149,7 @@ function renderFinnGenPlot() {
             showarrow: false,
             xanchor: 'right',
             yanchor: 'top',
-            font: { color: 'grey' }
+            font: { color: theme.grid }
           },
           {
             x: Math.max(...x),
@@ -139,9 +158,10 @@ function renderFinnGenPlot() {
             showarrow: false,
             xanchor: 'right',
             yanchor: 'top',
-            font: { color: 'grey' }
+            font: { color: theme.grid }
           }
-        ]
+        ],
+        hoverlabel: { bgcolor: theme.bg, font: { color: theme.fg } }
       };
       // Clear existing text if any
       document.getElementById("finngen-gwas-catalog").innerHTML = "";
@@ -219,6 +239,31 @@ function renderFinnGenPlot() {
               });
             });
           }
+          function applyTheme() {
+            theme = getTheme();
+            Plotly.relayout('finngen-gwas-catalog', {
+              paper_bgcolor: theme.bg,
+              plot_bgcolor: theme.bg,
+              font: {color: theme.fg},
+              'xaxis.tickcolor': theme.fg,
+              'xaxis.zerolinecolor': theme.fg,
+              'xaxis.linecolor': theme.fg,
+              'yaxis.tickcolor': theme.fg,
+              'yaxis.zerolinecolor': theme.fg,
+              'yaxis.linecolor': theme.fg,
+              'shapes[0].line.color': theme.grid,
+              'shapes[1].line.color': theme.grid,
+              'annotations[0].font.color': theme.grid,
+              'annotations[1].font.color': theme.grid,
+              hoverlabel: {bgcolor: theme.bg, font:{color: theme.fg}}
+            });
+            Plotly.restyle('finngen-gwas-catalog', {
+              'marker.color': [theme.point]
+            });
+          }
+
+          applyTheme();
+          document.addEventListener('pheweb:theme', applyTheme);
         });
 
       // Update the FinnGen button link
