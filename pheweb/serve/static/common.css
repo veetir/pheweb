@@ -216,3 +216,12 @@
   box-shadow: 0 0 0 .4rem rgba(49,130,206,.25);
   outline: none;
 }
+
+[data-bs-theme='dark'] table.dataTable {
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_info,
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_paginate .paginate_button {
+  color: var(--bs-body-color) !important;
+}
