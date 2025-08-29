@@ -183,7 +183,7 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
 
                     "tooltip.closable": false,
                     "tooltip.html": ("<div><strong>{{phewas_string}}</strong></div>\n" +
-                                     "<div><strong style='color:{{color}}'>{{category_name}}</strong></div>\n\n" +
+                                     "<div><strong>{{category_name}}</strong></div>\n\n" +
                                      window.model.tooltip_lztemplate),
 
                     // Show labels that are: in the top 10, and (by neglog10) >=75% of sig threshold, and >=25% of best

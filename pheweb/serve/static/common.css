@@ -226,14 +226,39 @@
   color: var(--bs-body-color) !important;
 }
 
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_length label,
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_filter label {
+  color: #fff !important;
+}
+
+[data-bs-theme='dark'] .dataTables_length select,
+[data-bs-theme='dark'] .dataTables_wrapper .dataTables_filter input {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border-color: var(--bs-border-color);
+}
+
 /* PheWAS plot adjustments for dark mode */
 [data-bs-theme='dark'] #phewas_plot_container svg {
   background: var(--bs-body-bg);
 }
 [data-bs-theme='dark'] #phewas_plot_container .lz-axis path,
 [data-bs-theme='dark'] #phewas_plot_container .lz-axis line {
-  stroke: var(--bs-body-color);
+  stroke: #fff;
 }
 [data-bs-theme='dark'] #phewas_plot_container .lz-axis text {
-  fill: var(--bs-body-color);
+  fill: #fff;
+}
+[data-bs-theme='dark'] #phewas_plot_container .lz-data_layer text {
+  fill: #fff;
+}
+
+[data-bs-theme='dark'] #phewas_plot_container .lz-data_layer-significance path {
+  stroke: #fff;
+}
+
+[data-bs-theme='dark'] #phewas_plot_container .lz-tooltip {
+  background: var(--bs-body-bg);
+  color: #fff;
+  border: 1px solid var(--bs-border-color);
 }
