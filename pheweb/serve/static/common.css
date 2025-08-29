@@ -1,7 +1,7 @@
 /* Reconcile bootstrap3 to typeahead.js (the real Typeahead, not bootstrap-typeahead) */
 :root {
-  --manhattan-chrom-a: #4c72b0;
-  --manhattan-chrom-b: #1b4f72;
+  --manhattan-chrom-a: #00003C;
+  --manhattan-chrom-b: #7878BA;
 }
 
 [data-bs-theme='dark'] {
