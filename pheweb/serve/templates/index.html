@@ -14,11 +14,11 @@
       <form action="{{ url_for('.go') }}">
          <fieldset>
           <div class="form-group search-field" style="position: relative; width: 100%;">
-            <img
-              src="{{ url_for('.static', filename='images/search.svg') }}"
-              alt=""
-              class="search-icon"
-              aria-hidden="true">
+              <img
+                src="{{ url_for('.static', filename='images/search.svg') }}"
+                alt=""
+                class="search-icon icon-invert"
+                aria-hidden="true">
             <input
               name="query"
               class="form-control typeahead search-input"

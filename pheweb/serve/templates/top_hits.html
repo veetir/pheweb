@@ -100,17 +100,18 @@
 {% block contained %}
   <div class="row">
     <div class="col-xs-12 col-sm-8">
-      <h1 style="margin-top:0">
-        Top Hits 
-        <img src="{{ url_for('bp.static', filename='images/info.svg') }}" 
-             alt="Info" 
-             style="height: 24px; vertical-align: middle; cursor: pointer;"
-             title="This page shows only the peaks with a p-value &lt; 10⁻⁶. 
-             Variants are hidden if any variant within 500kb in the same phenotype 
-             has a smaller p-value. Only the top 2000 variants of each phenotype 
-             are considered. This table is limited to the top 1000 hits, but the 
-             download button includes all hits.">
-      </h1>
+        <h1 style="margin-top:0">
+          Top Hits
+          <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
+               alt="Info"
+               class="icon-invert"
+               style="height: 24px; vertical-align: middle; cursor: pointer;"
+               title="This page shows only the peaks with a p-value &lt; 10⁻⁶.
+               Variants are hidden if any variant within 500kb in the same phenotype
+               has a smaller p-value. Only the top 2000 variants of each phenotype
+               are considered. This table is limited to the top 1000 hits, but the
+               download button includes all hits.">
+        </h1>
     </div>
   </div>
 
@@ -124,10 +125,10 @@
 
       {% if config.DOWNLOAD_TOP_HITS_BUTTON %}
         <span class="download-button">
-          <a href="{{ url_for('.download_top_hits') }}" title="Download top hits">
-            <img src="{{ url_for('bp.static', filename='images/download.svg') }}" alt="Download">
-            <span style="display: none;">Download</span>
-          </a>
+            <a href="{{ url_for('.download_top_hits') }}" title="Download top hits">
+              <img src="{{ url_for('bp.static', filename='images/download.svg') }}" alt="Download" class="icon-download">
+              <span style="display: none;">Download</span>
+            </a>
         </span>
       {% endif %}
     </div>

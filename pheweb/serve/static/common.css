@@ -230,6 +230,9 @@
   pointer-events: none;
   z-index: 1;
 }
+[data-bs-theme='dark'] .search-field .search-icon{
+  opacity: 1;
+}
 .search-field .search-input:focus{
   border-color: #5D33DB;
   box-shadow: 0 0 0 .4rem rgba(49,130,206,.25);
@@ -346,4 +349,19 @@
 /* Soften result count badge in dark mode */
 [data-bs-theme='dark'] #streamtable-found {
   background-color: var(--bs-gray-700) !important;
+}
+
+/* Theme-aware icon coloring */
+.icon-invert {
+  filter: none;
+}
+[data-bs-theme='dark'] .icon-invert {
+  filter: invert(1);
+}
+
+.icon-download {
+  filter: none;
+}
+[data-bs-theme='dark'] .icon-download {
+  filter: invert(1) brightness(4.8);
 }
