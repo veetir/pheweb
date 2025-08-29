@@ -14,7 +14,7 @@ function getTheme() {
   };
 }
 
-var theme = getTheme();
+var theme = {};
 
 function csColour(row) {
   return row.good_cs ? theme.good : theme.low;

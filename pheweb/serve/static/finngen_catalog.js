@@ -55,7 +55,7 @@ function renderFinnGenPlot() {
           bg: bg,
           fg: fg,
           dark: dark,
-          point: dark ? '#8B66FF' : '#3500D3',
+          point: dark ? '#BDA7FF' : '#3500D3',
           grid: dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'
         };
       }
