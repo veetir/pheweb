@@ -305,9 +305,12 @@
   border-bottom-color: var(--bs-body-bg);
 }
 [data-bs-theme='dark'] .lz-container-responsive path.lz-data_layer-genes,
-[data-bs-theme='dark'] .lz-container-responsive rect.lz-data_layer-genes:not(.lz-clickarea) {
-  stroke: var(--bs-link-color);
-  fill: var(--bs-link-color);
+[data-bs-theme='dark'] .lz-container-responsive rect.lz-data_layer-genes {
+  stroke: var(--bs-link-color) !important;
+  fill: var(--bs-link-color) !important;
+}
+[data-bs-theme='dark'] .lz-container-responsive path.lz-data_layer-scatter {
+  filter: brightness(1.4) saturate(1.2);
 }
 [data-bs-theme='dark'] .lz-container-responsive text.lz-data_layer-genes {
   fill: var(--bs-body-color);
