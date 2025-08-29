@@ -52,8 +52,8 @@ function renderPlotlyCatalogPlot() {
           bg: bg,
           fg: fg,
           dark: dark,
-          ukbb: dark ? '#00c6a2' : '#008060',
-          ebi: dark ? '#ff7b33' : '#D33500'
+          ukbb: dark ? '#00C795' : '#008060',
+          ebi: dark ? '#FF9470' : '#D33500'
         };
       }
 
