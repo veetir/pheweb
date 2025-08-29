@@ -257,6 +257,28 @@
   border-color: var(--bs-border-color);
 }
 
+/* LocusZoom plot adjustments for dark mode */
+[data-bs-theme='dark'] .lz-container-responsive svg {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-axis path,
+[data-bs-theme='dark'] .lz-container-responsive .lz-axis line {
+  stroke: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-axis text,
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer text {
+  fill: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-data_layer-significance path {
+  stroke: var(--bs-body-color);
+}
+[data-bs-theme='dark'] .lz-container-responsive .lz-tooltip {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+}
+
 /* PheWAS plot adjustments for dark mode */
 [data-bs-theme='dark'] #phewas_plot_container svg {
   background: var(--bs-body-bg);

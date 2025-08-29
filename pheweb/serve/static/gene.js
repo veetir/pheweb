@@ -30,7 +30,7 @@ function populate_streamtable(data) {
             } else {
               var baseUrl = "{{ url_for('.region_page', phenocode='', region='').rstrip('/') }}";
               var url = baseUrl + "/" + phenoData.phenocode + "/gene/" + window.gene_symbol;
-              return '<a style="color:black" href="' + url + '">' + label + '</a>';
+              return '<a class="text-body" href="' + url + '">' + label + '</a>';
             }
           }
         }
