@@ -102,10 +102,23 @@ function layoutRows(clusters) {
 }
 
 function selectEndpoint(ep) {
-  var sel = document.getElementById('endpoint-select');
-  if (sel) {
-    sel.value = ep;
-    sel.dispatchEvent(new Event('change'));
+  if (typeof window.setFinnGenEndpoint === 'function') {
+    window.setFinnGenEndpoint(ep);
+  } else {
+    var search = document.getElementById('endpoint-search');
+    if (search) {
+      search.value = ep;
+      search.dispatchEvent(new Event('input'));
+    }
+
+    var sel = document.getElementById('endpoint-select');
+    if (sel) {
+      // wait for search filter to repopulate options
+      setTimeout(function(){
+        sel.value = ep;
+        sel.dispatchEvent(new Event('change'));
+      }, 350);
+    }
   }
 
   // Scroll FinnGen plot into view so users can see the results immediately
