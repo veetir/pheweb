@@ -256,6 +256,7 @@ function drawUnique() {
   const pillOuterH = measurePillOuterHeight();
   clusters.forEach(function(c){
     var pillMap = new Map();
+    var variantMap = new Map();
     (c.items || []).forEach(function(i){
       if (!pillMap.has(i.trait)) {
         pillMap.set(i.trait, {
@@ -264,9 +265,19 @@ function drawUnique() {
           isDrug: isDrug(i)
         });
       }
+      if (!variantMap.has(i.variant)) {
+        variantMap.set(i.variant, {
+          variant: i.variant,
+          vpos: i.vpos,
+          traits: [displayEndpoint(i.trait, currentAtcMap, currentShowCodes)]
+        });
+      } else {
+        variantMap.get(i.variant).traits.push(displayEndpoint(i.trait, currentAtcMap, currentShowCodes));
+      }
     });
     c.pills = Array.from(pillMap.values());
     c.endpoints = c.pills.map(function(p){ return p.label; });
+    c.variants = Array.from(variantMap.values());
     var n = c.pills.length;
     var perRow = Math.max(1, Math.floor(width / approxPillWidth));
     var rowsNeeded = Math.max(1, Math.ceil(n / perRow));
@@ -282,6 +293,21 @@ function drawUnique() {
     railsLayer = wrapper.append('div').attr('class','susie-rails')
       .style('position','absolute');
   }
+
+  var tooltip = wrapper.select('.susie-tooltip');
+  if (tooltip.empty()) {
+    tooltip = wrapper.append('div').attr('class','susie-tooltip')
+      .style('position','absolute')
+      .style('pointer-events','none')
+      .style('opacity',0)
+      .style('padding','4px 8px')
+      .style('font-size','11px')
+      .style('border-radius','4px')
+      .style('z-index',10);
+  }
+  tooltip.style('background', theme.bg)
+    .style('color', theme.fg)
+    .style('border', '1px solid '+theme.grid);
 
   var totalPlotHeight = layout.totalHeight;
   railsLayer
@@ -340,16 +366,37 @@ function drawUnique() {
     .attr('d', function(d){ return d.end > regionEnd ? ('M'+x(d.inter_end)+','+((baseRowHeight-barHeight)/2)+' L'+(x(d.inter_end)+6)+','+(baseRowHeight/2)+' L'+x(d.inter_end)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
     .attr('fill', function(d){ return csColour(d.items[0]); });
 
+  function showVarTip(v, event) {
+    var html = v.variant;
+    if (v.traits && v.traits.length) {
+      html += '<br>' + v.traits.join(', ');
+    }
+    tooltip.html(html).style('opacity',1);
+    moveVarTip(event);
+  }
+  function moveVarTip(event) {
+    var rect = wrapper.node().getBoundingClientRect();
+    var xPos = event.clientX - rect.left + 12;
+    var yPos = event.clientY - rect.top + 12;
+    tooltip.style('left', xPos + 'px').style('top', yPos + 'px');
+  }
+  function hideVarTip() { tooltip.style('opacity',0); }
+
   rowsMerge.selectAll('g.variant-ticks').remove();
   rowsMerge.each(function(d){
     var t = d3.select(this).append('g').attr('class','variant-ticks');
-    t.selectAll('line').data(d.vpos).enter().append('line')
-      .attr('x1', function(v){ return x(v); })
-      .attr('x2', function(v){ return x(v); })
-      .attr('y1', (baseRowHeight-barHeight)/2)
-      .attr('y2', (baseRowHeight+barHeight)/2)
-      .attr('stroke', theme.variant)
-      .attr('stroke-width',1);
+    var mk = t.selectAll('g.tick').data(d.variants || []).enter().append('g')
+      .attr('class','tick')
+      .attr('transform', function(v){ return 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +')'; })
+      .on('mouseover', function(v){ showVarTip(v, d3.event); })
+      .on('mousemove', function(){ moveVarTip(d3.event); })
+      .on('mouseout', hideVarTip);
+    mk.append('line')
+      .attr('x1', -5).attr('y1', -5).attr('x2', 5).attr('y2', 5)
+      .attr('stroke', theme.variant).attr('stroke-width',2);
+    mk.append('line')
+      .attr('x1', -5).attr('y1', 5).attr('x2', 5).attr('y2', -5)
+      .attr('stroke', theme.variant).attr('stroke-width',2);
   });
   railsLayer.selectAll('.pill-rail').remove();
 
@@ -371,7 +418,7 @@ function drawUnique() {
     const pills = rail.selectAll('button.pill')
       .data(cluster.pills || [], function(d){ return d.trait; });
 
-    pills.enter().append('button')
+    const enter = pills.enter().append('button')
       .attr('class','pill')
       .attr('title', function(d){ return d.label; })
       .text(function(d){ return d.label; })
@@ -386,8 +433,10 @@ function drawUnique() {
           .style('font-size','12px')
           .style('line-height','18px')
           .style('white-space','nowrap')
-          .style('cursor','pointer');
-      })
+          .style('cursor', d.isDrug ? 'default' : 'pointer');
+      });
+
+    enter.filter(function(d){ return !d.isDrug; })
       .on('click', function(d){
         if (window.d3 && d3.event && typeof d3.event.stopPropagation === 'function') {
           d3.event.stopPropagation();
