@@ -428,12 +428,15 @@ function renderFinnGenSusie() {
               end:   Math.floor(x1)
             });
             // propagate to the other panels
-            ['finngen-gwas-catalog','plotly-gwas-catalog'].forEach(function(id){
+            ['finngen-gwas-catalog'].forEach(function(id){
               Plotly.relayout(id, {
                 'xaxis.range': [x0, x1],
                 'xaxis.title': 'Chromosome ' + (cur.chr||chr) + ' (Mb)'
               });
             });
+            if (window.gwasCatalogPlot && window.gwasCatalogPlot.setXRange) {
+              window.gwasCatalogPlot.setXRange(x0, x1, cur.chr || chr);
+            }
           }
         });
         if (window.plot && window.plot.on) {

@@ -429,10 +429,9 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
         })();
         window.plot.on("state_changed", function() {
             var currentState = window.plot.state;
-            Plotly.relayout("plotly-gwas-catalog", {
-                "xaxis.range": [currentState.start, currentState.end],
-                "xaxis.title": "Chromosome " + currentState.chr + " (Mb)"
-            });
+            if (window.gwasCatalogPlot && window.gwasCatalogPlot.setXRange) {
+                window.gwasCatalogPlot.setXRange(currentState.start, currentState.end, currentState.chr);
+            }
         });
         
     });

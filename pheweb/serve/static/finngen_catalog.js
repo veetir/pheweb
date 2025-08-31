@@ -199,12 +199,11 @@ function renderFinnGenPlot() {
             });
           }
 
-          // Sync
+          // Sync with GWAS catalog plot
           if (typeof lzStart !== 'undefined' && typeof lzEnd !== 'undefined') {
-            Plotly.relayout('plotly-gwas-catalog', {
-              'xaxis.range': [lzStart, lzEnd],
-              'xaxis.title': 'Chromosome ' + (lzChr || chr) + ' (Mb)'
-            });
+            if (window.gwasCatalogPlot && window.gwasCatalogPlot.setXRange) {
+              window.gwasCatalogPlot.setXRange(lzStart, lzEnd, lzChr || chr);
+            }
           }
 
           // If a user pans or zooms in the FinnGen chart, update LZ
@@ -221,11 +220,10 @@ function renderFinnGenPlot() {
                   end: Math.floor(xEnd)
                 });
               }
-              // Update the other Plotly chart
-              Plotly.relayout('plotly-gwas-catalog', {
-                'xaxis.range': [xStart, xEnd],
-                'xaxis.title': 'Chromosome ' + (lzChr || chr) + ' (Mb)'
-              });
+              // Update the D3 GWAS catalog chart
+              if (window.gwasCatalogPlot && window.gwasCatalogPlot.setXRange) {
+                window.gwasCatalogPlot.setXRange(xStart, xEnd, lzChr || chr);
+              }
             }
           });
 
