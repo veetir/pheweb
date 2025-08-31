@@ -74,6 +74,17 @@ var currentAtcMap = {};
 var currentShowCodes = false;
 var regionStart = 0, regionEnd = 0;
 var expandedClusters = new Set();
+const baseRowHeight = 20;
+const railGap = 2;
+
+function layoutRows(clusters, expanded) {
+  const ys = []; let y = 0;
+  clusters.forEach(function(c){
+    ys.push(y);
+    y += expanded.has(c.id) ? baseRowHeight * 2 : baseRowHeight;
+  });
+  return { yPositions: ys, totalHeight: y };
+}
 
 function selectEndpoint(ep) {
   var sel = document.getElementById('endpoint-select');
@@ -213,27 +224,22 @@ function drawUnique() {
 
   var clusters = clusterRows(currentRows, tol);
 
-  if (expandedClusters.size === 0) {
-    clusters.forEach(function(c){ expandedClusters.add(c.id); });
-  } else {
-    clusters.forEach(function(c){ if(!expandedClusters.has(c.id)) expandedClusters.add(c.id); });
+  if (typeof drawUnique.prevTol === 'undefined') drawUnique.prevTol = tol;
+  if (drawUnique.prevTol !== tol) {
+    expandedClusters.clear();
+    drawUnique.prevTol = tol;
   }
 
   var containerWidth = container.clientWidth ? container.clientWidth : 600;
-  var endpointWidth = 200;
   var margin = {left:40,right:20,top:20,bottom:20};
-  var width = containerWidth - margin.left - margin.right - endpointWidth;
-  if (width < 50) width = containerWidth - margin.left - margin.right;
-  var rowHeight = 20;
+  var width = Math.max(50, containerWidth - margin.left - margin.right);
   var barHeight = 6;
-  var height = clusters.length * rowHeight + margin.top + margin.bottom;
-
   var x = d3.scaleLinear().domain([regionStart, regionEnd]).range([0, width]);
 
-  d3.select('#finngen-susie-wrapper').style('position', 'relative');
-  var tooltip = d3.select('#finngen-susie-wrapper').select('.susie-tooltip');
+  var wrapper = d3.select('#finngen-susie-wrapper').style('position','relative');
+  var tooltip = wrapper.select('.susie-tooltip');
   if (tooltip.empty()) {
-    tooltip = d3.select('#finngen-susie-wrapper').append('div').attr('class', 'susie-tooltip')
+    tooltip = wrapper.append('div').attr('class', 'susie-tooltip')
       .style('position','absolute').style('pointer-events','none')
       .style('padding','2px 4px').style('border-radius','4px')
       .style('border','1px solid '+theme.fg).style('background', theme.bg).style('color', theme.fg)
@@ -241,6 +247,22 @@ function drawUnique() {
   } else {
     tooltip.style('border','1px solid '+theme.fg).style('background', theme.bg).style('color', theme.fg);
   }
+
+  var railsLayer = wrapper.select('.susie-rails');
+  if (railsLayer.empty()) {
+    railsLayer = wrapper.append('div').attr('class','susie-rails')
+      .style('position','absolute').style('left', (margin.left)+'px')
+      .style('top', (margin.top)+'px')
+      .style('width', width+'px')
+      .style('pointer-events','none')
+      .style('z-index',2);
+  } else {
+    railsLayer.style('left', (margin.left)+'px').style('width', width+'px');
+  }
+
+  var layout = layoutRows(clusters, expandedClusters);
+  var totalPlotHeight = layout.totalHeight;
+  var height = totalPlotHeight + margin.top + margin.bottom;
 
   var svg = d3.select(container).select('svg');
   if (svg.empty()) svg = d3.select(container).html('').append('svg');
@@ -264,69 +286,88 @@ function drawUnique() {
       drawUnique();
     });
 
-  rowsEnter.append('rect').attr('class','bar').attr('y',(rowHeight-barHeight)/2).attr('height',barHeight);
-  rowsEnter.append('circle').attr('class','count-circle').attr('cy',rowHeight/2);
+  rowsEnter.append('rect').attr('class','bar').attr('y',(baseRowHeight-barHeight)/2).attr('height',barHeight);
+  rowsEnter.append('circle').attr('class','count-circle').attr('cy',baseRowHeight/2);
   rowsEnter.append('text').attr('class','count-text').attr('dy','0.35em').attr('text-anchor','middle').style('font-size','8px');
   rowsEnter.append('path').attr('class','left-cap');
   rowsEnter.append('path').attr('class','right-cap');
 
   var rowsMerge = rowsEnter.merge(rows);
-  rowsMerge.transition().duration(500).attr('transform', function(d,i){ return 'translate(0,'+(i*rowHeight)+')'; });
+  rowsMerge.transition().duration(300).attr('transform', function(d,i){ return 'translate(0,'+layout.yPositions[i]+')'; });
 
-  rowsMerge.select('rect.bar').transition().duration(500)
+  rowsMerge.select('rect.bar').transition().duration(300)
     .attr('x', function(d){ return x(d.inter_start); })
     .attr('width', function(d){ return Math.max(1, x(d.inter_end) - x(d.inter_start)); })
     .attr('fill', function(d){ return csColour(d.items[0]); })
     .attr('stroke', function(d){ return expandedClusters.has(d.id) ? theme.variant : 'none'; })
     .attr('stroke-width', function(d){ return expandedClusters.has(d.id) ? 2 : 0; });
 
-  rowsMerge.select('circle.count-circle').transition().duration(500)
+  rowsMerge.select('circle.count-circle').transition().duration(300)
     .attr('cx', function(d){ return x(d.inter_start) - 10; })
     .attr('r', function(d){ return 3 + Math.log(d.count + 1) * 2; })
     .attr('fill', function(d){ return csColour(d.items[0]); });
 
-  rowsMerge.select('text.count-text').transition().duration(500)
+  rowsMerge.select('text.count-text').transition().duration(300)
     .attr('x', function(d){ return x(d.inter_start) - 10; })
-    .attr('y', rowHeight/2)
+    .attr('y', baseRowHeight/2)
     .text(function(d){ return d.count; })
     .attr('fill', theme.bg);
 
-  rowsMerge.select('path.left-cap').transition().duration(500)
-    .attr('d', function(d){ return d.start < regionStart ? ('M'+(x(d.inter_start)-6)+','+(rowHeight/2)+' L'+x(d.inter_start)+','+((rowHeight-barHeight)/2)+' L'+x(d.inter_start)+','+((rowHeight+barHeight)/2)+' Z') : null; })
+  rowsMerge.select('path.left-cap').transition().duration(300)
+    .attr('d', function(d){ return d.start < regionStart ? ('M'+(x(d.inter_start)-6)+','+(baseRowHeight/2)+' L'+x(d.inter_start)+','+((baseRowHeight-barHeight)/2)+' L'+x(d.inter_start)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
     .attr('fill', function(d){ return csColour(d.items[0]); });
 
-  rowsMerge.select('path.right-cap').transition().duration(500)
-    .attr('d', function(d){ return d.end > regionEnd ? ('M'+x(d.inter_end)+','+((rowHeight-barHeight)/2)+' L'+(x(d.inter_end)+6)+','+(rowHeight/2)+' L'+x(d.inter_end)+','+((rowHeight+barHeight)/2)+' Z') : null; })
+  rowsMerge.select('path.right-cap').transition().duration(300)
+    .attr('d', function(d){ return d.end > regionEnd ? ('M'+x(d.inter_end)+','+((baseRowHeight-barHeight)/2)+' L'+(x(d.inter_end)+6)+','+(baseRowHeight/2)+' L'+x(d.inter_end)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
     .attr('fill', function(d){ return csColour(d.items[0]); });
 
   rowsMerge.selectAll('g.variant-ticks').remove();
-  rowsMerge.selectAll('foreignObject').remove();
   rowsMerge.filter(function(d){ return expandedClusters.has(d.id); }).each(function(d){
     var t = d3.select(this).append('g').attr('class','variant-ticks');
     t.selectAll('line').data(d.vpos).enter().append('line')
       .attr('x1', function(v){ return x(v); })
       .attr('x2', function(v){ return x(v); })
-      .attr('y1', (rowHeight-barHeight)/2)
-      .attr('y2', (rowHeight+barHeight)/2)
+      .attr('y1', (baseRowHeight-barHeight)/2)
+      .attr('y2', (baseRowHeight+barHeight)/2)
       .attr('stroke', theme.variant)
       .attr('stroke-width',1);
+  });
+  railsLayer.selectAll('.pill-rail').remove();
 
-    var fo = d3.select(this).append('foreignObject')
-      .attr('x', width + 10)
-      .attr('y', 0)
-      .attr('width', endpointWidth - 10)
-      .attr('height', rowHeight)
-      .append('xhtml:div')
+  function renderRail(idx, cluster, yTop) {
+    var rail = railsLayer.append('div')
+      .attr('class','pill-rail')
+      .style('position','absolute')
+      .style('left','0px')
+      .style('top', (yTop + baseRowHeight + railGap) + 'px')
+      .style('height', (baseRowHeight - railGap*2) + 'px')
+      .style('width', width + 'px')
       .style('overflow-x','auto')
       .style('white-space','nowrap')
-      .style('height', rowHeight + 'px');
-    d.endpoints.forEach(function(ep){
-      var pill = fo.append('span')
-        .attr('class','susie-pill')
-        .style('cursor','pointer')
-        .text(ep)
-        .on('click', function(){ selectEndpoint(ep); });
-    });
+      .style('pointer-events','auto')
+      .style('display', expandedClusters.has(cluster.id) ? 'block' : 'none');
+
+    var est = 100, overscan = 5;
+    var scroller = rail.node();
+
+    function paint() {
+      var scrollLeft = scroller.scrollLeft, visible = Math.ceil(width/est)+overscan*2;
+      var start = Math.max(0, Math.floor(scrollLeft/est)-overscan);
+      var end = Math.min(cluster.endpoints.length, start + visible);
+      rail.selectAll('button.pill').remove();
+      for (var i=start; i<end; i++) {
+        rail.append('button')
+          .attr('class','pill')
+          .text(cluster.endpoints[i])
+          .on('click', (function(ep){ return function(){ selectEndpoint(ep); }; })(cluster.endpoints[i]));
+      }
+    }
+    paint();
+    scroller.addEventListener('scroll', paint, {passive:true});
+  }
+
+  clusters.forEach(function(c,i){
+    if (expandedClusters.has(c.id) && c.endpoints.length) renderRail(i, c, layout.yPositions[i]);
   });
 
   if (summaryEl) summaryEl.innerHTML = '';
@@ -340,6 +381,11 @@ function drawUnique() {
     .selectAll('path,line')
     .attr('stroke', theme.grid);
   svg.select('g.x-axis').selectAll('text').attr('fill', theme.fg);
+
+  d3.selectAll('.susie-rails .pill')
+    .style('background', theme.bg)
+    .style('color', theme.fg)
+    .style('border-color', theme.dark ? '#444' : '#888');
 }
 
 function showTooltip(d, event, tooltip) {
@@ -380,7 +426,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
   document.addEventListener('pheweb:theme', drawUnique);
   if (window.plot && window.plot.on) {
-    window.plot.on('state_changed', renderFinnGenSusie);
+    window.plot.on('state_changed', function(){
+      if (window.plot && window.plot.state) {
+        var st = window.plot.state;
+        regionStart = st.start;
+        regionEnd = st.end;
+      }
+      drawUnique();
+    });
   }
 });
 

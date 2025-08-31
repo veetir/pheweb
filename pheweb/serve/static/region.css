@@ -18,6 +18,22 @@
     overflow: visible;
 }
 
+.susie-rails .pill-rail { /* container styled inline */ }
+.susie-rails .pill {
+  margin: 2px 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 16px;
+  border: 1px solid #444;
+  background: var(--bs-body-bg, #222);
+  color: var(--bs-body-color, #eee);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.susie-rails .pill:hover { border-color:#777; }
+.row .bar { shape-rendering: crispEdges; }
+
 #endpoint-row-wrapper {
     display: flex;
     align-items: flex-start;
