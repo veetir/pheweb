@@ -223,6 +223,9 @@ function drawUnique() {
   }
 
   var clusters = clusterRows(currentRows, tol);
+  if (expandedClusters.size === 0 && clusters.length) {
+    expandedClusters.add(clusters[0].id); // auto-open first cluster
+  }
 
   if (typeof drawUnique.prevTol === 'undefined') drawUnique.prevTol = tol;
   if (drawUnique.prevTol !== tol) {
@@ -251,17 +254,18 @@ function drawUnique() {
   var railsLayer = wrapper.select('.susie-rails');
   if (railsLayer.empty()) {
     railsLayer = wrapper.append('div').attr('class','susie-rails')
-      .style('position','absolute').style('left', (margin.left)+'px')
-      .style('top', (margin.top)+'px')
-      .style('width', width+'px')
-      .style('pointer-events','none')
-      .style('z-index',2);
-  } else {
-    railsLayer.style('left', (margin.left)+'px').style('width', width+'px');
+      .style('position','absolute')
+      .style('pointer-events','none');
   }
 
   var layout = layoutRows(clusters, expandedClusters);
   var totalPlotHeight = layout.totalHeight;
+  railsLayer
+    .style('left', (margin.left)+'px')
+    .style('top',  (margin.top)+'px')
+    .style('width', width+'px')
+    .style('height', totalPlotHeight+'px')
+    .style('z-index', 5);
   var height = totalPlotHeight + margin.top + margin.bottom;
 
   var svg = d3.select(container).select('svg');
@@ -291,6 +295,10 @@ function drawUnique() {
   rowsEnter.append('text').attr('class','count-text').attr('dy','0.35em').attr('text-anchor','middle').style('font-size','8px');
   rowsEnter.append('path').attr('class','left-cap');
   rowsEnter.append('path').attr('class','right-cap');
+  rowsEnter.append('path').attr('class','chev');
+  rowsEnter.append('text').attr('class','inline-hint')
+    .attr('dy','0.35em').attr('text-anchor','middle')
+    .style('font-size','10px');
 
   var rowsMerge = rowsEnter.merge(rows);
   rowsMerge.transition().duration(300).attr('transform', function(d,i){ return 'translate(0,'+layout.yPositions[i]+')'; });
@@ -320,6 +328,29 @@ function drawUnique() {
   rowsMerge.select('path.right-cap').transition().duration(300)
     .attr('d', function(d){ return d.end > regionEnd ? ('M'+x(d.inter_end)+','+((baseRowHeight-barHeight)/2)+' L'+(x(d.inter_end)+6)+','+(baseRowHeight/2)+' L'+x(d.inter_end)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
     .attr('fill', function(d){ return csColour(d.items[0]); });
+
+  rowsMerge.select('path.chev')
+    .attr('d', function(d){
+      var x0 = Math.max(0, x(d.inter_start) - 16), y0 = baseRowHeight/2;
+      var right = 'M'+x0+','+(y0-4)+' L'+(x0+6)+','+y0+' L'+x0+','+(y0+4)+' Z';
+      var down  = 'M'+(x0-4)+','+(y0-2)+' L'+(x0+4)+','+(y0-2)+' L'+x0+','+(y0+4)+' Z';
+      return expandedClusters.has(d.id) ? down : right;
+    })
+    .attr('fill', theme.grid);
+
+  rowsMerge.select('text.inline-hint')
+    .attr('x', function(d){ return (x(d.inter_start)+x(d.inter_end))/2; })
+    .attr('y', baseRowHeight/2)
+    .text(function(d){
+      if (expandedClusters.has(d.id)) return '';
+      var names = (d.endpoints || []).slice(0,2).join(', ');
+      var more  = (d.endpoints && d.endpoints.length>2) ? ' +'+(d.endpoints.length-2) : '';
+      return (names || (d.count + ' endpoints')) + more + ' — click to expand';
+    })
+    .style('fill', theme.fg)
+    .style('paint-order','stroke')
+    .style('stroke', theme.bg)
+    .style('stroke-width','3px');
 
   rowsMerge.selectAll('g.variant-ticks').remove();
   rowsMerge.filter(function(d){ return expandedClusters.has(d.id); }).each(function(d){
@@ -385,7 +416,7 @@ function drawUnique() {
   d3.selectAll('.susie-rails .pill')
     .style('background', theme.bg)
     .style('color', theme.fg)
-    .style('border-color', theme.dark ? '#444' : '#888');
+    .style('border', '1px solid ' + (theme.dark ? '#444' : '#888'));
 }
 
 function showTooltip(d, event, tooltip) {
