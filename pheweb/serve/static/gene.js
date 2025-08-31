@@ -28,7 +28,7 @@ function populate_streamtable(data) {
             if (phenoData.phenocode === window.pheno.phenocode) {
               return label;
             } else {
-              var baseUrl = "{{ url_for('.region_page', phenocode='', region='').rstrip('/') }}";
+              var baseUrl = window.region_page_base_url;
               var url = baseUrl + "/" + phenoData.phenocode + "/gene/" + window.gene_symbol;
               return '<a class="text-body" href="' + url + '">' + label + '</a>';
             }
@@ -46,7 +46,7 @@ function populate_streamtable(data) {
         $(this.node())
           .css("cursor", "pointer")
           .on("click", function () {
-            var baseUrl = "{{ url_for('.region_page', phenocode='', region='').rstrip('/') }}";
+            var baseUrl = window.region_page_base_url;
             var url = baseUrl + "/" + rowData.pheno.phenocode + "/gene/" + window.gene_symbol;
             window.location = url;
           });
