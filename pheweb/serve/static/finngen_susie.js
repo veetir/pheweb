@@ -86,14 +86,22 @@ function selectEndpoint(ep) {
 function renderFinnGenSusie() {
   theme = getTheme();
   var regionEl = document.getElementById('lz-1');
-  if (!regionEl || !regionEl.dataset.region) {
-    console.error("No region data found on element with id 'lz-1'");
+  var region = '';
+  if (window.plot && window.plot.state) {
+    var st = window.plot.state;
+    regionStart = st.start;
+    regionEnd = st.end;
+    region = st.chr + ':' + regionStart + '-' + regionEnd;
+  } else if (regionEl && regionEl.dataset.region) {
+    region = regionEl.dataset.region;
+    var rng = region.split(':')[1].split('-');
+    regionStart = parseInt(rng[0]);
+    regionEnd = parseInt(rng[1]);
+  } else {
+    console.error("No region data found");
     return;
   }
-  var region = regionEl.dataset.region;
-  var rng = region.split(':')[1].split('-');
-  regionStart = parseInt(rng[0]);
-  regionEnd = parseInt(rng[1]);
+  if (regionEl) regionEl.dataset.region = region;
 
   var apiUrl = window.model.urlprefix + '/api/finngen-susie?region=chr' + region;
   var container = document.getElementById('finngen-susie');
@@ -185,22 +193,6 @@ function clusterRows(rows, tol) {
   return clusters;
 }
 
-function sortClusters(clusters, mode) {
-  switch(mode) {
-    case 'width':
-      clusters.sort(function(a,b){ return (a.inter_end - a.inter_start) - (b.inter_end - b.inter_start); });
-      break;
-    case 'count':
-      clusters.sort(function(a,b){ return b.count - a.count; });
-      break;
-    case 'category':
-      clusters.sort(function(a,b){ return (a.category||'').localeCompare(b.category||''); });
-      break;
-    default:
-      clusters.sort(function(a,b){ return a.inter_start - b.inter_start; });
-  }
-}
-
 function drawUnique() {
   var container = document.getElementById('finngen-susie');
   var summaryEl = document.getElementById('susie-summary');
@@ -213,8 +205,6 @@ function drawUnique() {
   var tolLabels = ['0','10k','100k','1M','All'];
   var tolIdx = tolInput ? parseInt(tolInput.value) || 0 : 0;
   var tol = tolScale[tolIdx];
-  var sortSel = document.getElementById('susie-sort');
-  var sortMode = sortSel ? sortSel.value : 'start';
 
   if (tolInput) {
     var disp = document.getElementById('susie-tol-display');
@@ -222,7 +212,6 @@ function drawUnique() {
   }
 
   var clusters = clusterRows(currentRows, tol);
-  sortClusters(clusters, sortMode);
 
   if (expandedClusters.size === 0) {
     clusters.forEach(function(c){ expandedClusters.add(c.id); });
@@ -230,8 +219,11 @@ function drawUnique() {
     clusters.forEach(function(c){ if(!expandedClusters.has(c.id)) expandedClusters.add(c.id); });
   }
 
-  var width = container.clientWidth ? container.clientWidth - 40 : 600;
+  var containerWidth = container.clientWidth ? container.clientWidth : 600;
+  var endpointWidth = 200;
   var margin = {left:40,right:20,top:20,bottom:20};
+  var width = containerWidth - margin.left - margin.right - endpointWidth;
+  if (width < 50) width = containerWidth - margin.left - margin.right;
   var rowHeight = 20;
   var barHeight = 6;
   var height = clusters.length * rowHeight + margin.top + margin.bottom;
@@ -252,7 +244,7 @@ function drawUnique() {
 
   var svg = d3.select(container).select('svg');
   if (svg.empty()) svg = d3.select(container).html('').append('svg');
-  svg.attr('width', width + margin.left + margin.right)
+  svg.attr('width', containerWidth)
      .attr('height', height);
 
   var g = svg.select('g.plot');
@@ -308,7 +300,7 @@ function drawUnique() {
     .attr('fill', function(d){ return csColour(d.items[0]); });
 
   rowsMerge.selectAll('g.variant-ticks').remove();
-  rowsMerge.selectAll('g.endpoints').remove();
+  rowsMerge.selectAll('foreignObject').remove();
   rowsMerge.filter(function(d){ return expandedClusters.has(d.id); }).each(function(d){
     var t = d3.select(this).append('g').attr('class','variant-ticks');
     t.selectAll('line').data(d.vpos).enter().append('line')
@@ -319,24 +311,40 @@ function drawUnique() {
       .attr('stroke', theme.variant)
       .attr('stroke-width',1);
 
-    var e = d3.select(this).append('g').attr('class','endpoints');
-    var xoff = x(d.inter_end) + 5;
+    var fo = d3.select(this).append('foreignObject')
+      .attr('x', width + 10)
+      .attr('y', 0)
+      .attr('width', endpointWidth - 10)
+      .attr('height', rowHeight)
+      .append('xhtml:div')
+      .style('overflow-x','auto')
+      .style('white-space','nowrap')
+      .style('height', rowHeight + 'px');
     d.endpoints.forEach(function(ep){
-      var txt = e.append('text').text(ep)
-        .attr('x', xoff).attr('y', rowHeight/2 + 3)
-        .attr('fill', theme.fg).style('font-size','10px')
+      var pill = fo.append('span')
+        .attr('class','susie-pill')
         .style('cursor','pointer')
+        .text(ep)
         .on('click', function(){ selectEndpoint(ep); });
-      xoff += txt.node().getComputedTextLength() + 8;
     });
   });
 
   if (summaryEl) summaryEl.innerHTML = '';
+
+  svg.select('g.x-axis').remove();
+  var axis = d3.axisBottom(x);
+  svg.append('g')
+    .attr('class','x-axis')
+    .attr('transform','translate('+margin.left+','+(height - margin.bottom)+')')
+    .call(axis)
+    .selectAll('path,line')
+    .attr('stroke', theme.grid);
+  svg.select('g.x-axis').selectAll('text').attr('fill', theme.fg);
 }
 
 function showTooltip(d, event, tooltip) {
   var ex = (d.endpoints || []).slice(0,3).join(', ');
-  var html = '['+d.start+'-'+d.end+']<br>width '+(d.end-d.start)+' bp<br>#endpoints '+d.count;
+  var html = '['+d.inter_start+'-'+d.inter_end+']<br>width '+(d.inter_end - d.inter_start)+' bp<br>#endpoints '+d.count;
   if (ex) html += '<br>'+ex;
   tooltip.html(html).style('opacity',1);
   moveTooltip(event, tooltip);
@@ -361,7 +369,6 @@ document.addEventListener('DOMContentLoaded', function(){
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
   var atcToggle = document.getElementById('show-atc-codes');
-  var sortSel  = document.getElementById('susie-sort');
   var tolInput = document.getElementById('susie-tol');
 
   if (sel)      sel.addEventListener('change', renderFinnGenSusie);
@@ -369,9 +376,11 @@ document.addEventListener('DOMContentLoaded', function(){
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
   if (atcToggle) atcToggle.addEventListener('change', renderFinnGenSusie);
-  if (sortSel)  sortSel.addEventListener('change', drawUnique);
   if (tolInput) tolInput.addEventListener('input', drawUnique);
 
   document.addEventListener('pheweb:theme', drawUnique);
+  if (window.plot && window.plot.on) {
+    window.plot.on('state_changed', renderFinnGenSusie);
+  }
 });
 
