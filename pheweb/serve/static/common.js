@@ -47,10 +47,7 @@ window.debug = window.debug || {};
     document.addEventListener('DOMContentLoaded', () => {
         updateIcon(getStored());
         const btn = document.getElementById('theme-toggle');
-        if (btn) {
-            btn.addEventListener('click', cycle);
-            btn.blur();
-        }
+        if (btn) btn.addEventListener('click', cycle);
         document.dispatchEvent(new CustomEvent('pheweb:theme', {detail: {theme: preferred(getStored())}}));
     });
 
