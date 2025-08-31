@@ -290,6 +290,10 @@ h1 {
     width: 100%;
 }
 
+#finngen-susie svg {
+    overflow: visible;
+}
+
 #susie-summary {
     padding: 20px 20px;
     font-size: 0.9em;
@@ -308,4 +312,20 @@ h1 {
 .susie-pill {
     margin: 0 6px 0 0;
     word-break: break-word;
+}
+
+.susie-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    padding: 4px 6px;
+    border: 1px solid var(--bs-body-color);
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.count-badge {
+    font-size: 0.7em;
+    fill: currentColor;
 }

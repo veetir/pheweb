@@ -9,40 +9,18 @@ function getTheme() {
     dark: dark,
     good: dark ? '#a47cff' : '#3500D3',
     low: dark ? '#d8cff8' : '#BAA8F0',
-    variant: dark ? '#ff7b33' : '#D33500',
-    grid: dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'
+    variant: dark ? '#ff7b33' : '#D33500'
   };
 }
 
 var theme = {};
-
-function csColour(row) {
-  return row.good_cs ? theme.good : theme.low;
-}
-
-function isDrug(row) {
-  return row.trait.startsWith('ATC_');
-}
-
-function classifyRow(row) {
-  return 'endpoint_' + (row.good_cs ? 'good' : 'low');
-}
+var susieData = null;
+var expandedCluster = null;
 
 function updateToggleStates() {
   var epToggle = document.getElementById('show-endpoints');
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
-  var atcToggle = document.getElementById('show-atc-codes');
-
-  if (atcToggle) {
-    var dgChecked = dgToggle && dgToggle.checked;
-    atcToggle.disabled = !dgChecked;
-    if (!dgChecked) atcToggle.checked = false;
-    if (atcToggle.parentElement) {
-      atcToggle.parentElement.classList.toggle('disabled', !dgChecked);
-    }
-  }
-
   if (lqToggle) {
     var disableLq = !(dgToggle && dgToggle.checked) && !(epToggle && epToggle.checked);
     lqToggle.disabled = disableLq;
@@ -53,38 +31,163 @@ function updateToggleStates() {
   }
 }
 
-// cache of ATC code mapping fetched from the backend
-var atcMapPromise = null;
-function getAtcMap() {
-  if (!atcMapPromise) {
-    var url = window.model.urlprefix + '/api/atc';
-    atcMapPromise = fetch(url)
-      .then(function(resp){ return resp.ok ? resp.json() : {}; })
-      .catch(function(){ return {}; });
-  }
-  return atcMapPromise;
+function isDrug(row) {
+  return row.trait && row.trait.startsWith('ATC_');
 }
 
-function displayEndpoint(ep, atcMap, showCodes) {
-  if (showCodes) return ep;
-  var m = ep.match(/^ATC_(.+)_IRN$/);
-  if (m && atcMap[m[1]]) {
-    return atcMap[m[1]];
+function clusterRows(rows, tol) {
+  var clusters = [];
+  rows.forEach(function(r) {
+    var found = clusters.find(function(c) {
+      return Math.abs(c.start - r.start) <= tol && Math.abs(c.end - r.end) <= tol;
+    });
+    if (!found) {
+      found = {start: r.start, end: r.end, endpoints: [], variants: [], good: r.good_cs};
+      clusters.push(found);
+    }
+    found.endpoints.push(r.trait);
+    found.variants.push({pos: r.vpos, variant: r.variant});
+    if (r.good_cs) found.good = true;
+  });
+  return clusters;
+}
+
+function showSummary(cluster) {
+  var summary = document.getElementById('susie-summary');
+  if (!summary) return;
+  summary.innerHTML = '';
+  if (!cluster) return;
+  cluster.endpoints.forEach(function(ep) {
+    var span = document.createElement('span');
+    span.className = 'btn susie-pill';
+    span.textContent = ep;
+    summary.appendChild(span);
+  });
+}
+
+function drawClusters(clusters, region) {
+  var container = d3.select('#finngen-susie');
+  container.html('');
+  var width = document.getElementById('lz-1').clientWidth;
+  var margin = {left: 40, right: 20, top: 10, bottom: 10};
+  var rowStep = 22;
+  var barHeight = 6;
+  var height = margin.top + margin.bottom + clusters.length * rowStep;
+
+  var svg = container.append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  var x = d3.scaleLinear()
+    .domain([region.start, region.end])
+    .range([margin.left, width - margin.right]);
+
+  var tooltip = d3.select('.susie-tooltip');
+  if (tooltip.empty()) {
+    tooltip = d3.select('body').append('div')
+      .attr('class', 'susie-tooltip')
+      .style('opacity', 0);
   }
-  return ep;
+
+  var rows = svg.selectAll('.susie-row')
+    .data(clusters, function(d){ return d.start + '-' + d.end; });
+
+  var rowsEnter = rows.enter().append('g')
+    .attr('class', 'susie-row')
+    .attr('transform', function(d,i){ return 'translate(0,' + (margin.top + i*rowStep) + ')'; })
+    .style('opacity', 0);
+
+  rowsEnter.transition().duration(500).style('opacity',1);
+
+  rows.exit().transition().duration(500).style('opacity',0).remove();
+
+  rows = rows.merge(rowsEnter)
+    .transition().duration(500)
+    .attr('transform', function(d,i){ return 'translate(0,' + (margin.top + i*rowStep) + ')'; })
+    .selection();
+
+  rows.each(function(d){
+    var g = d3.select(this);
+    g.selectAll('*').remove();
+    var barStart = Math.max(d.start, region.start);
+    var barEnd = Math.min(d.end, region.end);
+    var color = d.good ? theme.good : theme.low;
+
+    var count = d.endpoints.length;
+    var cx = x(region.start) - 15;
+    g.append('circle')
+      .attr('cx', cx)
+      .attr('cy', 0)
+      .attr('r', 3 + Math.log(count))
+      .attr('fill', theme.fg);
+
+    g.append('rect')
+      .attr('x', x(barStart))
+      .attr('y', -barHeight/2)
+      .attr('width', x(barEnd) - x(barStart))
+      .attr('height', barHeight)
+      .attr('fill', color)
+      .attr('class', 'susie-bar');
+
+    if (d.start < region.start) {
+      g.append('path')
+        .attr('d', 'M' + x(region.start) + ' ' + (-barHeight/2) + ' L' + (x(region.start)-6) + ' 0 L' + x(region.start) + ' ' + (barHeight/2) + ' Z')
+        .attr('fill', color);
+    }
+    if (d.end > region.end) {
+      g.append('path')
+        .attr('d', 'M' + x(region.end) + ' ' + (-barHeight/2) + ' L' + (x(region.end)+6) + ' 0 L' + x(region.end) + ' ' + (barHeight/2) + ' Z')
+        .attr('fill', color);
+    }
+
+    g.append('text')
+      .attr('x', x(barEnd) + 4)
+      .attr('y', 4)
+      .attr('class', 'count-badge')
+      .text('×' + count);
+
+    var variants = (expandedCluster === d) ? d.variants : [];
+    g.selectAll('.variant')
+      .data(variants)
+      .enter()
+      .append('line')
+      .attr('class', 'variant')
+      .attr('x1', function(v){ return x(v.pos); })
+      .attr('x2', function(v){ return x(v.pos); })
+      .attr('y1', -barHeight/2 - 4)
+      .attr('y2', barHeight/2 + 4)
+      .attr('stroke', theme.variant)
+      .attr('stroke-width', 1);
+
+    g.on('mousemove', function(evt){
+      tooltip.style('opacity',1)
+        .html('[' + d.start + ', ' + d.end + '] width ' + (d.end - d.start) + '<br>#endpoints: ' + count + '<br>' + d.endpoints.slice(0,3).join(', '))
+        .style('left', (evt.pageX + 5) + 'px')
+        .style('top', (evt.pageY + 5) + 'px');
+    }).on('mouseout', function(){
+      tooltip.style('opacity',0);
+    }).on('click', function(){
+      expandedCluster = (expandedCluster === d) ? null : d;
+      drawClusters(clusters, region);
+      showSummary(expandedCluster);
+    });
+  });
 }
 
 function renderFinnGenSusie() {
   theme = getTheme();
   var regionEl = document.getElementById('lz-1');
-  if (!regionEl || !regionEl.dataset.region) {
-    console.error("No region data found on element with id 'lz-1'");
-    return;
-  }
-  var region = regionEl.dataset.region;
-  var apiUrl = window.model.urlprefix + '/api/finngen-susie?region=chr' + region;
+  if (!regionEl || !regionEl.dataset.region) return;
+  var regionStr = regionEl.dataset.region;
+  var parts = regionStr.split(':');
+  var chr = parts[0];
+  var range = parts[1].split('-');
+  var region = { chr: chr, start: +range[0], end: +range[1] };
+
+  var apiUrl = window.model.urlprefix + '/api/finngen-susie?region=chr' + regionStr;
   var container = document.getElementById('finngen-susie');
-  if (!container) return;
+  var summaryEl = document.getElementById('susie-summary');
+
   updateToggleStates();
   var showEP = document.getElementById('show-endpoints');
   showEP = showEP ? showEP.checked : false;
@@ -92,9 +195,6 @@ function renderFinnGenSusie() {
   showDG = showDG ? showDG.checked : false;
   var showLQ = document.getElementById('show-low-quality');
   showLQ = showLQ ? showLQ.checked : false;
-  var showCodesEl = document.getElementById('show-atc-codes');
-  var showCodes = showCodesEl ? showCodesEl.checked : false;
-  var summaryEl = document.getElementById('susie-summary');
 
   if (!showEP && !showDG) {
     container.innerHTML = 'Toggle endpoints or drugs to display results.';
@@ -102,419 +202,47 @@ function renderFinnGenSusie() {
     return;
   }
 
+  var sortBy = document.getElementById('susie-sort').value;
+  var tol = parseFloat(document.getElementById('susie-tolerance').value || 0) * 1000;
+
   container.innerHTML = '<p>Loading...</p>';
 
-  Promise.all([
-    fetch(apiUrl).then(function(resp){
-      if (!resp.ok) throw new Error("Failed to fetch SuSiE data");
-      return resp.json();
-    }),
-    getAtcMap()
-  ])
-    .then(function(results) {
-      var json = results[0];
-      var atcMap = results[1];
-      var rows = json.data || json;
-
-      rows = rows.filter(function(r) {
-        return isDrug(r) ? showDG : showEP;
-      });
-      if (!showLQ) {
-        rows = rows.filter(function(r){
-          return r.good_cs;
-        });
-      }
-
-      if (!rows || !rows.length) {
-        container.innerHTML = 'No SuSiE results in this region.';
-        if (summaryEl) summaryEl.innerHTML = '';
-        return;
-      }
-
-      // Group identical credible-set intervals per endpoint and quality
-      var grouped = {};
-      rows.forEach(function(r){
-        var key = [r.trait, r.start, r.end, r.good_cs].join('|');
-        if (!grouped[key]) {
-          grouped[key] = {
-            trait: r.trait,
-            start: r.start,
-            end: r.end,
-            good_cs: r.good_cs,
-            cs: [],
-            vpos: [],
-            variant: [],
-            prob: []
-          };
-        }
-        grouped[key].cs.push(r.cs);
-        grouped[key].vpos.push(r.vpos);
-        grouped[key].variant.push(r.variant);
-        grouped[key].prob.push(r.prob);
-      });
-      rows = Object.values(grouped);
-
-      // Build y-axis labels
-      var labels = [];
-      rows.forEach(function(r) {
-        var name = displayEndpoint(r.trait, atcMap, showCodes);
-        var lab = r.cs.length>1 ? name + ' (' + ' ×' + r.cs.length + ')' : name;
-        r.label = lab;
-        if (labels.indexOf(lab) === -1) labels.push(lab);
-      });
-
-      // Helper to wrap long labels onto multiple lines
-      function wrapLabel(text, maxLen) {
-        var words = text.split(/\s+/);
-        var lines = [];
-        var current = '';
-        words.forEach(function(w){
-          var test = current ? current + ' ' + w : w;
-          if (test.length > maxLen) {
-            if (current) lines.push(current);
-            current = w;
-          } else {
-            current = test;
-          }
-        });
-        if (current) lines.push(current);
-        return lines.join('<br>');
-      }
-
-      // Determine positions for each label based on wrapped line count
-      var maxLineLen = 30;
-      var tickvals = [];
-      var ticktext = [];
-      var yIndex = {};
-      var yCursor = 0;  // counts virtual rows
-      labels.forEach(function(l){
-        var wrapped = wrapLabel(l, maxLineLen);
-        var lineCnt = wrapped.split('<br>').length;
-        var start = yCursor;
-        var end   = yCursor + lineCnt;
-        var center = (start + end) / 2;
-        tickvals.push(center);
-        ticktext.push(wrapped);
-        yIndex[l] = center;
-        yCursor = end;
-      });
-      var totalLines = yCursor;
-
-      // Bucket data by good/low endpoint quality
-      var categories = {
-        endpoint_good: { lineX:[], lineY:[], markerX:[], markerY:[], markerSize:[], color: csColour({good_cs:true}),  name: 'Credible set' },
-        endpoint_low:  { lineX:[], lineY:[], markerX:[], markerY:[], markerSize:[], color: csColour({good_cs:false}), name: 'Credible set (low quality)' }
-      };
-      var shapes = [];
-
-      rows.forEach(function(r) {
-        var lab    = r.label;
-        var y      = yIndex[lab];
-        var bucket = categories[classifyRow(r)];
-
-        // credible‐set interval
-        bucket.lineX.push(r.start, r.end, null);
-        bucket.lineY.push(y,      y,     null);
-
-        // endpoint marker(s)
-        r.vpos.forEach(function(vpos, idx){
-          bucket.markerX.push(vpos);
-          bucket.markerY.push(y);
-          bucket.markerSize.push((r.prob[idx]||0)*20 + 5);
-
-          // little guide-line at the row (yref:'y')
-          shapes.push({
-            type: 'line',
-            x0: vpos, x1: vpos,
-            yref: 'y',  y0: y,   y1: y,
-            line: { color: bucket.color, width: 1, dash: 'dot' }
-          });
-        });
-      });
-
-      // Assemble traces
-      var traces = [];
-
-      // 1) credible‐set bars + 2) endpoint markers (no hover)
-      Object.keys(categories).forEach(function(key){
-        var c = categories[key];
-        // bars
-        traces.push({
-          x: c.lineX,
-          y: c.lineY,
-          mode: 'lines',
-          line: { color: c.color, width: 4 },
-          hoverinfo: 'skip',
-          name: c.name,
-          legendgroup: key,
-          showlegend: true
-        });
-      });
-
-      // 3) top‐variant crosses in dark red, hover shows variant string
-      var variantX = [], variantY = [], variantText = [];
-      rows.forEach(function(r){
-        var lab = r.label;
-        r.vpos.forEach(function(vpos, idx){
-          variantX.push(vpos);
-          variantY.push(yIndex[lab]);
-          variantText.push(r.variant[idx]);
-        });
-      });
-      traces.push({
-        x: variantX,
-        y: variantY,
-        mode: 'markers',
-        marker: { symbol: 'x', size: 10, color: theme.variant },
-        name: 'Top variant',
-        text: variantText,
-        hoverinfo: 'text',
-        showlegend: true
-      });
-
-      // Layout
-      var chr = region.split(':')[0];
-      var layout = {
-        showlegend: true,
-        xaxis:      {
-          title: 'Chromosome ' + chr + ' position',
-          showgrid: false,
-          zeroline: true,
-          zerolinecolor: theme.fg,
-          tickcolor: theme.fg,
-          linecolor: theme.fg
-        },
-        yaxis: {
-          tickvals:  tickvals,
-          ticktext:  ticktext,
-          showgrid:  false,
-          autorange: 'reversed',
-          automargin: true,
-          tickcolor: theme.fg,
-          linecolor: theme.fg,
-          zerolinecolor: theme.fg
-        },
-        margin:     { t:34, b:40, l:120, r:20 },
-        height:     200 + 25*totalLines,
-        shapes:     shapes,
-        legend: {
-            orientation: 'h',
-            x: 0,
-            y: 1,
-            xanchor: 'left',
-            yanchor: 'bottom',
-            font: {color: theme.fg}
-        },
-        paper_bgcolor: theme.bg,
-        plot_bgcolor: theme.bg,
-        hoverlabel: {bgcolor: theme.bg, font:{color: theme.fg}}
-      };
-
-        var endpoints = rows.map(function(r) {
-          return r.trait;
-        });
-        var uniqueEndpoints = Array.from(new Set(endpoints));
-        summaryEl = document.getElementById('susie-summary');
-        var controlsEl = document.getElementById('susie-controls');
-        var lzWidth = document.getElementById('lz-1').clientWidth;
-        summaryEl.style.maxWidth = lzWidth + 'px';
-        summaryEl.style.margin = '0 auto';
-        if (controlsEl) {
-          controlsEl.style.maxWidth = lzWidth + 'px';
-          controlsEl.style.margin = '0 auto';
-        }
-        var count = uniqueEndpoints.length;
-        summaryEl.innerHTML =
-          '<strong>' + count + '</strong> overlapping endpoint' + (count===1?'':'s') +
-          ' <a href="#" class="info-link" title="Endpoints '
-          + 'that have at least one credible set that intersects'
-            + ' the current region"><img src="' +
-            window.model.urlprefix + '/static/images/info.svg" class="info-icon info-icon-inline info-icon-inline-lg icon-invert"'
-            + ' alt="Info"></a>: ';
-
-
-        uniqueEndpoints.forEach(function(ep) {
-          var m = ep.match(/^ATC_(.+)_IRN$/);
-          var a = document.createElement('a');
-          a.textContent = displayEndpoint(ep, atcMap, showCodes);
-          a.className = 'btn susie-pill';
-
-          if (m) {
-              a.classList.add('btn-drug');
-              a.title = 'Drug endpoint';
-              // Drug endpoints: keep old behaviour and link to ATC website
-              var code = m[1];
-              a.href   = 'https://atcddd.fhi.no/atc_ddd_index/?code=' + encodeURIComponent(code);
-              a.target = '_blank';
-          } else {
-              // Non-drug endpoints: populate FinnGen catalog search
-              a.href = '#';
-              a.addEventListener('click', function(ev){
-                  ev.preventDefault();
-                  var searchBox = document.getElementById('endpoint-search');
-                  if (searchBox) {
-                      searchBox.value = ep;
-                      searchBox.dispatchEvent(new Event('input', { bubbles: true }));
-                  }
-                  var select = document.getElementById('endpoint-select');
-                  if (!select) return;
-                  if (select.value === ep) return; // already selected
-                  var attempts = 0;
-                  function applySelection() {
-                      attempts++;
-                      var optionFound = Array.from(select.options).some(function(o){ return o.value === ep; });
-                      if (optionFound) {
-                          select.value = ep;
-                          select.dispatchEvent(new Event('change', { bubbles: true }));
-                          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-                      } else if (attempts < 20) {
-                          setTimeout(applySelection, 50);
-                      }
-                  }
-                  setTimeout(applySelection, 350);
-              });
-          }
-
-          summaryEl.appendChild(a);
-        });
-
-      // Render
-      container.innerHTML = '';
-      var plotDiv = document.getElementById('finngen-susie');
-      plotDiv.style.maxWidth = lzWidth + 'px';
-      plotDiv.style.margin = '0 auto';
-      layout.width = lzWidth;
-      Plotly.newPlot(plotDiv, traces, layout, {responsive: true}).then(function(){
-        // add full label tooltips
-        var ticks = plotDiv.querySelectorAll('.yaxislayer-above text');
-        ticks.forEach(function(t, idx){ t.setAttribute('title', labels[idx]); });
-
-        plotDiv.on('plotly_click', function(evt) {
-          try {
-            var pts = evt.points || [];
-            if (!pts.length) return;
-            var v = pts[0].text || '';
-            var m = v.match(/^(?:chr)?([0-9XYMT]+)[:\-]([0-9]+)[:\-]([ACGTN]+)[:\-]([ACGTN]+)$/i);
-            if (m) {
-              var chrom = m[1];
-              var pos   = m[2];
-              var ref   = m[3].toUpperCase();
-              var alt   = m[4].toUpperCase();
-              var url = 'https://gnomad.broadinstitute.org/variant/' + encodeURIComponent(chrom + '-' + pos + '-' + ref + '-' + alt);
-              window.open(url, '_blank');
-              return;
-            }
-          } catch (e) {
-            console.error('Error handling variant click', e);
-          }
-        });
-
-        // sync with locuszoom state
-        if (window.plot && window.plot.state) {
-          var s = window.plot.state;
-          Plotly.relayout('finngen-susie',{
-            'xaxis.range': [s.start, s.end],
-            'xaxis.title': 'Chromosome ' + (s.chr||chr) + ' position'
-          });
-        }
-        var pd = document.getElementById('finngen-susie');
-        pd.on('plotly_relayout', function(evt){
-          var x0 = evt['xaxis.range[0]'], x1 = evt['xaxis.range[1]'];
-          if (x0!=null && x1!=null && window.plot && window.plot.applyState) {
-            var cur = window.plot.state;
-            window.plot.applyState({
-              chr: cur.chr,
-              start: Math.floor(x0),
-              end:   Math.floor(x1)
-            });
-            // propagate to the other panels
-            ['finngen-gwas-catalog','plotly-gwas-catalog'].forEach(function(id){
-              Plotly.relayout(id, {
-                'xaxis.range': [x0, x1],
-                'xaxis.title': 'Chromosome ' + (cur.chr||chr) + ' (Mb)'
-              });
-            });
-          }
-        });
-        if (window.plot && window.plot.on) {
-          window.plot.on('state_changed', function(){
-            var s = window.plot.state;
-            Plotly.relayout('finngen-susie',{
-              'xaxis.range': [s.start, s.end],
-              'xaxis.title': 'Chromosome ' + s.chr + ' position'
-            });
-          });
-        }
-        window.addEventListener('resize', function(){
-          var newWidth = document.getElementById('lz-1').clientWidth;
-          Plotly.relayout(plotDiv, {width: newWidth});
-          summaryEl.style.maxWidth = newWidth + 'px';
-          if (controlsEl) controlsEl.style.maxWidth = newWidth + 'px';
-          plotDiv.style.maxWidth = newWidth + 'px';
-        });
-
-        function applyTheme() {
-          theme = getTheme();
-          var gd = document.getElementById('finngen-susie');
-          var shapes = (gd.layout.shapes || []).map(function(s){
-            var goodColors = ['#3500D3','#a47cff'];
-            var lowColors = ['#BAA8F0','#d8cff8'];
-            if (goodColors.indexOf(s.line.color) !== -1) s.line.color = theme.good;
-            else if (lowColors.indexOf(s.line.color) !== -1) s.line.color = theme.low;
-            return s;
-          });
-          Plotly.relayout('finngen-susie', {
-            paper_bgcolor: theme.bg,
-            plot_bgcolor: theme.bg,
-            font: {color: theme.fg},
-            'xaxis.tickcolor': theme.fg,
-            'xaxis.zerolinecolor': theme.fg,
-            'xaxis.linecolor': theme.fg,
-            'yaxis.tickcolor': theme.fg,
-            'yaxis.zerolinecolor': theme.fg,
-            'yaxis.linecolor': theme.fg,
-            legend: {orientation:'h', x:0, y:1, xanchor:'left', yanchor:'bottom', font:{color: theme.fg}},
-            shapes: shapes,
-            hoverlabel: {bgcolor: theme.bg, font:{color: theme.fg}}
-          });
-          Plotly.restyle('finngen-susie', {'line.color': theme.good}, [0]);
-          Plotly.restyle('finngen-susie', {'line.color': theme.low}, [1]);
-          Plotly.restyle('finngen-susie', {'marker.color': theme.variant}, [2]);
-        }
-
-        applyTheme();
-        document.addEventListener('pheweb:theme', applyTheme);
-      });
-    })
-    .catch(function(err){
+  fetch(apiUrl).then(function(resp){
+    if (!resp.ok) throw new Error('Failed to fetch SuSiE data');
+    return resp.json();
+  }).then(function(json){
+    var rows = (json.data || json).filter(function(r){
+      return (isDrug(r) ? showDG : showEP) && (showLQ || r.good_cs);
+    });
+    if (!rows.length) {
       container.innerHTML = 'No SuSiE results in this region.';
       if (summaryEl) summaryEl.innerHTML = '';
-      console.error(err);
+      return;
+    }
+    expandedCluster = null;
+    showSummary(null);
+    var clusters = clusterRows(rows, tol);
+    clusters.forEach(function(c){ c.width = c.end - c.start; });
+    clusters.sort(function(a,b){
+      if (sortBy === 'width') return a.width - b.width;
+      if (sortBy === 'count') return b.endpoints.length - a.endpoints.length;
+      return a.start - b.start;
     });
+    drawClusters(clusters, region);
+  }).catch(function(){
+    container.innerHTML = 'No SuSiE results in this region.';
+    if (summaryEl) summaryEl.innerHTML = '';
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function(){
   renderFinnGenSusie();
-
-  var sel      = document.getElementById('endpoint-select');
-  var epToggle = document.getElementById('show-endpoints');
-  var dgToggle = document.getElementById('show-drugs');
-  var lqToggle = document.getElementById('show-low-quality');
-  var atcToggle = document.getElementById('show-atc-codes');
-
-  var summary = document.getElementById('susie-summary');
-  if (summary) {
-    summary.addEventListener('wheel', function(e) {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      summary.scrollLeft += e.deltaY;
-    }, { passive: false });
-  }
-
-  if (sel)      sel.addEventListener('change', renderFinnGenSusie);
-  if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
-  if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
-  if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
-  if (atcToggle) atcToggle.addEventListener('change', renderFinnGenSusie);
+  ['endpoint-select','show-endpoints','show-drugs','show-low-quality','show-atc-codes','susie-sort','susie-tolerance']
+    .forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('change', renderFinnGenSusie);
+    });
 });
+
+document.addEventListener('pheweb:theme', renderFinnGenSusie);
 
