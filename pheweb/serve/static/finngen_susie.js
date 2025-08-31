@@ -388,15 +388,26 @@ function drawUnique() {
     var mk = t.selectAll('g.tick').data(d.variants || []).enter().append('g')
       .attr('class','tick')
       .attr('transform', function(v){ return 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +')'; })
+      .style('cursor','pointer')
       .on('mouseover', function(v){ showVarTip(v, d3.event); })
       .on('mousemove', function(){ moveVarTip(d3.event); })
-      .on('mouseout', hideVarTip);
+      .on('mouseout', hideVarTip)
+      .on('click', function(v){
+        if (v && v.variant) {
+          var parts = v.variant.split(':');
+          if (parts.length >= 4) {
+            var url = 'https://gnomad.broadinstitute.org/variant/' +
+                      parts[0] + '-' + parts[1] + '-' + parts[2] + '-' + parts[3];
+            window.open(url, '_blank');
+          }
+        }
+      });
     mk.append('line')
       .attr('x1', -5).attr('y1', -5).attr('x2', 5).attr('y2', 5)
-      .attr('stroke', theme.variant).attr('stroke-width',2);
+      .attr('stroke', theme.variant).attr('stroke-width',3);
     mk.append('line')
       .attr('x1', -5).attr('y1', 5).attr('x2', 5).attr('y2', -5)
-      .attr('stroke', theme.variant).attr('stroke-width',2);
+      .attr('stroke', theme.variant).attr('stroke-width',3);
   });
   railsLayer.selectAll('.pill-rail').remove();
 
