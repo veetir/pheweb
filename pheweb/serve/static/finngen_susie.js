@@ -107,6 +107,12 @@ function selectEndpoint(ep) {
     sel.value = ep;
     sel.dispatchEvent(new Event('change'));
   }
+
+  // Scroll FinnGen plot into view so users can see the results immediately
+  var target = document.getElementById('finngen-gwas-catalog');
+  if (target && typeof target.scrollIntoView === 'function') {
+    target.scrollIntoView({behavior:'smooth'});
+  }
 }
 
 function renderFinnGenSusie() {
@@ -249,11 +255,22 @@ function drawUnique() {
 
   const pillOuterH = measurePillOuterHeight();
   clusters.forEach(function(c){
-    var n = (c.items ? c.items.length : (c.endpoints ? c.endpoints.length : 0)) || 0;
+    var pillMap = new Map();
+    (c.items || []).forEach(function(i){
+      if (!pillMap.has(i.trait)) {
+        pillMap.set(i.trait, {
+          trait: i.trait,
+          label: displayEndpoint(i.trait, currentAtcMap, currentShowCodes),
+          isDrug: isDrug(i)
+        });
+      }
+    });
+    c.pills = Array.from(pillMap.values());
+    c.endpoints = c.pills.map(function(p){ return p.label; });
+    var n = c.pills.length;
     var perRow = Math.max(1, Math.floor(width / approxPillWidth));
     var rowsNeeded = Math.max(1, Math.ceil(n / perRow));
     c.railHeight = rowsNeeded * pillOuterH + railGap * 2;
-    c.endpoints = (c.items || []).map(function(i){ return displayEndpoint(i.trait, currentAtcMap, currentShowCodes); });
   });
 
   var layout = layoutRows(clusters);
@@ -351,16 +368,8 @@ function drawUnique() {
       .style('gap','6px')
       .style('pointer-events','auto');
 
-    const pillData = (cluster.items || []).map(function(i){
-      return {
-        trait: i.trait,
-        label: displayEndpoint(i.trait, currentAtcMap, currentShowCodes),
-        isDrug: isDrug(i)
-      };
-    });
-
     const pills = rail.selectAll('button.pill')
-      .data(pillData, function(d){ return d.trait; });
+      .data(cluster.pills || [], function(d){ return d.trait; });
 
     pills.enter().append('button')
       .attr('class','pill')
@@ -368,10 +377,10 @@ function drawUnique() {
       .text(function(d){ return d.label; })
       .each(function(d){
         var el = d3.select(this);
-        var border = d.isDrug ? drugColor : endpointColor;
-        el.style('background', getTheme().bg)
-          .style('color', getTheme().fg)
-          .style('border', '2px solid ' + border)
+        var bg = d.isDrug ? drugColor : endpointColor;
+        el.style('background', bg)
+          .style('color', '#fff')
+          .style('border', '2px solid ' + bg)
           .style('border-radius','14px')
           .style('padding','2px 10px')
           .style('font-size','12px')
@@ -390,10 +399,6 @@ function drawUnique() {
   clusters.forEach(function(c,i){
     renderRail(c, layout.yPositions[i], width);
   });
-
-  d3.selectAll('.susie-rails .pill')
-    .style('background', theme.bg)
-    .style('color', theme.fg);
 
   if (summaryEl) summaryEl.innerHTML = '';
 
@@ -418,7 +423,6 @@ document.addEventListener('DOMContentLoaded', function(){
   var atcToggle = document.getElementById('show-atc-codes');
   var tolInput = document.getElementById('susie-tol');
 
-  if (sel)      sel.addEventListener('change', renderFinnGenSusie);
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
