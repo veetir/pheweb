@@ -75,21 +75,29 @@ var currentShowCodes = false;
 var regionStart = 0, regionEnd = 0;
 const baseRowHeight = 20;
 const railGap = 2;
-const approxPillWidth = 110;     // px, rough width per pill
-const pillRowHeight   = 22;      // px, line-height for a pill row
+const endpointColor = '#5D33DB';
+const drugColor = '#106527';
+const approxPillWidth = 120;   // px, rough width per pill
+
+function measurePillOuterHeight() {
+  if (measurePillOuterHeight.cached) return measurePillOuterHeight.cached;
+  const test = document.createElement('button');
+  test.className = 'pill';
+  test.style.visibility = 'hidden';
+  test.style.position = 'absolute';
+  test.style.left = '-9999px';
+  test.textContent = 'TEST_PILL';
+  document.body.appendChild(test);
+  const h = test.offsetHeight || 24;
+  document.body.removeChild(test);
+  measurePillOuterHeight.cached = h + 6; // include row gap
+  return measurePillOuterHeight.cached;
+}
 
 function layoutRows(clusters) {
   const ys = [];
   let y = 0;
-
-  clusters.forEach(function(c){
-    c.railHeight = c.railHeight || (pillRowHeight * 2); // temp default
-  });
-
-  clusters.forEach(function(c){
-    ys.push(y);
-    y += baseRowHeight + c.railHeight;
-  });
+  clusters.forEach(c => { ys.push(y); y += baseRowHeight + (c.railHeight || 0); });
   return { yPositions: ys, totalHeight: y };
 }
 
@@ -239,29 +247,18 @@ function drawUnique() {
   var barHeight = 6;
   var x = d3.scaleLinear().domain([regionStart, regionEnd]).range([0, width]);
 
-  // compute per-cluster rail height to show ALL pills (no scrollbar in rail)
+  const pillOuterH = measurePillOuterHeight();
   clusters.forEach(function(c){
-    var perRow = Math.max(1, Math.floor(width / approxPillWidth));   // pills per row
-    var n = (c.items ? c.items.length : (c.endpoints ? c.endpoints.length : 0));
+    var n = (c.items ? c.items.length : (c.endpoints ? c.endpoints.length : 0)) || 0;
+    var perRow = Math.max(1, Math.floor(width / approxPillWidth));
     var rowsNeeded = Math.max(1, Math.ceil(n / perRow));
-    c.railHeight = rowsNeeded * pillRowHeight + railGap * 2;
-    // also maintain a string list for tooltips
+    c.railHeight = rowsNeeded * pillOuterH + railGap * 2;
     c.endpoints = (c.items || []).map(function(i){ return displayEndpoint(i.trait, currentAtcMap, currentShowCodes); });
   });
 
   var layout = layoutRows(clusters);
 
   var wrapper = d3.select('#finngen-susie-wrapper').style('position','relative');
-  var tooltip = wrapper.select('.susie-tooltip');
-  if (tooltip.empty()) {
-    tooltip = wrapper.append('div').attr('class', 'susie-tooltip')
-      .style('position','absolute').style('pointer-events','none')
-      .style('padding','2px 4px').style('border-radius','4px')
-      .style('border','1px solid '+theme.fg).style('background', theme.bg).style('color', theme.fg)
-      .style('opacity',0);
-  } else {
-    tooltip.style('border','1px solid '+theme.fg).style('background', theme.bg).style('color', theme.fg);
-  }
 
   var railsLayer = wrapper.select('.susie-rails');
   if (railsLayer.empty()) {
@@ -291,10 +288,7 @@ function drawUnique() {
 
   rows.exit().transition().duration(300).style('opacity',0).remove();
 
-  var rowsEnter = rows.enter().append('g').attr('class','row')
-    .on('mouseover', function(event,d){ showTooltip(d,event,tooltip); })
-    .on('mousemove', function(event){ moveTooltip(event,tooltip); })
-    .on('mouseout', function(){ hideTooltip(tooltip); });
+  var rowsEnter = rows.enter().append('g').attr('class','row');
 
   rowsEnter.append('rect').attr('class','bar').attr('y',(baseRowHeight-barHeight)/2).attr('height',barHeight);
   rowsEnter.append('circle').attr('class','count-circle').attr('cy',baseRowHeight/2);
@@ -342,69 +336,64 @@ function drawUnique() {
   });
   railsLayer.selectAll('.pill-rail').remove();
 
-  function renderRail(cluster, yTop, width, x, wrapper, tooltip) {
-    var rail = railsLayer.append('div')
+  function renderRail(cluster, yTop, width) {
+    const rail = railsLayer.append('div')
       .attr('class','pill-rail')
       .style('position','absolute')
       .style('left','0px')
       .style('top',  (yTop + baseRowHeight + railGap) + 'px')
       .style('width', width + 'px')
       .style('height', (cluster.railHeight - railGap*2) + 'px')
-      .style('overflow','hidden')         // no scrollbars inside the rail
+      .style('overflow','hidden')
       .style('display','flex')
       .style('flex-wrap','wrap')
       .style('align-content','flex-start')
       .style('gap','6px')
       .style('pointer-events','auto');
 
-    // mouse events on the rail should drive the same tooltip as the bar
-    rail.on('mouseenter', function(event){ showTooltip(cluster, event, tooltip); })
-        .on('mousemove',  function(event){ moveTooltip(event, tooltip); })
-        .on('mouseleave', function(){      hideTooltip(tooltip); });
-
-    // build pill data from cluster.items so we have both label and trait
-    var pillData = (cluster.items || []).map(function(i){
+    const pillData = (cluster.items || []).map(function(i){
       return {
-        label: displayEndpoint(i.trait, currentAtcMap, currentShowCodes),
         trait: i.trait,
+        label: displayEndpoint(i.trait, currentAtcMap, currentShowCodes),
         isDrug: isDrug(i)
       };
     });
 
-    var pills = rail.selectAll('button.pill')
+    const pills = rail.selectAll('button.pill')
       .data(pillData, function(d){ return d.trait; });
 
     pills.enter().append('button')
-      .attr('class', function(d){ return 'pill ' + (d.isDrug ? 'pill--drug' : 'pill--endpoint'); })
+      .attr('class','pill')
       .attr('title', function(d){ return d.label; })
       .text(function(d){ return d.label; })
-      .on('click', function(event, d){
-        event.stopPropagation();
-        selectEndpoint(d.trait); // use the trait id for the FinnGen search
-      })
-      // theme the pills inline so dark/light works without extra CSS
       .each(function(d){
         var el = d3.select(this);
-        // color scheme: endpoints -> theme.good; drugs -> theme.variant
-        var bg = theme.dark ? '#1e1e1e' : '#ffffff';
-        var bd = d.isDrug ? theme.variant : theme.good;
-        var fg = theme.fg;
-        el.style('background', bg)
-          .style('color', fg)
-          .style('border', '1px solid ' + bd)
+        var border = d.isDrug ? drugColor : endpointColor;
+        el.style('background', getTheme().bg)
+          .style('color', getTheme().fg)
+          .style('border', '2px solid ' + border)
           .style('border-radius','14px')
           .style('padding','2px 10px')
           .style('font-size','12px')
           .style('line-height','18px')
           .style('white-space','nowrap')
           .style('cursor','pointer');
+      })
+      .on('click', function(d){
+        if (window.d3 && d3.event && typeof d3.event.stopPropagation === 'function') {
+          d3.event.stopPropagation();
+        }
+        selectEndpoint(d.trait);
       });
   }
 
   clusters.forEach(function(c,i){
-    // render a rail for every row
-    renderRail(c, layout.yPositions[i], width, x, wrapper, tooltip);
+    renderRail(c, layout.yPositions[i], width);
   });
+
+  d3.selectAll('.susie-rails .pill')
+    .style('background', theme.bg)
+    .style('color', theme.fg);
 
   if (summaryEl) summaryEl.innerHTML = '';
 
@@ -417,31 +406,6 @@ function drawUnique() {
     .selectAll('path,line')
     .attr('stroke', theme.grid);
   svg.select('g.x-axis').selectAll('text').attr('fill', theme.fg);
-}
-
-function showTooltip(d, event, tooltip) {
-  var a = (typeof d.inter_start === 'number') ? d.inter_start : d.start;
-  var b = (typeof d.inter_end   === 'number') ? d.inter_end   : d.end;
-  var count = (typeof d.count === 'number') ? d.count : (d.items ? d.items.length : 0);
-  var ex = (d.endpoints || []).slice(0, 3).join(', ');
-
-  var html = '[' + a + '-' + b + ']<br>width ' + (b - a) + ' bp<br>#endpoints ' + count;
-  if (ex) html += '<br>' + ex;
-
-  tooltip.html(html).style('opacity', 1);
-  moveTooltip(event, tooltip);
-}
-
-function moveTooltip(event, tooltip) {
-  var wrapper = document.getElementById('finngen-susie-wrapper');
-  var rect = wrapper.getBoundingClientRect();
-  var x = event.clientX - rect.left + 12;
-  var y = event.clientY - rect.top  + 12;
-  tooltip.style('left', x + 'px').style('top', y + 'px');
-}
-
-function hideTooltip(tooltip) {
-  tooltip.style('opacity',0);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
