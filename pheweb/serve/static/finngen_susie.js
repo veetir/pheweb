@@ -73,15 +73,23 @@ var currentRows = [];
 var currentAtcMap = {};
 var currentShowCodes = false;
 var regionStart = 0, regionEnd = 0;
-var expandedClusters = new Set();
 const baseRowHeight = 20;
 const railGap = 2;
+const approxPillWidth = 110;     // px, rough width per pill
+const pillRowHeight   = 22;      // px, line-height for a pill row
+const maxRailRows     = 3;       // cap visible rows before vertical scroll
 
-function layoutRows(clusters, expanded) {
-  const ys = []; let y = 0;
+function layoutRows(clusters) {
+  const ys = [];
+  let y = 0;
+
+  clusters.forEach(function(c){
+    c.railHeight = c.railHeight || (pillRowHeight * 2); // temp default
+  });
+
   clusters.forEach(function(c){
     ys.push(y);
-    y += expanded.has(c.id) ? baseRowHeight * 2 : baseRowHeight;
+    y += baseRowHeight + c.railHeight;
   });
   return { yPositions: ys, totalHeight: y };
 }
@@ -161,7 +169,6 @@ function renderFinnGenSusie() {
       }
 
       currentRows = rows;
-      expandedClusters = new Set();
       drawUnique();
     })
     .catch(function(err){
@@ -223,13 +230,8 @@ function drawUnique() {
   }
 
   var clusters = clusterRows(currentRows, tol);
-  if (expandedClusters.size === 0 && clusters.length) {
-    expandedClusters.add(clusters[0].id); // auto-open first cluster
-  }
-
   if (typeof drawUnique.prevTol === 'undefined') drawUnique.prevTol = tol;
   if (drawUnique.prevTol !== tol) {
-    expandedClusters.clear();
     drawUnique.prevTol = tol;
   }
 
@@ -238,6 +240,15 @@ function drawUnique() {
   var width = Math.max(50, containerWidth - margin.left - margin.right);
   var barHeight = 6;
   var x = d3.scaleLinear().domain([regionStart, regionEnd]).range([0, width]);
+
+  clusters.forEach(function(c){
+    var perRow = Math.max(1, Math.floor(width / approxPillWidth));
+    var rowsNeeded = Math.ceil((c.endpoints ? c.endpoints.length : 0) / perRow);
+    var visibleRows = Math.min(maxRailRows, Math.max(1, rowsNeeded));
+    c.railHeight = visibleRows * pillRowHeight + railGap * 2;
+  });
+
+  var layout = layoutRows(clusters);
 
   var wrapper = d3.select('#finngen-susie-wrapper').style('position','relative');
   var tooltip = wrapper.select('.susie-tooltip');
@@ -254,18 +265,17 @@ function drawUnique() {
   var railsLayer = wrapper.select('.susie-rails');
   if (railsLayer.empty()) {
     railsLayer = wrapper.append('div').attr('class','susie-rails')
-      .style('position','absolute')
-      .style('pointer-events','none');
+      .style('position','absolute');
   }
 
-  var layout = layoutRows(clusters, expandedClusters);
   var totalPlotHeight = layout.totalHeight;
   railsLayer
-    .style('left', (margin.left)+'px')
-    .style('top',  (margin.top)+'px')
+    .style('left',  (margin.left)+'px')
+    .style('top',   (margin.top)+'px')
     .style('width', width+'px')
     .style('height', totalPlotHeight+'px')
-    .style('z-index', 5);
+    .style('z-index', 5)
+    .style('pointer-events','none');
   var height = totalPlotHeight + margin.top + margin.bottom;
 
   var svg = d3.select(container).select('svg');
@@ -280,25 +290,16 @@ function drawUnique() {
 
   rows.exit().transition().duration(300).style('opacity',0).remove();
 
-  var rowsEnter = rows.enter().append('g').attr('class','row').style('cursor','pointer')
+  var rowsEnter = rows.enter().append('g').attr('class','row')
     .on('mouseover', function(event,d){ showTooltip(d,event,tooltip); })
     .on('mousemove', function(event){ moveTooltip(event,tooltip); })
-    .on('mouseout', function(){ hideTooltip(tooltip); })
-    .on('click', function(event,d){
-      if (expandedClusters.has(d.id)) expandedClusters.delete(d.id);
-      else expandedClusters.add(d.id);
-      drawUnique();
-    });
+    .on('mouseout', function(){ hideTooltip(tooltip); });
 
   rowsEnter.append('rect').attr('class','bar').attr('y',(baseRowHeight-barHeight)/2).attr('height',barHeight);
   rowsEnter.append('circle').attr('class','count-circle').attr('cy',baseRowHeight/2);
   rowsEnter.append('text').attr('class','count-text').attr('dy','0.35em').attr('text-anchor','middle').style('font-size','8px');
   rowsEnter.append('path').attr('class','left-cap');
   rowsEnter.append('path').attr('class','right-cap');
-  rowsEnter.append('path').attr('class','chev');
-  rowsEnter.append('text').attr('class','inline-hint')
-    .attr('dy','0.35em').attr('text-anchor','middle')
-    .style('font-size','10px');
 
   var rowsMerge = rowsEnter.merge(rows);
   rowsMerge.transition().duration(300).attr('transform', function(d,i){ return 'translate(0,'+layout.yPositions[i]+')'; });
@@ -306,9 +307,7 @@ function drawUnique() {
   rowsMerge.select('rect.bar').transition().duration(300)
     .attr('x', function(d){ return x(d.inter_start); })
     .attr('width', function(d){ return Math.max(1, x(d.inter_end) - x(d.inter_start)); })
-    .attr('fill', function(d){ return csColour(d.items[0]); })
-    .attr('stroke', function(d){ return expandedClusters.has(d.id) ? theme.variant : 'none'; })
-    .attr('stroke-width', function(d){ return expandedClusters.has(d.id) ? 2 : 0; });
+    .attr('fill', function(d){ return csColour(d.items[0]); });
 
   rowsMerge.select('circle.count-circle').transition().duration(300)
     .attr('cx', function(d){ return x(d.inter_start) - 10; })
@@ -329,31 +328,8 @@ function drawUnique() {
     .attr('d', function(d){ return d.end > regionEnd ? ('M'+x(d.inter_end)+','+((baseRowHeight-barHeight)/2)+' L'+(x(d.inter_end)+6)+','+(baseRowHeight/2)+' L'+x(d.inter_end)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
     .attr('fill', function(d){ return csColour(d.items[0]); });
 
-  rowsMerge.select('path.chev')
-    .attr('d', function(d){
-      var x0 = Math.max(0, x(d.inter_start) - 16), y0 = baseRowHeight/2;
-      var right = 'M'+x0+','+(y0-4)+' L'+(x0+6)+','+y0+' L'+x0+','+(y0+4)+' Z';
-      var down  = 'M'+(x0-4)+','+(y0-2)+' L'+(x0+4)+','+(y0-2)+' L'+x0+','+(y0+4)+' Z';
-      return expandedClusters.has(d.id) ? down : right;
-    })
-    .attr('fill', theme.grid);
-
-  rowsMerge.select('text.inline-hint')
-    .attr('x', function(d){ return (x(d.inter_start)+x(d.inter_end))/2; })
-    .attr('y', baseRowHeight/2)
-    .text(function(d){
-      if (expandedClusters.has(d.id)) return '';
-      var names = (d.endpoints || []).slice(0,2).join(', ');
-      var more  = (d.endpoints && d.endpoints.length>2) ? ' +'+(d.endpoints.length-2) : '';
-      return (names || (d.count + ' endpoints')) + more + ' — click to expand';
-    })
-    .style('fill', theme.fg)
-    .style('paint-order','stroke')
-    .style('stroke', theme.bg)
-    .style('stroke-width','3px');
-
   rowsMerge.selectAll('g.variant-ticks').remove();
-  rowsMerge.filter(function(d){ return expandedClusters.has(d.id); }).each(function(d){
+  rowsMerge.each(function(d){
     var t = d3.select(this).append('g').attr('class','variant-ticks');
     t.selectAll('line').data(d.vpos).enter().append('line')
       .attr('x1', function(v){ return x(v); })
@@ -365,40 +341,34 @@ function drawUnique() {
   });
   railsLayer.selectAll('.pill-rail').remove();
 
-  function renderRail(idx, cluster, yTop) {
+  function renderRail(cluster, yTop) {
     var rail = railsLayer.append('div')
       .attr('class','pill-rail')
       .style('position','absolute')
       .style('left','0px')
-      .style('top', (yTop + baseRowHeight + railGap) + 'px')
-      .style('height', (baseRowHeight - railGap*2) + 'px')
+      .style('top',  (yTop + baseRowHeight + railGap) + 'px')
       .style('width', width + 'px')
-      .style('overflow-x','auto')
-      .style('white-space','nowrap')
-      .style('pointer-events','auto')
-      .style('display', expandedClusters.has(cluster.id) ? 'block' : 'none');
+      .style('height', (cluster.railHeight - railGap*2) + 'px')
+      .style('overflow-y','auto')
+      .style('overflow-x','hidden')
+      .style('display','flex')
+      .style('flex-wrap','wrap')
+      .style('align-content','flex-start')
+      .style('gap','4px')
+      .style('row-gap','4px')
+      .style('pointer-events','auto');
 
-    var est = 100, overscan = 5;
-    var scroller = rail.node();
+    var pills = rail.selectAll('button.pill')
+      .data(cluster.endpoints || [], function(d){ return d; });
 
-    function paint() {
-      var scrollLeft = scroller.scrollLeft, visible = Math.ceil(width/est)+overscan*2;
-      var start = Math.max(0, Math.floor(scrollLeft/est)-overscan);
-      var end = Math.min(cluster.endpoints.length, start + visible);
-      rail.selectAll('button.pill').remove();
-      for (var i=start; i<end; i++) {
-        rail.append('button')
-          .attr('class','pill')
-          .text(cluster.endpoints[i])
-          .on('click', (function(ep){ return function(){ selectEndpoint(ep); }; })(cluster.endpoints[i]));
-      }
-    }
-    paint();
-    scroller.addEventListener('scroll', paint, {passive:true});
+    pills.enter().append('button')
+      .attr('class','pill')
+      .text(function(d){ return d; })
+      .on('click', function(event, ep){ event.stopPropagation(); selectEndpoint(ep); });
   }
 
   clusters.forEach(function(c,i){
-    if (expandedClusters.has(c.id) && c.endpoints.length) renderRail(i, c, layout.yPositions[i]);
+    if (c.endpoints && c.endpoints.length) renderRail(c, layout.yPositions[i]);
   });
 
   if (summaryEl) summaryEl.innerHTML = '';

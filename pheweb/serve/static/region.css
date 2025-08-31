@@ -18,19 +18,19 @@
     overflow: visible;
 }
 
-.susie-rails .pill-rail {
-  pointer-events:auto;
-  white-space:nowrap;
-  overflow-x:auto;
-}
 .susie-rails .pill {
-  margin:2px 4px;
-  padding:2px 8px;
-  border-radius:12px;
-  font-size:11px;
-  cursor:pointer;
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 18px;
+  border: 1px solid #444;
+  background: var(--bs-body-bg, #fff);
+  color: var(--bs-body-color, #000);
+  cursor: pointer;
+  white-space: nowrap;
 }
-.susie-rails .pill:hover { border-color:#777; }
+.susie-rails .pill:hover { border-color: #777; }
 .row .bar { shape-rendering: crispEdges; }
 
 #endpoint-row-wrapper {
