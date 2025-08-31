@@ -77,7 +77,6 @@ const baseRowHeight = 20;
 const railGap = 2;
 const approxPillWidth = 110;     // px, rough width per pill
 const pillRowHeight   = 22;      // px, line-height for a pill row
-const maxRailRows     = 3;       // cap visible rows before vertical scroll
 
 function layoutRows(clusters) {
   const ys = [];
@@ -202,7 +201,6 @@ function clusterRows(rows, tol) {
   clusters.forEach(function(c){
     c.id = c.start + '-' + c.end;
     c.count = c.items.length;
-    c.endpoints = c.items.map(function(i){ return displayEndpoint(i.trait, currentAtcMap, currentShowCodes); });
     c.vpos = c.items.map(function(i){ return i.vpos; });
     c.category = c.items[0].category || '';
     c.inter_start = Math.max(c.start, regionStart);
@@ -241,11 +239,14 @@ function drawUnique() {
   var barHeight = 6;
   var x = d3.scaleLinear().domain([regionStart, regionEnd]).range([0, width]);
 
+  // compute per-cluster rail height to show ALL pills (no scrollbar in rail)
   clusters.forEach(function(c){
-    var perRow = Math.max(1, Math.floor(width / approxPillWidth));
-    var rowsNeeded = Math.ceil((c.endpoints ? c.endpoints.length : 0) / perRow);
-    var visibleRows = Math.min(maxRailRows, Math.max(1, rowsNeeded));
-    c.railHeight = visibleRows * pillRowHeight + railGap * 2;
+    var perRow = Math.max(1, Math.floor(width / approxPillWidth));   // pills per row
+    var n = (c.items ? c.items.length : (c.endpoints ? c.endpoints.length : 0));
+    var rowsNeeded = Math.max(1, Math.ceil(n / perRow));
+    c.railHeight = rowsNeeded * pillRowHeight + railGap * 2;
+    // also maintain a string list for tooltips
+    c.endpoints = (c.items || []).map(function(i){ return displayEndpoint(i.trait, currentAtcMap, currentShowCodes); });
   });
 
   var layout = layoutRows(clusters);
@@ -341,7 +342,7 @@ function drawUnique() {
   });
   railsLayer.selectAll('.pill-rail').remove();
 
-  function renderRail(cluster, yTop) {
+  function renderRail(cluster, yTop, width, x, wrapper, tooltip) {
     var rail = railsLayer.append('div')
       .attr('class','pill-rail')
       .style('position','absolute')
@@ -349,26 +350,60 @@ function drawUnique() {
       .style('top',  (yTop + baseRowHeight + railGap) + 'px')
       .style('width', width + 'px')
       .style('height', (cluster.railHeight - railGap*2) + 'px')
-      .style('overflow-y','auto')
-      .style('overflow-x','hidden')
+      .style('overflow','hidden')         // no scrollbars inside the rail
       .style('display','flex')
       .style('flex-wrap','wrap')
       .style('align-content','flex-start')
-      .style('gap','4px')
-      .style('row-gap','4px')
+      .style('gap','6px')
       .style('pointer-events','auto');
 
+    // mouse events on the rail should drive the same tooltip as the bar
+    rail.on('mouseenter', function(event){ showTooltip(cluster, event, tooltip); })
+        .on('mousemove',  function(event){ moveTooltip(event, tooltip); })
+        .on('mouseleave', function(){      hideTooltip(tooltip); });
+
+    // build pill data from cluster.items so we have both label and trait
+    var pillData = (cluster.items || []).map(function(i){
+      return {
+        label: displayEndpoint(i.trait, currentAtcMap, currentShowCodes),
+        trait: i.trait,
+        isDrug: isDrug(i)
+      };
+    });
+
     var pills = rail.selectAll('button.pill')
-      .data(cluster.endpoints || [], function(d){ return d; });
+      .data(pillData, function(d){ return d.trait; });
 
     pills.enter().append('button')
-      .attr('class','pill')
-      .text(function(d){ return d; })
-      .on('click', function(event, ep){ event.stopPropagation(); selectEndpoint(ep); });
+      .attr('class', function(d){ return 'pill ' + (d.isDrug ? 'pill--drug' : 'pill--endpoint'); })
+      .attr('title', function(d){ return d.label; })
+      .text(function(d){ return d.label; })
+      .on('click', function(event, d){
+        event.stopPropagation();
+        selectEndpoint(d.trait); // use the trait id for the FinnGen search
+      })
+      // theme the pills inline so dark/light works without extra CSS
+      .each(function(d){
+        var el = d3.select(this);
+        // color scheme: endpoints -> theme.good; drugs -> theme.variant
+        var bg = theme.dark ? '#1e1e1e' : '#ffffff';
+        var bd = d.isDrug ? theme.variant : theme.good;
+        var fg = theme.fg;
+        el.style('background', bg)
+          .style('color', fg)
+          .style('border', '1px solid ' + bd)
+          .style('border-radius','14px')
+          .style('padding','2px 10px')
+          .style('font-size','12px')
+          .style('line-height','18px')
+          .style('white-space','nowrap')
+          .style('cursor','pointer');
+      });
   }
 
   clusters.forEach(function(c,i){
-    if (c.endpoints && c.endpoints.length) renderRail(c, layout.yPositions[i]);
+    // render a rail for every row
+    renderRail(c, layout.yPositions[i], width, x, wrapper, tooltip);
   });
 
   if (summaryEl) summaryEl.innerHTML = '';
@@ -382,26 +417,27 @@ function drawUnique() {
     .selectAll('path,line')
     .attr('stroke', theme.grid);
   svg.select('g.x-axis').selectAll('text').attr('fill', theme.fg);
-
-  d3.selectAll('.susie-rails .pill')
-    .style('background', theme.bg)
-    .style('color', theme.fg)
-    .style('border', '1px solid ' + (theme.dark ? '#444' : '#888'));
 }
 
 function showTooltip(d, event, tooltip) {
-  var ex = (d.endpoints || []).slice(0,3).join(', ');
-  var html = '['+d.inter_start+'-'+d.inter_end+']<br>width '+(d.inter_end - d.inter_start)+' bp<br>#endpoints '+d.count;
-  if (ex) html += '<br>'+ex;
-  tooltip.html(html).style('opacity',1);
+  var a = (typeof d.inter_start === 'number') ? d.inter_start : d.start;
+  var b = (typeof d.inter_end   === 'number') ? d.inter_end   : d.end;
+  var count = (typeof d.count === 'number') ? d.count : (d.items ? d.items.length : 0);
+  var ex = (d.endpoints || []).slice(0, 3).join(', ');
+
+  var html = '[' + a + '-' + b + ']<br>width ' + (b - a) + ' bp<br>#endpoints ' + count;
+  if (ex) html += '<br>' + ex;
+
+  tooltip.html(html).style('opacity', 1);
   moveTooltip(event, tooltip);
 }
 
 function moveTooltip(event, tooltip) {
-  var container = document.getElementById('finngen-susie-wrapper');
-  var rect = container.getBoundingClientRect();
-  tooltip.style('left', (event.clientX - rect.left + 15) + 'px')
-         .style('top', (event.clientY - rect.top + 15) + 'px');
+  var wrapper = document.getElementById('finngen-susie-wrapper');
+  var rect = wrapper.getBoundingClientRect();
+  var x = event.clientX - rect.left + 12;
+  var y = event.clientY - rect.top  + 12;
+  tooltip.style('left', x + 'px').style('top', y + 'px');
 }
 
 function hideTooltip(tooltip) {
