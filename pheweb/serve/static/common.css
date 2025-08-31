@@ -3,16 +3,49 @@
   --manhattan-chrom-a: #00003C;
   --manhattan-chrom-b: #7878BA;
   --lz-line-color: #0000ff;
+  --lz-menu-bg: #fff;
+  --lz-menu-color: #000;
 }
 
 [data-bs-theme='dark'] {
   --manhattan-chrom-a: #81a1c1;
   --manhattan-chrom-b: #5e81ac;
   --lz-line-color: #ffa500;
+  --lz-menu-bg: #2e3440;
+  --lz-menu-color: #e5e9f0;
 }
 
 .lz-data_layer-line {
   stroke: var(--lz-line-color) !important;
+}
+
+/* LocusZoom toolbar menu styling */
+.lz-toolbar-menu {
+  background: var(--lz-menu-bg) !important;
+  color: var(--lz-menu-color);
+  border: 1px solid var(--lz-menu-color);
+}
+
+.lz-toolbar-menu label {
+  color: var(--lz-menu-color);
+}
+
+.lz-toolbar-menu input[type="radio"] {
+  accent-color: var(--lz-menu-color);
+}
+
+.lz-toolbar-menu table {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.lz-toolbar-menu table tr {
+  display: flex;
+}
+
+[data-bs-theme='dark'] .lz-toolbar-menu table {
+  flex-direction: column-reverse;
 }
 .twitter-typeahead {
   width: 100%;
