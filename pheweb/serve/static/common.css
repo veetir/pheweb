@@ -2,11 +2,17 @@
 :root {
   --manhattan-chrom-a: #00003C;
   --manhattan-chrom-b: #7878BA;
+  --lz-line-color: #0000ff;
 }
 
 [data-bs-theme='dark'] {
   --manhattan-chrom-a: #81a1c1;
   --manhattan-chrom-b: #5e81ac;
+  --lz-line-color: #ffa500;
+}
+
+.lz-data_layer-line {
+  stroke: var(--lz-line-color) !important;
 }
 .twitter-typeahead {
   width: 100%;
