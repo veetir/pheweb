@@ -102,8 +102,18 @@ function layoutRows(clusters) {
 }
 
 function selectEndpoint(ep) {
+  function glow(selectEl) {
+    if (!selectEl) return;
+    selectEl.classList.add('highlight-dropdown');
+    clearTimeout(selectEl._highlightTimeout);
+    selectEl._highlightTimeout = setTimeout(function(){
+      selectEl.classList.remove('highlight-dropdown');
+    }, 2000);
+  }
+
   if (typeof window.setFinnGenEndpoint === 'function') {
     window.setFinnGenEndpoint(ep);
+    glow(document.getElementById('endpoint-select'));
   } else {
     var search = document.getElementById('endpoint-search');
     if (search) {
@@ -117,6 +127,7 @@ function selectEndpoint(ep) {
       setTimeout(function(){
         sel.value = ep;
         sel.dispatchEvent(new Event('change'));
+        glow(sel);
       }, 350);
     }
   }

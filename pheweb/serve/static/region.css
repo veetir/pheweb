@@ -28,7 +28,9 @@
   color: var(--bs-body-color, #000);
   cursor: pointer;
   white-space: nowrap;
+  transition: transform 0.1s ease;
 }
+.susie-rails .pill:hover { transform: scale(1.05); }
 .row .bar { shape-rendering: crispEdges; }
 
 #endpoint-row-wrapper {
