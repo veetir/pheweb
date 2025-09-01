@@ -8,7 +8,7 @@ function renderPlotlyCatalogPlot() {
 
   var ebiUrl = window.model.urlprefix + "/api/gwascatalog?region=" + encodeURIComponent(regionData);
 
-  var filterStr = "id eq 4 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
+  var filterStr = "id in 4,7 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
   var params = {
     format: "objects",
     sort: "pos",
@@ -19,8 +19,7 @@ function renderPlotlyCatalogPlot() {
     return key + "=" + encodeURIComponent(params[key]);
   }).join("&");
   var ukbbUrl = "https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/?" + queryString;
-
-  Promise.all([
+Promise.all([
     fetch(ebiUrl).then(function(response) {
       if (!response.ok) {
         throw new Error("Error fetching local data: " + response.status);
