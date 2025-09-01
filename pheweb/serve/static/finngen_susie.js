@@ -90,7 +90,7 @@ function measurePillOuterHeight() {
   document.body.appendChild(test);
   const h = test.offsetHeight || 24;
   document.body.removeChild(test);
-  measurePillOuterHeight.cached = h + 6; // include row gap
+  measurePillOuterHeight.cached = h + 12; // include row gap
   return measurePillOuterHeight.cached;
 }
 
