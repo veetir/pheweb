@@ -206,7 +206,7 @@ def api_gwascatalog():
             400,
         )
 
-    tsv_path = os.path.join(conf.get_data_dir(), "gwascat.tsv")
+    tsv_path = os.path.join(conf.get_data_dir(), "gwascat.tsv.gz")
 
     try:
         result = subprocess.run(
