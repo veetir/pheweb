@@ -492,6 +492,23 @@ function setupEndpointSearch(retries = 8, delay = 200) {
   });
 }
 
+function setFinnGenEndpoint(ep) {
+  var search = document.getElementById('endpoint-search');
+  var select = document.getElementById('endpoint-select');
+  if (search) {
+    search.value = ep;
+    search.dispatchEvent(new Event('input'));
+  }
+  if (select) {
+    setTimeout(function(){
+      select.value = ep;
+      select.dispatchEvent(new Event('change'));
+    }, 350);
+  }
+}
+
+window.setFinnGenEndpoint = setFinnGenEndpoint;
+
 // Initialize everything on DOM load
 document.addEventListener("DOMContentLoaded", function() {
   loadEndpoints();

@@ -98,6 +98,18 @@
             alt="Info" class="info-icon info-icon-inline icon-invert">
       </a>
     </label>
+  <label for="susie-tol">
+    Tolerance (bp)
+    <input type="range" id="susie-tol" min="0" max="4" step="1" value="4" list="susie-tol-list">
+    <span id="susie-tol-display">All</span>
+    <datalist id="susie-tol-list">
+      <option value="0" label="0"></option>
+      <option value="1" label="10k"></option>
+      <option value="2" label="100k"></option>
+      <option value="3" label="1M"></option>
+      <option value="4" label="All"></option>
+    </datalist>
+  </label>
   </div>
 
 <div id="finngen-susie-wrapper">

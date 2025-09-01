@@ -18,6 +18,21 @@
     overflow: visible;
 }
 
+.susie-rails .pill {
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 18px;
+  background: var(--bs-body-bg, #fff);
+  color: var(--bs-body-color, #000);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.1s ease;
+}
+.susie-rails .pill:hover { transform: scale(1.05); }
+.row .bar { shape-rendering: crispEdges; }
+
 #endpoint-row-wrapper {
     display: flex;
     align-items: flex-start;
