@@ -47,6 +47,7 @@ from typing import Dict, Tuple, List, Any, Optional
 import urllib.parse
 import requests
 import subprocess
+import datetime
 
 bp = Blueprint("bp", __name__, template_folder="templates", static_folder="static")
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "static"))
@@ -193,6 +194,60 @@ def api_finngen_susie():
             "good_cs": good_cs,
             "gene_most_severe": gene
         })
+
+    return jsonify({"data": data})
+
+
+@bp.route("/api/gwascatalog")
+def api_gwascatalog():
+    region = request.args.get("region")
+    if not region:
+        return (
+            jsonify({"error": "Missing region parameter, expected format 'chr:start-end'"}),
+            400,
+        )
+
+    tsv_path = os.path.join(conf.get_data_dir(), "gwascat.tsv.gz")
+
+    try:
+        result = subprocess.run(
+            ["tabix", tsv_path, region],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        return jsonify({"error": exc.stderr.strip() or str(exc)}), 500
+
+    data = []
+    for line in result.stdout.splitlines():
+        if line.startswith("#"):
+            continue
+        fields = line.split("\t")
+        if len(fields) < 14:
+            continue
+        try:
+            chrom = fields[0]
+            pos = int(fields[1])
+            logp = float(fields[5]) if fields[5] else None
+            data.append(
+                {
+                    "chrom": chrom,
+                    "pos": pos,
+                    "log_pvalue": logp,
+                    "study": fields[7],
+                    "pmid": fields[8],
+                    "trait": fields[6],
+                    "risk_frq": fields[12],
+                    "or_beta": fields[13],
+                    "risk_allele": fields[11],
+                    "rsid": fields[3],
+                    "id": 7,
+                }
+            )
+        except Exception:
+            continue
 
     return jsonify({"data": data})
 
@@ -500,11 +555,17 @@ def region_page(phenocode: str, region: str):
     except KeyError:
         die("Sorry, I couldn't find the phewas code {!r}".format(phenocode))
     pheno["phenocode"] = phenocode
+    gwascat_path = os.path.join(conf.get_data_dir(), "gwascat.tsv.gz")
+    gwascat_last_updated = None
+    if os.path.exists(gwascat_path):
+        ts = os.path.getmtime(gwascat_path)
+        gwascat_last_updated = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d")
     return render_template(
         "region.html",
         pheno=pheno,
         region=region,
         tooltip_lztemplate=parse_utils.tooltip_lztemplate,
+        gwas_catalog_last_updated=gwascat_last_updated,
     )
 
 

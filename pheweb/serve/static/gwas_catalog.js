@@ -6,34 +6,39 @@ function renderPlotlyCatalogPlot() {
   var start = coords[0];
   var end = coords[1];
 
-  // Build the filter string dynamically using the region values
-  var filterStr = "id in 4,7 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
+  var ebiUrl = window.model.urlprefix + "/api/gwascatalog?region=" + encodeURIComponent(regionData);
 
-  // Define the API endpoint and parameters
-  var url = "https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/";
+  var filterStr = "id eq 4 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
   var params = {
     format: "objects",
     sort: "pos",
     filter: filterStr,
     build: "GRCh38"
   };
-
-  // Construct the URL with encoded parameters
   var queryString = Object.keys(params).map(function(key) {
     return key + "=" + encodeURIComponent(params[key]);
   }).join("&");
-  var fullUrl = url + "?" + queryString;
+  var ukbbUrl = "https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/?" + queryString;
 
-  fetch(fullUrl)
-    .then(function(response) {
+  Promise.all([
+    fetch(ebiUrl).then(function(response) {
       if (!response.ok) {
-        throw new Error("Error fetching data: " + response.status);
+        throw new Error("Error fetching local data: " + response.status);
+      }
+      return response.json();
+    }),
+    fetch(ukbbUrl).then(function(response) {
+      if (!response.ok) {
+        throw new Error("Error fetching UKBB data: " + response.status);
       }
       return response.json();
     })
-    .then(function(data) {
-      var results = data.data;
-      if (!results || results.length === 0) {
+  ])
+    .then(function(allData) {
+      var ebiResults = (allData[0] && allData[0].data) || [];
+      var ukbbResults = (allData[1] && allData[1].data) || [];
+
+      if (ebiResults.length === 0 && ukbbResults.length === 0) {
         document.getElementById("plotly-gwas-catalog").innerHTML = "No data found in this region.";
         return;
       }
@@ -59,11 +64,10 @@ function renderPlotlyCatalogPlot() {
 
       var theme = getTheme();
 
-      results.forEach(function(record) {
+      function addRecord(record, xArr, yArr, customArr) {
         var pos = record.pos;
         var logp = record.log_pvalue;
         if (pos != null && logp != null) {
-          // Gather extra fields for the tooltip.
           var extra = {
             study: record.study || "N/A",
             pmid: record.pmid || "",
@@ -73,25 +77,19 @@ function renderPlotlyCatalogPlot() {
             risk_allele: record.risk_allele || "N/A",
             rsid: record.rsid || "N/A"
           };
-          // If study is UKBB, don't include the PMID.
           if (extra.study === "UKBB") {
             extra.studyText = wrapText(extra.study, 60);
           } else {
             extra.studyText = wrapText(extra.study + " (PMID: " + extra.pmid + ")", 60);
           }
-
-          // Based on the catalog id (4 for UKBB), add to the appropriate arrays.
-          if (record.id === 4) {
-            ukbbX.push(pos);
-            ukbbY.push(logp);
-            ukbbCustom.push(extra);
-          } else {
-            ebiX.push(pos);
-            ebiY.push(logp);
-            ebiCustom.push(extra);
-          }
+          xArr.push(pos);
+          yArr.push(logp);
+          customArr.push(extra);
         }
-      });
+      }
+
+      ukbbResults.forEach(function(record) { addRecord(record, ukbbX, ukbbY, ukbbCustom); });
+      ebiResults.forEach(function(record) { addRecord(record, ebiX, ebiY, ebiCustom); });
 
       function wrapText(text, width) {
         let result = '';
@@ -155,7 +153,6 @@ function renderPlotlyCatalogPlot() {
 
       // Define layout
       var layout = {
-        title: { text: "Hits in GWAS Catalog", font: { size: 14 } },
         xaxis: {
           title: "Chromosome " + chr + " (Mb)",
           showgrid: false,
@@ -183,7 +180,7 @@ function renderPlotlyCatalogPlot() {
           rangemode: "tozero"
         },
         height: 500,
-        margin: { t: 34, b: 40, l: 50, r: 20 },
+        margin: { t: 20, b: 40, l: 50, r: 20 },
         paper_bgcolor: theme.bg,
         plot_bgcolor: theme.bg,
         legend: {
