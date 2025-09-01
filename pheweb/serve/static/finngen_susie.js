@@ -515,13 +515,26 @@ document.addEventListener('DOMContentLoaded', function(){
 
   document.addEventListener('pheweb:theme', drawUnique);
 
-  // When other plots change the viewed region, LocusZoom emits a state
-  // change event. Re-fetch and redraw the SuSiE track so the x-axis and
-  // interval data stay in sync with the rest of the page.
-  if (window.plot && window.plot.on) {
-    window.plot.on('state_changed', function(){
-      renderFinnGenSusie();
-    });
-  }
+  // Ensure the SuSiE plot stays in sync with LocusZoom. Other plots
+  // communicate zoom/pan events through LocusZoom by calling
+  // `window.plot.applyState`, which emits a `state_changed` event. The
+  // LocusZoom instance may load asynchronously, so keep trying until it
+  // becomes available.
+  (function attachLZSync(){
+    function hook(){
+      if (window.plot && window.plot.on) {
+        window.plot.on('state_changed', function(){
+          renderFinnGenSusie();
+        });
+        return true;
+      }
+      return false;
+    }
+    if (!hook()) {
+      var retry = setInterval(function(){
+        if (hook()) clearInterval(retry);
+      }, 250);
+    }
+  })();
 });
 
