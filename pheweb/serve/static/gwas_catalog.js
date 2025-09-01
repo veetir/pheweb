@@ -8,7 +8,7 @@ function renderPlotlyCatalogPlot() {
 
   var ebiUrl = window.model.urlprefix + "/api/gwascatalog?region=" + encodeURIComponent(regionData);
 
-  var filterStr = "id in 4,7 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
+  var filterStr = "id in 4 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
   var params = {
     format: "objects",
     sort: "pos",
