@@ -117,7 +117,7 @@ function renderPlotlyCatalogPlot() {
         x: ukbbX,
         y: ukbbY,
         mode: 'markers',
-        type: 'scatter',
+        type: 'scattergl',
         name: 'UKBB',
         marker: { symbol: 'circle', color: theme.ukbb, opacity: 0.4, size: 8 },
         customdata: ukbbCustom,
@@ -129,12 +129,14 @@ function renderPlotlyCatalogPlot() {
         x: ebiX,
         y: ebiY,
         mode: 'markers',
-        type: 'scatter',
+        type: 'scattergl',
         name: 'GWAS Catalog',
         marker: { symbol: 'diamond', color: theme.ebi, opacity: 0.7, size: 8 },
         customdata: ebiCustom,
         hovertemplate: tooltipTemplate
       };
+
+      console.log(ebiCustom)
 
       // Define layout
       var layout = {
