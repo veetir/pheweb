@@ -2,12 +2,8 @@
 
 LocusZoom.Adapters.extend("GwasCatalogLZ", "CustomGwasCatalogLZ", {
     getURL: function(state, chain, fields) {
-        var build38ids = "1,4,7";
-        var filter = "id in " + build38ids +
-                     " and chrom eq '" + state.chr + "'" +
-                     " and pos ge " + state.start +
-                     " and pos le " + state.end;
-        return this.url + "?format=objects&filter=" + encodeURIComponent(filter);
+        var region = state.chr + ":" + state.start + "-" + state.end;
+        return this.url + "?region=" + encodeURIComponent(region);
     }
 });
 
@@ -135,7 +131,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
     var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
     var data_sources = new LocusZoom.DataSources()
         .add("assoc", ["AssociationPheWeb", {url: localBase }])
-        .add("catalog", ["CustomGwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/'}])
+        .add("catalog", ["CustomGwasCatalogLZ", {url: window.model.urlprefix + '/api/gwascatalog'}])
         .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
             params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
         }])

@@ -5,26 +5,9 @@ function renderPlotlyCatalogPlot() {
   var coords = parts[1].split('-');
   var start = coords[0];
   var end = coords[1];
+  var url = window.model.urlprefix + "/api/gwascatalog?region=" + encodeURIComponent(regionData);
 
-  // Build the filter string dynamically using the region values
-  var filterStr = "id in 4,7 and chrom eq '" + chr + "' and pos ge " + start + " and pos le " + end;
-
-  // Define the API endpoint and parameters
-  var url = "https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/";
-  var params = {
-    format: "objects",
-    sort: "pos",
-    filter: filterStr,
-    build: "GRCh38"
-  };
-
-  // Construct the URL with encoded parameters
-  var queryString = Object.keys(params).map(function(key) {
-    return key + "=" + encodeURIComponent(params[key]);
-  }).join("&");
-  var fullUrl = url + "?" + queryString;
-
-  fetch(fullUrl)
+  fetch(url)
     .then(function(response) {
       if (!response.ok) {
         throw new Error("Error fetching data: " + response.status);

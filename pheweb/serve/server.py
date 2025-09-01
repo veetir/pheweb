@@ -196,6 +196,60 @@ def api_finngen_susie():
 
     return jsonify({"data": data})
 
+
+@bp.route("/api/gwascatalog")
+def api_gwascatalog():
+    region = request.args.get("region")
+    if not region:
+        return (
+            jsonify({"error": "Missing region parameter, expected format 'chr:start-end'"}),
+            400,
+        )
+
+    tsv_path = os.path.join(conf.get_data_dir(), "gwascat.tsv")
+
+    try:
+        result = subprocess.run(
+            ["tabix", tsv_path, region],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        return jsonify({"error": exc.stderr.strip() or str(exc)}), 500
+
+    data = []
+    for line in result.stdout.splitlines():
+        if line.startswith("#"):
+            continue
+        fields = line.split("\t")
+        if len(fields) < 14:
+            continue
+        try:
+            chrom = fields[0]
+            pos = int(fields[1])
+            logp = float(fields[5]) if fields[5] else None
+            data.append(
+                {
+                    "chrom": chrom,
+                    "pos": pos,
+                    "log_pvalue": logp,
+                    "study": fields[7],
+                    "pmid": fields[8],
+                    "trait": fields[6],
+                    "risk_frq": fields[12],
+                    "or_beta": fields[13],
+                    "risk_allele": fields[11],
+                    "rsid": fields[3],
+                    "id": 7,
+                }
+            )
+        except Exception:
+            continue
+
+    return jsonify({"data": data})
+
 @functools.lru_cache()
 def _load_atc_map() -> Dict[str, str]:
     """Return mapping of ATC codes to long names."""
