@@ -47,6 +47,7 @@ from typing import Dict, Tuple, List, Any, Optional
 import urllib.parse
 import requests
 import subprocess
+import datetime
 
 bp = Blueprint("bp", __name__, template_folder="templates", static_folder="static")
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "static"))
@@ -247,6 +248,30 @@ def api_gwascatalog():
             )
         except Exception:
             continue
+
+    try:
+        chrom, coords = region.split(":")
+        start, end = coords.split("-")
+        filter_str = (
+            f"id eq 4 and chrom eq '{chrom}' and pos ge {start} and pos le {end}"
+        )
+        params = {
+            "format": "objects",
+            "sort": "pos",
+            "filter": filter_str,
+            "build": "GRCh38",
+        }
+        resp = requests.get(
+            "https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/",
+            params=params,
+            timeout=10,
+        )
+        resp.raise_for_status()
+        ukbb = resp.json().get("data", [])
+        if isinstance(ukbb, list):
+            data.extend(ukbb)
+    except Exception:
+        pass
 
     return jsonify({"data": data})
 
@@ -796,7 +821,12 @@ else:
 
 @bp.route("/")
 def homepage():
-    return render_template("index.html")
+    gwascat_path = os.path.join(conf.get_data_dir(), "gwascat.tsv.gz")
+    last_updated = None
+    if os.path.exists(gwascat_path):
+        ts = os.path.getmtime(gwascat_path)
+        last_updated = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d")
+    return render_template("index.html", gwas_catalog_last_updated=last_updated)
 
 
 @bp.route("/favicon.ico")
