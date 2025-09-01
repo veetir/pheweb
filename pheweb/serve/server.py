@@ -579,11 +579,17 @@ def region_page(phenocode: str, region: str):
     except KeyError:
         die("Sorry, I couldn't find the phewas code {!r}".format(phenocode))
     pheno["phenocode"] = phenocode
+    gwascat_path = os.path.join(conf.get_data_dir(), "gwascat.tsv.gz")
+    gwascat_last_updated = None
+    if os.path.exists(gwascat_path):
+        ts = os.path.getmtime(gwascat_path)
+        gwascat_last_updated = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d")
     return render_template(
         "region.html",
         pheno=pheno,
         region=region,
         tooltip_lztemplate=parse_utils.tooltip_lztemplate,
+        gwas_catalog_last_updated=gwascat_last_updated,
     )
 
 
@@ -821,12 +827,7 @@ else:
 
 @bp.route("/")
 def homepage():
-    gwascat_path = os.path.join(conf.get_data_dir(), "gwascat.tsv.gz")
-    last_updated = None
-    if os.path.exists(gwascat_path):
-        ts = os.path.getmtime(gwascat_path)
-        last_updated = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d")
-    return render_template("index.html", gwas_catalog_last_updated=last_updated)
+    return render_template("index.html")
 
 
 @bp.route("/favicon.ico")

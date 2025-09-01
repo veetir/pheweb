@@ -138,7 +138,6 @@ function renderPlotlyCatalogPlot() {
 
       // Define layout
       var layout = {
-        title: { text: "Hits in GWAS Catalog", font: { size: 14 } },
         xaxis: {
           title: "Chromosome " + chr + " (Mb)",
           showgrid: false,
@@ -166,7 +165,7 @@ function renderPlotlyCatalogPlot() {
           rangemode: "tozero"
         },
         height: 500,
-        margin: { t: 34, b: 40, l: 50, r: 20 },
+        margin: { t: 20, b: 40, l: 50, r: 20 },
         paper_bgcolor: theme.bg,
         plot_bgcolor: theme.bg,
         legend: {
