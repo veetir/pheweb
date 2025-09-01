@@ -514,15 +514,27 @@ document.addEventListener('DOMContentLoaded', function(){
   if (tolInput) tolInput.addEventListener('input', drawUnique);
 
   document.addEventListener('pheweb:theme', drawUnique);
-  if (window.plot && window.plot.on) {
-    window.plot.on('state_changed', function(){
-      if (window.plot && window.plot.state) {
-        var st = window.plot.state;
-        regionStart = st.start;
-        regionEnd = st.end;
+
+  // Ensure the SuSiE plot stays in sync with LocusZoom. Other plots
+  // communicate zoom/pan events through LocusZoom by calling
+  // `window.plot.applyState`, which emits a `state_changed` event. The
+  // LocusZoom instance may load asynchronously, so keep trying until it
+  // becomes available.
+  (function attachLZSync(){
+    function hook(){
+      if (window.plot && window.plot.on) {
+        window.plot.on('state_changed', function(){
+          renderFinnGenSusie();
+        });
+        return true;
       }
-      drawUnique();
-    });
-  }
+      return false;
+    }
+    if (!hook()) {
+      var retry = setInterval(function(){
+        if (hook()) clearInterval(retry);
+      }, 250);
+    }
+  })();
 });
 
