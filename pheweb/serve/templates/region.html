@@ -127,6 +127,16 @@
 
 <div id="susie-summary"></div>
 
+  <div class="row">
+    <div class="col-xs-12">
+      <p>GWAS catalog
+        <a href="#" class="info-link" title="GWAS catalog last updated {{ gwas_catalog_last_updated or 'unknown' }}">
+          <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
+               alt="Info" class="info-icon info-icon-inline icon-invert">
+        </a>
+      </p>
+    </div>
+  </div>
   <div id="plotly-gwas-catalog"></div>
 
     <div id="endpoint-row-wrapper">
