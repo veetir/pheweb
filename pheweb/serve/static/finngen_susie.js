@@ -478,7 +478,7 @@ function drawUnique() {
           .style('font-size','12px')
           .style('line-height','18px')
           .style('white-space','nowrap')
-          .style('cursor', d.isDrug ? 'default' : 'pointer');
+          .style('cursor', 'pointer');
       });
 
     enter.filter(function(d){ return !d.isDrug; })
@@ -487,6 +487,23 @@ function drawUnique() {
           d3.event.stopPropagation();
         }
         selectEndpoint(d.trait);
+      });
+
+    // Drug pills: go to drugs portal for the ATC code
+    enter.filter(function(d){ return d.isDrug; })
+      .on('click', function(d){
+        if (window.d3 && d3.event && typeof d3.event.stopPropagation === 'function') {
+          d3.event.stopPropagation();
+        }
+        var code = d && d.trait ? d.trait : '';
+        if (code) {
+          var url = 'https://drugs.finngen.fi/pheno/' + code;
+          if (window && typeof window.open === 'function') {
+            window.open(url, '_blank');
+          } else {
+            window.location.href = url;
+          }
+        }
       });
   }
 
