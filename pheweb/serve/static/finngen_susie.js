@@ -172,6 +172,8 @@ function renderFinnGenSusie() {
   showLQ = showLQ ? showLQ.checked : false;
   var showCodesEl = document.getElementById('show-atc-codes');
   currentShowCodes = showCodesEl ? showCodesEl.checked : false;
+  var topInRegionEl = document.getElementById('susie-filter-top-in-region');
+  var filterTopInRegion = topInRegionEl ? !!topInRegionEl.checked : true;
   var summaryEl = document.getElementById('susie-summary');
 
   if (!showEP && !showDG) {
@@ -197,6 +199,19 @@ function renderFinnGenSusie() {
       rows = rows.filter(function(r) { return isDrug(r) ? showDG : showEP; });
       if (!showLQ) {
         rows = rows.filter(function(r){ return r.good_cs; });
+      }
+
+      if (!rows.length) {
+        container.innerHTML = 'No SuSiE results in this region.';
+        if (summaryEl) summaryEl.innerHTML = '';
+        return;
+      }
+
+      // Optionally filter to show only CS with top variant in region
+      if (filterTopInRegion) {
+        rows = rows.filter(function(r){
+          return (typeof r.vpos === 'number') && r.vpos >= regionStart && r.vpos <= regionEnd;
+        });
       }
 
       if (!rows.length) {
@@ -369,26 +384,31 @@ function drawUnique() {
   rowsMerge.select('rect.bar').transition().duration(300)
     .attr('x', function(d){ return x(d.inter_start); })
     .attr('width', function(d){ return Math.max(1, x(d.inter_end) - x(d.inter_start)); })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
+    .attr('fill', function(d){ return csColour(d.items[0]); })
+    .attr('fill-opacity', 0.2);
 
   rowsMerge.select('circle.count-circle').transition().duration(300)
     .attr('cx', function(d){ return x(d.inter_start) - 10; })
     .attr('r', function(d){ return 3 + Math.log(d.count + 1) * 2; })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
+    .attr('fill', function(d){ return csColour(d.items[0]); })
+    .attr('fill-opacity', 0.2);
 
   rowsMerge.select('text.count-text').transition().duration(300)
     .attr('x', function(d){ return x(d.inter_start) - 10; })
     .attr('y', baseRowHeight/2)
     .text(function(d){ return d.count; })
-    .attr('fill', theme.bg);
+    .attr('fill', theme.bg)
+    .attr('fill-opacity', 0.2);
 
   rowsMerge.select('path.left-cap').transition().duration(300)
     .attr('d', function(d){ return d.start < regionStart ? ('M'+(x(d.inter_start)-6)+','+(baseRowHeight/2)+' L'+x(d.inter_start)+','+((baseRowHeight-barHeight)/2)+' L'+x(d.inter_start)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
+    .attr('fill', function(d){ return csColour(d.items[0]); })
+    .attr('fill-opacity', 0.2);
 
   rowsMerge.select('path.right-cap').transition().duration(300)
     .attr('d', function(d){ return d.end > regionEnd ? ('M'+x(d.inter_end)+','+((baseRowHeight-barHeight)/2)+' L'+(x(d.inter_end)+6)+','+(baseRowHeight/2)+' L'+x(d.inter_end)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
+    .attr('fill', function(d){ return csColour(d.items[0]); })
+    .attr('fill-opacity', 0.2);
 
   function showVarTip(v, event) {
     var html = v.variant;
@@ -506,11 +526,13 @@ document.addEventListener('DOMContentLoaded', function(){
   var lqToggle = document.getElementById('show-low-quality');
   var atcToggle = document.getElementById('show-atc-codes');
   var tolInput = document.getElementById('susie-tol');
+  var topInRegionToggle = document.getElementById('susie-filter-top-in-region');
 
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
   if (atcToggle) atcToggle.addEventListener('change', renderFinnGenSusie);
+  if (topInRegionToggle) topInRegionToggle.addEventListener('change', renderFinnGenSusie);
   if (tolInput) tolInput.addEventListener('input', drawUnique);
 
   document.addEventListener('pheweb:theme', drawUnique);
@@ -537,4 +559,3 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   })();
 });
-
