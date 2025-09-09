@@ -427,7 +427,7 @@ function drawUnique() {
         showVarTip(v, d3.event);
         d3.select(this)
           .transition().duration(80)
-          .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1.03)');
+          .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1.2)');
       })
       .on('mousemove', function(){ moveVarTip(d3.event); })
       .on('mouseout', function(v){
