@@ -373,13 +373,14 @@ function drawUnique() {
   var rowsEnter = rows.enter().append('g').attr('class','row');
 
   rowsEnter.append('rect').attr('class','bar').attr('y',(baseRowHeight-barHeight)/2).attr('height',barHeight);
-  rowsEnter.append('circle').attr('class','count-circle').attr('cy',baseRowHeight/2);
-  rowsEnter.append('text').attr('class','count-text').attr('dy','0.35em').attr('text-anchor','middle').style('font-size','8px');
   rowsEnter.append('path').attr('class','left-cap');
   rowsEnter.append('path').attr('class','right-cap');
 
   var rowsMerge = rowsEnter.merge(rows);
   rowsMerge.transition().duration(300).attr('transform', function(d,i){ return 'translate(0,'+layout.yPositions[i]+')'; });
+
+  // Clean up any legacy count markers from previous versions
+  rowsMerge.selectAll('.count-circle, .count-text').remove();
 
   rowsMerge.select('rect.bar').transition().duration(300)
     .attr('x', function(d){ return x(d.inter_start); })
@@ -387,18 +388,7 @@ function drawUnique() {
     .attr('fill', function(d){ return csColour(d.items[0]); })
     .attr('fill-opacity', 0.2);
 
-  rowsMerge.select('circle.count-circle').transition().duration(300)
-    .attr('cx', function(d){ return x(d.inter_start) - 10; })
-    .attr('r', function(d){ return 3 + Math.log(d.count + 1) * 2; })
-    .attr('fill', function(d){ return csColour(d.items[0]); })
-    .attr('fill-opacity', 0.2);
-
-  rowsMerge.select('text.count-text').transition().duration(300)
-    .attr('x', function(d){ return x(d.inter_start) - 10; })
-    .attr('y', baseRowHeight/2)
-    .text(function(d){ return d.count; })
-    .attr('fill', theme.bg)
-    .attr('fill-opacity', 0.2);
+  // Removed count bubble and text for clarity
 
   rowsMerge.select('path.left-cap').transition().duration(300)
     .attr('d', function(d){ return d.start < regionStart ? ('M'+(x(d.inter_start)-6)+','+(baseRowHeight/2)+' L'+x(d.inter_start)+','+((baseRowHeight-barHeight)/2)+' L'+x(d.inter_start)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
