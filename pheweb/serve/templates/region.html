@@ -98,6 +98,15 @@
             alt="Info" class="info-icon info-icon-inline icon-invert">
       </a>
     </label>
+    <label>
+      <input type="checkbox" id="susie-filter-top-in-region" checked>
+      Top variants in region
+      <a href="#" class="info-link"
+        title="When enabled, hides credible set rows whose top variant lies outside the current region window.">
+        <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
+            alt="Info" class="info-icon info-icon-inline icon-invert">
+      </a>
+    </label>
     <label for="susie-tol">
       Grouping
       <input type="range" id="susie-tol" min="0" max="4" step="1" value="4" list="susie-tol-list">

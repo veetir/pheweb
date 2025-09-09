@@ -172,6 +172,8 @@ function renderFinnGenSusie() {
   showLQ = showLQ ? showLQ.checked : false;
   var showCodesEl = document.getElementById('show-atc-codes');
   currentShowCodes = showCodesEl ? showCodesEl.checked : false;
+  var topInRegionEl = document.getElementById('susie-filter-top-in-region');
+  var filterTopInRegion = topInRegionEl ? !!topInRegionEl.checked : true;
   var summaryEl = document.getElementById('susie-summary');
 
   if (!showEP && !showDG) {
@@ -197,6 +199,19 @@ function renderFinnGenSusie() {
       rows = rows.filter(function(r) { return isDrug(r) ? showDG : showEP; });
       if (!showLQ) {
         rows = rows.filter(function(r){ return r.good_cs; });
+      }
+
+      if (!rows.length) {
+        container.innerHTML = 'No SuSiE results in this region.';
+        if (summaryEl) summaryEl.innerHTML = '';
+        return;
+      }
+
+      // Optionally filter to show only CS with top variant in region
+      if (filterTopInRegion) {
+        rows = rows.filter(function(r){
+          return (typeof r.vpos === 'number') && r.vpos >= regionStart && r.vpos <= regionEnd;
+        });
       }
 
       if (!rows.length) {
@@ -358,37 +373,32 @@ function drawUnique() {
   var rowsEnter = rows.enter().append('g').attr('class','row');
 
   rowsEnter.append('rect').attr('class','bar').attr('y',(baseRowHeight-barHeight)/2).attr('height',barHeight);
-  rowsEnter.append('circle').attr('class','count-circle').attr('cy',baseRowHeight/2);
-  rowsEnter.append('text').attr('class','count-text').attr('dy','0.35em').attr('text-anchor','middle').style('font-size','8px');
   rowsEnter.append('path').attr('class','left-cap');
   rowsEnter.append('path').attr('class','right-cap');
 
   var rowsMerge = rowsEnter.merge(rows);
   rowsMerge.transition().duration(300).attr('transform', function(d,i){ return 'translate(0,'+layout.yPositions[i]+')'; });
 
+  // Clean up any legacy count markers from previous versions
+  rowsMerge.selectAll('.count-circle, .count-text').remove();
+
   rowsMerge.select('rect.bar').transition().duration(300)
     .attr('x', function(d){ return x(d.inter_start); })
     .attr('width', function(d){ return Math.max(1, x(d.inter_end) - x(d.inter_start)); })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
+    .attr('fill', function(d){ return csColour(d.items[0]); })
+    .attr('fill-opacity', 0.2);
 
-  rowsMerge.select('circle.count-circle').transition().duration(300)
-    .attr('cx', function(d){ return x(d.inter_start) - 10; })
-    .attr('r', function(d){ return 3 + Math.log(d.count + 1) * 2; })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
-
-  rowsMerge.select('text.count-text').transition().duration(300)
-    .attr('x', function(d){ return x(d.inter_start) - 10; })
-    .attr('y', baseRowHeight/2)
-    .text(function(d){ return d.count; })
-    .attr('fill', theme.bg);
+  // Removed count bubble and text for clarity
 
   rowsMerge.select('path.left-cap').transition().duration(300)
     .attr('d', function(d){ return d.start < regionStart ? ('M'+(x(d.inter_start)-6)+','+(baseRowHeight/2)+' L'+x(d.inter_start)+','+((baseRowHeight-barHeight)/2)+' L'+x(d.inter_start)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
+    .attr('fill', function(d){ return csColour(d.items[0]); })
+    .attr('fill-opacity', 0.2);
 
   rowsMerge.select('path.right-cap').transition().duration(300)
     .attr('d', function(d){ return d.end > regionEnd ? ('M'+x(d.inter_end)+','+((baseRowHeight-barHeight)/2)+' L'+(x(d.inter_end)+6)+','+(baseRowHeight/2)+' L'+x(d.inter_end)+','+((baseRowHeight+barHeight)/2)+' Z') : null; })
-    .attr('fill', function(d){ return csColour(d.items[0]); });
+    .attr('fill', function(d){ return csColour(d.items[0]); })
+    .attr('fill-opacity', 0.2);
 
   function showVarTip(v, event) {
     var html = v.variant;
@@ -413,9 +423,19 @@ function drawUnique() {
       .attr('class','tick')
       .attr('transform', function(v){ return 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +')'; })
       .style('cursor','pointer')
-      .on('mouseover', function(v){ showVarTip(v, d3.event); })
+      .on('mouseover', function(v){
+        showVarTip(v, d3.event);
+        d3.select(this)
+          .transition().duration(80)
+          .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1.2)');
+      })
       .on('mousemove', function(){ moveVarTip(d3.event); })
-      .on('mouseout', hideVarTip)
+      .on('mouseout', function(v){
+        hideVarTip();
+        d3.select(this)
+          .transition().duration(100)
+          .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1)');
+      })
       .on('click', function(v){
         if (v && v.variant) {
           var parts = v.variant.split(':');
@@ -468,7 +488,7 @@ function drawUnique() {
           .style('font-size','12px')
           .style('line-height','18px')
           .style('white-space','nowrap')
-          .style('cursor', d.isDrug ? 'default' : 'pointer');
+          .style('cursor', 'pointer');
       });
 
     enter.filter(function(d){ return !d.isDrug; })
@@ -477,6 +497,23 @@ function drawUnique() {
           d3.event.stopPropagation();
         }
         selectEndpoint(d.trait);
+      });
+
+    // Drug pills: go to drugs portal for the ATC code
+    enter.filter(function(d){ return d.isDrug; })
+      .on('click', function(d){
+        if (window.d3 && d3.event && typeof d3.event.stopPropagation === 'function') {
+          d3.event.stopPropagation();
+        }
+        var code = d && d.trait ? d.trait : '';
+        if (code) {
+          var url = 'https://drugs.finngen.fi/pheno/' + code;
+          if (window && typeof window.open === 'function') {
+            window.open(url, '_blank');
+          } else {
+            window.location.href = url;
+          }
+        }
       });
   }
 
@@ -506,11 +543,13 @@ document.addEventListener('DOMContentLoaded', function(){
   var lqToggle = document.getElementById('show-low-quality');
   var atcToggle = document.getElementById('show-atc-codes');
   var tolInput = document.getElementById('susie-tol');
+  var topInRegionToggle = document.getElementById('susie-filter-top-in-region');
 
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
   if (atcToggle) atcToggle.addEventListener('change', renderFinnGenSusie);
+  if (topInRegionToggle) topInRegionToggle.addEventListener('change', renderFinnGenSusie);
   if (tolInput) tolInput.addEventListener('input', drawUnique);
 
   document.addEventListener('pheweb:theme', drawUnique);
@@ -537,4 +576,3 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   })();
 });
-
