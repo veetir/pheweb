@@ -423,9 +423,19 @@ function drawUnique() {
       .attr('class','tick')
       .attr('transform', function(v){ return 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +')'; })
       .style('cursor','pointer')
-      .on('mouseover', function(v){ showVarTip(v, d3.event); })
+      .on('mouseover', function(v){
+        showVarTip(v, d3.event);
+        d3.select(this)
+          .transition().duration(80)
+          .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1.03)');
+      })
       .on('mousemove', function(){ moveVarTip(d3.event); })
-      .on('mouseout', hideVarTip)
+      .on('mouseout', function(v){
+        hideVarTip();
+        d3.select(this)
+          .transition().duration(100)
+          .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1)');
+      })
       .on('click', function(v){
         if (v && v.variant) {
           var parts = v.variant.split(':');
