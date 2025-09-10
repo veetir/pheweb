@@ -77,7 +77,11 @@ const baseRowHeight = 20;
 const railGap = 2;
 const endpointColor = '#5D33DB';
 const drugColor = '#106527';
-const approxPillWidth = 120;   // px, rough width per pill
+const approxPillWidth = 120;   // px, rough width per pill (legacy, no longer used for height)
+const pillToggleSpace = 18;    // px reserved at right for expand/collapse toggle
+
+// Track which clusters are expanded (by id)
+var expandedClusters = new Set();
 
 function measurePillOuterHeight() {
   if (measurePillOuterHeight.cached) return measurePillOuterHeight.cached;
@@ -292,7 +296,7 @@ function drawUnique() {
   var barHeight = 6;
   var x = d3.scaleLinear().domain([regionStart, regionEnd]).range([0, width]);
 
-  const pillOuterH = measurePillOuterHeight();
+  // Build pill/variant data and measure actual rail heights to avoid clipping
   clusters.forEach(function(c){
     var pillMap = new Map();
     var variantMap = new Map();
@@ -317,10 +321,60 @@ function drawUnique() {
     c.pills = Array.from(pillMap.values());
     c.endpoints = c.pills.map(function(p){ return p.label; });
     c.variants = Array.from(variantMap.values());
-    var n = c.pills.length;
-    var perRow = Math.max(1, Math.floor(width / approxPillWidth));
-    var rowsNeeded = Math.max(1, Math.ceil(n / perRow));
-    c.railHeight = rowsNeeded * pillOuterH + railGap * 2;
+
+    // Create an offscreen measurement container to compute exact layout
+    var meas = d3.select('body').append('div')
+      .style('position','absolute')
+      .style('left','-99999px')
+      .style('top','0px')
+      .style('width', width + 'px')
+      .style('display','flex')
+      .style('flex-wrap','wrap')
+      .style('align-content','flex-start')
+      .style('gap','6px')
+      .style('padding-right', pillToggleSpace + 'px')
+      .style('visibility','hidden')
+      .style('pointer-events','none');
+
+    meas.selectAll('button.pill')
+      .data(c.pills)
+      .enter()
+      .append('button')
+      .attr('class','pill')
+      .text(function(d){ return d.label; })
+      .each(function(d){
+        var el = d3.select(this);
+        var bg = d.isDrug ? drugColor : endpointColor;
+        el.style('background', bg)
+          .style('color', '#fff')
+          .style('border', '2px solid ' + bg)
+          .style('border-radius','14px')
+          .style('padding','2px 10px')
+          .style('font-size','12px')
+          .style('line-height','18px')
+          .style('white-space','nowrap')
+          .style('cursor', 'pointer');
+      });
+
+    var node = meas.node();
+    var contentHeight = Math.ceil(node.scrollHeight || node.getBoundingClientRect().height || 0);
+    var rowHeight = 0;
+    var rowTops = new Set();
+    meas.selectAll('button.pill').each(function(){
+      rowHeight = Math.max(rowHeight, this.offsetHeight || 0);
+      rowTops.add(this.offsetTop || 0);
+    });
+    var rowsCount = Math.max(1, rowTops.size || 1);
+    meas.remove();
+
+    c.rowsCount = rowsCount;
+    c.fullRailContentHeight = contentHeight; // without top/bottom railGap
+    c.rowContentHeight = Math.ceil(rowHeight);
+
+    // Choose collapsed vs expanded height. Default collapsed to 1 row when multiple rows exist.
+    var isExpanded = expandedClusters.has(c.id);
+    var desiredContent = (isExpanded || rowsCount <= 1) ? c.fullRailContentHeight : c.rowContentHeight;
+    c.railHeight = desiredContent + railGap * 2; // include top/bottom rail margin
   });
 
   var layout = layoutRows(clusters);
@@ -462,12 +516,13 @@ function drawUnique() {
       .style('left','0px')
       .style('top',  (yTop + baseRowHeight + railGap) + 'px')
       .style('width', width + 'px')
-      .style('height', (cluster.railHeight - railGap*2) + 'px')
+      .style('height', Math.ceil(cluster.railHeight - railGap*2) + 'px')
       .style('overflow','hidden')
       .style('display','flex')
       .style('flex-wrap','wrap')
       .style('align-content','flex-start')
       .style('gap','6px')
+      .style('padding-right', pillToggleSpace + 'px')
       .style('pointer-events','auto');
 
     const pills = rail.selectAll('button.pill')
@@ -515,6 +570,39 @@ function drawUnique() {
           }
         }
       });
+
+    // Add expand/collapse toggle if multiple rows exist
+    if (cluster.rowsCount && cluster.rowsCount > 1) {
+      var isExpanded = expandedClusters.has(cluster.id);
+      var toggle = rail.append('button')
+        .attr('type', 'button')
+        .attr('title', isExpanded ? 'Collapse' : 'Expand')
+        .style('position','absolute')
+        .style('right', '2px')
+        .style('bottom', '2px')
+        .style('width', '16px')
+        .style('height', '16px')
+        .style('line-height', '14px')
+        .style('padding', '0')
+        .style('border', '1px solid ' + theme.grid)
+        .style('border-radius', '3px')
+        .style('background', theme.bg)
+        .style('color', theme.fg)
+        .style('cursor', 'pointer')
+        .style('z-index', 2)
+        .text(isExpanded ? '▴' : '▾')
+        .on('click', function(){
+          if (window.d3 && d3.event && typeof d3.event.stopPropagation === 'function') {
+            d3.event.stopPropagation();
+          }
+          if (expandedClusters.has(cluster.id)) {
+            expandedClusters.delete(cluster.id);
+          } else {
+            expandedClusters.add(cluster.id);
+          }
+          drawUnique();
+        });
+    }
   }
 
   clusters.forEach(function(c,i){
