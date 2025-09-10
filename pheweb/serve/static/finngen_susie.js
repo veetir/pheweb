@@ -31,6 +31,7 @@ function updateToggleStates() {
   var atcToggle = document.getElementById('show-atc-codes');
   var tolInput = document.getElementById('susie-tol');
   var tolLabel = document.querySelector('label[for="susie-tol"]');
+  var epCodesToggle = document.getElementById('show-endpoint-codes');
 
   if (atcToggle) {
     var dgChecked = dgToggle && dgToggle.checked;
@@ -58,6 +59,16 @@ function updateToggleStates() {
   if (tolLabel) {
     tolLabel.classList.toggle('disabled', disableGrouping);
   }
+
+  // Enable Endpoint codes only when Endpoints are shown
+  if (epCodesToggle) {
+    var disableEpCodes = !(epToggle && epToggle.checked);
+    epCodesToggle.disabled = disableEpCodes;
+    if (disableEpCodes) epCodesToggle.checked = false;
+    if (epCodesToggle.parentElement) {
+      epCodesToggle.parentElement.classList.toggle('disabled', disableEpCodes);
+    }
+  }
 }
 
 var atcMapPromise = null;
@@ -80,9 +91,62 @@ function displayEndpoint(ep, atcMap, showCodes) {
   return ep;
 }
 
+// Endpoint code -> human-readable name
+var endpointMapPromise = null;
+function getEndpointMap() {
+  if (endpointMapPromise) return endpointMapPromise;
+  function arrayToMap(arr) {
+    var map = {};
+    (arr || []).forEach(function(item){
+      if (item && item.endpoint) map[item.endpoint] = item.phenotype || item.endpoint;
+    });
+    return map;
+  }
+  if (Array.isArray(window.allEndpoints) && window.allEndpoints.length) {
+    endpointMapPromise = Promise.resolve(arrayToMap(window.allEndpoints));
+  } else if (window.endpointsTsvUrl) {
+    endpointMapPromise = fetch(window.endpointsTsvUrl)
+      .then(function(resp){ return resp.ok ? resp.text() : ''; })
+      .then(function(text){
+        var lines = (text || '').trim().split('\n');
+        if (!lines.length) return {};
+        var headers = lines[0].split('\t');
+        var endpointIdx = headers.indexOf('endpoint');
+        var phenotypeIdx = headers.indexOf('phenotype');
+        var arr = [];
+        for (var i=1;i<lines.length;i++){
+          var cols = lines[i].split('\t');
+          if (cols.length > Math.max(endpointIdx, phenotypeIdx)) {
+            var endpoint = (cols[endpointIdx] || '').trim();
+            var phenotype = (cols[phenotypeIdx] || '').trim();
+            if (endpoint) arr.push({endpoint:endpoint, phenotype:phenotype});
+          }
+        }
+        return arrayToMap(arr);
+      })
+      .catch(function(){ return {}; });
+  } else {
+    endpointMapPromise = Promise.resolve({});
+  }
+  return endpointMapPromise;
+}
+
+function endpointDisplayName(code) {
+  return (currentEndpointMap && currentEndpointMap[code]) ? currentEndpointMap[code] : code;
+}
+
+function truncateLabel(txt, maxLen) {
+  maxLen = maxLen || 36;
+  if (!txt) return '';
+  if (txt.length <= maxLen) return txt;
+  return txt.slice(0, maxLen - 1) + '…';
+}
+
 var currentRows = [];
 var currentAtcMap = {};
 var currentShowCodes = false;
+var currentEndpointMap = {};
+var currentShowEndpointCodes = false;
 var regionStart = 0, regionEnd = 0;
 const baseRowHeight = 20;
 const railGap = 2;
@@ -187,6 +251,8 @@ function renderFinnGenSusie() {
   showLQ = showLQ ? showLQ.checked : false;
   var showCodesEl = document.getElementById('show-atc-codes');
   currentShowCodes = showCodesEl ? showCodesEl.checked : false;
+  var showEndpointCodesEl = document.getElementById('show-endpoint-codes');
+  currentShowEndpointCodes = showEndpointCodesEl ? !!showEndpointCodesEl.checked : false;
   var topInRegionEl = document.getElementById('susie-filter-top-in-region');
   var filterTopInRegion = topInRegionEl ? !!topInRegionEl.checked : true;
   var summaryEl = document.getElementById('susie-summary');
@@ -208,11 +274,13 @@ function renderFinnGenSusie() {
       if (!resp.ok) throw new Error('Failed to fetch SuSiE data');
       return resp.json();
     }),
-    getAtcMap()
+    getAtcMap(),
+    getEndpointMap()
   ])
     .then(function(results) {
       var json = results[0];
       currentAtcMap = results[1];
+      currentEndpointMap = results[2] || {};
       var rows = json.data || json;
 
       rows = rows.filter(function(r) { return isDrug(r) ? showDG : showEP; });
@@ -330,21 +398,39 @@ function drawUnique() {
     var pillMap = new Map();
     var variantMap = new Map();
     (c.items || []).forEach(function(i){
+      var isDrugItem = isDrug(i);
       if (!pillMap.has(i.trait)) {
+        var labelRaw;
+        if (isDrugItem) {
+          // Drug labels: toggle between ATC code vs name
+          labelRaw = displayEndpoint(i.trait, currentAtcMap, currentShowCodes);
+        } else {
+          // Endpoint labels: toggle between endpoint code vs human-readable name
+          labelRaw = currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait);
+        }
         pillMap.set(i.trait, {
           trait: i.trait,
-          label: displayEndpoint(i.trait, currentAtcMap, currentShowCodes),
-          isDrug: isDrug(i)
+          isDrug: isDrugItem,
+          fullName: isDrugItem ? displayEndpoint(i.trait, currentAtcMap, false) : endpointDisplayName(i.trait),
+          label: truncateLabel(labelRaw, 36)
         });
       }
       if (!variantMap.has(i.variant)) {
         variantMap.set(i.variant, {
           variant: i.variant,
           vpos: i.vpos,
-          traits: [displayEndpoint(i.trait, currentAtcMap, currentShowCodes)]
+          traits: [
+            isDrugItem
+              ? displayEndpoint(i.trait, currentAtcMap, currentShowCodes)
+              : (currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait))
+          ]
         });
       } else {
-        variantMap.get(i.variant).traits.push(displayEndpoint(i.trait, currentAtcMap, currentShowCodes));
+        variantMap.get(i.variant).traits.push(
+          isDrugItem
+            ? displayEndpoint(i.trait, currentAtcMap, currentShowCodes)
+            : (currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait))
+        );
       }
     });
     c.pills = Array.from(pillMap.values());
@@ -561,7 +647,16 @@ function drawUnique() {
 
     const enter = pills.enter().append('button')
       .attr('class','pill')
-      .attr('title', function(d){ return d.label; })
+      .attr('title', function(d){
+        // Always show both code and human-readable name on hover
+        var code = d.trait;
+        var name = d.fullName || endpointDisplayName(d.trait);
+        if (d.isDrug) {
+          // For drugs, display ATC mapped name (if available)
+          name = displayEndpoint(d.trait, currentAtcMap, false);
+        }
+        return (name && name !== code) ? (name + ' — ' + code) : code;
+      })
       .text(function(d){ return d.label; })
       .each(function(d){
         var el = d3.select(this);
@@ -658,6 +753,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   var sel      = document.getElementById('endpoint-select');
   var epToggle = document.getElementById('show-endpoints');
+  var epCodesToggle = document.getElementById('show-endpoint-codes');
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
   var atcToggle = document.getElementById('show-atc-codes');
@@ -665,6 +761,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var topInRegionToggle = document.getElementById('susie-filter-top-in-region');
 
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
+  if (epCodesToggle) epCodesToggle.addEventListener('change', renderFinnGenSusie);
   if (dgToggle) dgToggle.addEventListener('change', renderFinnGenSusie);
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
   if (atcToggle) atcToggle.addEventListener('change', renderFinnGenSusie);
