@@ -332,6 +332,12 @@ Promise.all([
         }
       }
       
+      // Cache data for responsive redraws / wordcloud resize
+      window._gwasCatalogCache = {
+        ukbbCustom: ukbbCustom.slice(0),
+        ebiCustom: ebiCustom.slice(0)
+      };
+
       // Render the Plotly plot
       Plotly.newPlot('plotly-gwas-catalog', [traceUKBB, traceEBI], layout)
         .then(function() {
@@ -407,6 +413,28 @@ Promise.all([
 
             applyTheme();
             document.addEventListener('pheweb:theme', applyTheme);
+            // Initial draw respects current container size
+            if (window.Plotly && window.Plotly.Plots && typeof window.Plotly.Plots.resize === 'function') {
+              var plotDiv = document.getElementById('plotly-gwas-catalog');
+              if (plotDiv) window.Plotly.Plots.resize(plotDiv);
+            }
+
+            // Handle window resize: resize plot + redraw wordcloud
+            (function attachGWASResize(){
+              var timeoutId = null;
+              window.addEventListener('resize', function(){
+                if (timeoutId) clearTimeout(timeoutId);
+                timeoutId = setTimeout(function(){
+                  var plotDiv = document.getElementById('plotly-gwas-catalog');
+                  if (plotDiv && window.Plotly && window.Plotly.Plots && typeof window.Plotly.Plots.resize === 'function') {
+                    window.Plotly.Plots.resize(plotDiv);
+                  }
+                  if (window._gwasCatalogCache && window._gwasCatalogCache.ukbbCustom && window._gwasCatalogCache.ebiCustom) {
+                    renderCombinedWordCloud(window._gwasCatalogCache.ukbbCustom, window._gwasCatalogCache.ebiCustom, 'combined-wordcloud');
+                  }
+                }, 200);
+              });
+            })();
           });
     })
     .catch(function(error) {

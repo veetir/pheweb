@@ -416,6 +416,8 @@ function drawUnique() {
   if (svg.empty()) svg = d3.select(container).html('').append('svg');
   svg.attr('width', containerWidth)
      .attr('height', height);
+  // Track width to enable cheap resize checks
+  drawUnique._prevWidth = containerWidth;
 
   var g = svg.select('g.plot');
   if (g.empty()) g = svg.append('g').attr('class','plot').attr('transform','translate('+margin.left+','+margin.top+')');
@@ -662,5 +664,21 @@ document.addEventListener('DOMContentLoaded', function(){
         if (hook()) clearInterval(retry);
       }, 250);
     }
+  })();
+
+  // Handle page/window resize: re-render if width changed
+  (function attachResizeHandler(){
+    var timeoutId = null;
+    window.addEventListener('resize', function(){
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(function(){
+        var el = document.getElementById('finngen-susie');
+        if (!el) return;
+        var w = el.clientWidth || 0;
+        if (drawUnique._prevWidth !== w) {
+          drawUnique();
+        }
+      }, 150);
+    });
   })();
 });

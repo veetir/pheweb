@@ -264,6 +264,11 @@ function renderFinnGenPlot() {
 
           applyTheme();
           document.addEventListener('pheweb:theme', applyTheme);
+          // Initial responsive size
+          if (window.Plotly && window.Plotly.Plots && typeof window.Plotly.Plots.resize === 'function') {
+            var fgDiv = document.getElementById('finngen-gwas-catalog');
+            if (fgDiv) window.Plotly.Plots.resize(fgDiv);
+          }
         });
 
       // Update the FinnGen button link
@@ -520,3 +525,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
+
+// Handle window resize: resize the FinnGen plot without reloading data
+(function attachFinnGenResize(){
+  var timeoutId = null;
+  window.addEventListener('resize', function(){
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(function(){
+      var fgDiv = document.getElementById('finngen-gwas-catalog');
+      if (fgDiv && window.Plotly && window.Plotly.Plots && typeof window.Plotly.Plots.resize === 'function') {
+        window.Plotly.Plots.resize(fgDiv);
+      }
+    }, 200);
+  });
+})();
