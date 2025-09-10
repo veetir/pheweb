@@ -29,6 +29,8 @@ function updateToggleStates() {
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
   var atcToggle = document.getElementById('show-atc-codes');
+  var tolInput = document.getElementById('susie-tol');
+  var tolLabel = document.querySelector('label[for="susie-tol"]');
 
   if (atcToggle) {
     var dgChecked = dgToggle && dgToggle.checked;
@@ -46,6 +48,15 @@ function updateToggleStates() {
     if (lqToggle.parentElement) {
       lqToggle.parentElement.classList.toggle('disabled', disableLq);
     }
+  }
+
+  // Disable Grouping slider when both Endpoints and Drugs are off
+  var disableGrouping = !(dgToggle && dgToggle.checked) && !(epToggle && epToggle.checked);
+  if (tolInput) {
+    tolInput.disabled = disableGrouping;
+  }
+  if (tolLabel) {
+    tolLabel.classList.toggle('disabled', disableGrouping);
   }
 }
 
@@ -182,6 +193,10 @@ function renderFinnGenSusie() {
 
   if (!showEP && !showDG) {
     container.innerHTML = 'Toggle endpoints or drugs to display results.';
+    // Clear any existing rails from previous renders
+    var wrapper = d3.select('#finngen-susie-wrapper');
+    var rails = wrapper.select('.susie-rails');
+    if (!rails.empty()) rails.remove();
     if (summaryEl) summaryEl.innerHTML = '';
     return;
   }
@@ -272,6 +287,20 @@ function drawUnique() {
   if (!container) return;
 
   theme = getTheme();
+
+  // If both toggles are off, show message and clear rails, then exit
+  var epToggle = document.getElementById('show-endpoints');
+  var dgToggle = document.getElementById('show-drugs');
+  var epOn = epToggle ? !!epToggle.checked : false;
+  var dgOn = dgToggle ? !!dgToggle.checked : false;
+  if (!epOn && !dgOn) {
+    container.innerHTML = 'Toggle endpoints or drugs to display results.';
+    var wrapper = d3.select('#finngen-susie-wrapper');
+    var rails = wrapper.select('.susie-rails');
+    if (!rails.empty()) rails.remove();
+    if (summaryEl) summaryEl.innerHTML = '';
+    return;
+  }
 
   var tolInput = document.getElementById('susie-tol');
   var tolScale = [0, 10000, 100000, 1000000, 1e9];
