@@ -580,9 +580,21 @@ function drawUnique() {
     moveVarTip(event);
   }
   function moveVarTip(event) {
-    var rect = wrapper.node().getBoundingClientRect();
-    var xPos = event.clientX - rect.left + 12;
-    var yPos = event.clientY - rect.top + 12;
+    var node = wrapper.node();
+    var rect = node.getBoundingClientRect();
+    var xPos = event.clientX - rect.left + (node.scrollLeft || 0) + 12;
+    var yPos = event.clientY - rect.top + (node.scrollTop || 0) + 12;
+
+    // Keep tooltip within visible wrapper bounds
+    var tw = (tooltip.node() && tooltip.node().offsetWidth) || 0;
+    var th = (tooltip.node() && tooltip.node().offsetHeight) || 0;
+    var minX = (node.scrollLeft || 0) + 4;
+    var minY = (node.scrollTop || 0) + 4;
+    var maxX = (node.scrollLeft || 0) + node.clientWidth - tw - 4;
+    var maxY = (node.scrollTop || 0) + node.clientHeight - th - 4;
+    xPos = Math.max(minX, Math.min(xPos, maxX));
+    yPos = Math.max(minY, Math.min(yPos, maxY));
+
     tooltip.style('left', xPos + 'px').style('top', yPos + 'px');
   }
   function hideVarTip() { tooltip.style('opacity',0); }
