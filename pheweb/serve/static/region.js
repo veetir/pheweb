@@ -423,11 +423,24 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 previous_milliseconds = milliseconds;
             });
         })();
+        function computeMbTicks(startBp, endBp) {
+            var step = 50000;
+            var s = Math.ceil(startBp / step) * step;
+            var e = Math.floor(endBp / step) * step;
+            var vals = [], texts = [];
+            for (var v=s; v<=e; v+=step) { vals.push(v); texts.push((v/1e6).toFixed(2)); }
+            return {vals: vals, texts: texts};
+        }
+
         window.plot.on("state_changed", function() {
             var currentState = window.plot.state;
+            var ticks = computeMbTicks(currentState.start, currentState.end);
             Plotly.relayout("plotly-gwas-catalog", {
                 "xaxis.range": [currentState.start, currentState.end],
-                "xaxis.title": "Chromosome " + currentState.chr + " (Mb)"
+                "xaxis.title": "Chromosome " + currentState.chr + " (Mb)",
+                'xaxis.tickmode': 'array',
+                'xaxis.tickvals': ticks.vals,
+                'xaxis.ticktext': ticks.texts
             });
         });
         

@@ -150,6 +150,21 @@ Promise.all([
         hovertemplate: tooltipTemplate
       };
 
+      // Helpers for consistent Mb ticks (0.05 Mb increments)
+      function computeMbTicks(startBp, endBp) {
+        const step = 50000; // 50kb
+        const s = Math.ceil(startBp / step) * step;
+        const e = Math.floor(endBp / step) * step;
+        const vals = [];
+        const texts = [];
+        for (let v = s; v <= e; v += step) { vals.push(v); texts.push((v/1e6).toFixed(2)); }
+        return {vals, texts};
+      }
+
+      const regionStartBp = parseInt(start);
+      const regionEndBp = parseInt(end);
+      const initTicks = computeMbTicks(regionStartBp, regionEndBp);
+
       // Define layout
       var layout = {
         xaxis: {
@@ -162,7 +177,10 @@ Promise.all([
           ticklen: 6,
           tickwidth: 1,
           tickcolor: theme.fg,
-          linecolor: theme.fg
+          linecolor: theme.fg,
+          tickmode: 'array',
+          tickvals: initTicks.vals,
+          ticktext: initTicks.texts
         },
         yaxis: {
           title: "<b>-log10 p-value</b>",
@@ -361,6 +379,7 @@ Promise.all([
 
             // Only proceed if x-range actually changed
             if (typeof xStart !== 'undefined' && typeof xEnd !== 'undefined') {
+              var ticks = computeMbTicks(xStart, xEnd);
               // 1. Update the LocusZoom region
               if (window.plot && window.plot.state) {
                 var currentState = window.plot.state;
@@ -374,7 +393,16 @@ Promise.all([
               // 2. Also update the FinnGen chart
               Plotly.relayout('finngen-gwas-catalog', {
                 'xaxis.range': [xStart, xEnd],
-                'xaxis.title': "Chromosome " + chr + " (Mb)"
+                'xaxis.title': "Chromosome " + chr + " (Mb)",
+                'xaxis.tickmode': 'array',
+                'xaxis.tickvals': ticks.vals,
+                'xaxis.ticktext': ticks.texts
+              });
+              // Update own ticks to match
+              Plotly.relayout('plotly-gwas-catalog', {
+                'xaxis.tickmode': 'array',
+                'xaxis.tickvals': ticks.vals,
+                'xaxis.ticktext': ticks.texts
               });
             }
           });

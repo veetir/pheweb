@@ -81,6 +81,15 @@ function renderFinnGenPlot() {
           "<extra></extra>"
       };
 
+      function computeMbTicks(startBp, endBp) {
+        var step = 50000;
+        var s = Math.ceil(startBp / step) * step;
+        var e = Math.floor(endBp / step) * step;
+        var vals = [], texts = [];
+        for (var v=s; v<=e; v+=step) { vals.push(v); texts.push((v/1e6).toFixed(2)); }
+        return {vals: vals, texts: texts};
+      }
+
       var layout = {
         title: { text: "FinnGen Associations (" + selectedEndpoint + ")", font: { size: 14 } },
         showlegend: false,
@@ -95,7 +104,10 @@ function renderFinnGenPlot() {
           ticklen: 6,
           tickwidth: 1,
           tickcolor: theme.fg,
-          linecolor: theme.fg
+          linecolor: theme.fg,
+          tickmode: 'array',
+          tickvals: computeMbTicks(Math.min.apply(null, x), Math.max.apply(null, x)).vals,
+          ticktext: computeMbTicks(Math.min.apply(null, x), Math.max.apply(null, x)).texts
         },
         yaxis: {
           title: "<b>-log10 p-value</b>",
@@ -193,9 +205,13 @@ function renderFinnGenPlot() {
 
           // Use the existing region from LocusZoom if available
           if (typeof lzStart !== 'undefined' && typeof lzEnd !== 'undefined') {
+            var ticks = computeMbTicks(lzStart, lzEnd);
             Plotly.relayout('finngen-gwas-catalog', {
               'xaxis.range': [lzStart, lzEnd],
-              'xaxis.title': 'Chromosome ' + (lzChr || chr) + ' (Mb)'
+              'xaxis.title': 'Chromosome ' + (lzChr || chr) + ' (Mb)',
+              'xaxis.tickmode': 'array',
+              'xaxis.tickvals': ticks.vals,
+              'xaxis.ticktext': ticks.texts
             });
           }
 
@@ -212,6 +228,7 @@ function renderFinnGenPlot() {
             var xStart = evtData['xaxis.range[0]'];
             var xEnd   = evtData['xaxis.range[1]'];
             if (typeof xStart !== 'undefined' && typeof xEnd !== 'undefined') {
+              var ticks = computeMbTicks(xStart, xEnd);
               // Update LocusZoom
               if (window.plot && window.plot.state) {
                 var currentState = window.plot.state;
@@ -224,7 +241,16 @@ function renderFinnGenPlot() {
               // Update the other Plotly chart
               Plotly.relayout('plotly-gwas-catalog', {
                 'xaxis.range': [xStart, xEnd],
-                'xaxis.title': 'Chromosome ' + (lzChr || chr) + ' (Mb)'
+                'xaxis.title': 'Chromosome ' + (lzChr || chr) + ' (Mb)',
+                'xaxis.tickmode': 'array',
+                'xaxis.tickvals': ticks.vals,
+                'xaxis.ticktext': ticks.texts
+              });
+              // Update own ticks to match
+              Plotly.relayout('finngen-gwas-catalog', {
+                'xaxis.tickmode': 'array',
+                'xaxis.tickvals': ticks.vals,
+                'xaxis.ticktext': ticks.texts
               });
             }
           });
@@ -233,9 +259,13 @@ function renderFinnGenPlot() {
           if (window.plot && window.plot.on) {
             window.plot.on('state_changed', function() {
               var currentState = window.plot.state;
+              var ticks = computeMbTicks(currentState.start, currentState.end);
               Plotly.relayout('finngen-gwas-catalog', {
                 'xaxis.range': [currentState.start, currentState.end],
-                'xaxis.title': 'Chromosome ' + currentState.chr + ' (Mb)'
+                'xaxis.title': 'Chromosome ' + currentState.chr + ' (Mb)',
+                'xaxis.tickmode': 'array',
+                'xaxis.tickvals': ticks.vals,
+                'xaxis.ticktext': ticks.texts
               });
             });
           }

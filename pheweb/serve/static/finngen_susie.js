@@ -750,7 +750,18 @@ function drawUnique() {
   if (summaryEl) summaryEl.innerHTML = '';
 
   svg.select('g.x-axis').remove();
-  var axis = d3.axisBottom(x);
+  // Build x-axis ticks to match LocusZoom style: Mb with two decimals, 0.05 Mb (50kb) increments
+  function computeMbTicks(start, end) {
+    var step = 50000; // 50kb
+    var s = Math.ceil(start / step) * step;
+    var e = Math.floor(end / step) * step;
+    var vals = [];
+    for (var v = s; v <= e; v += step) vals.push(v);
+    return vals;
+  }
+  var axis = d3.axisBottom(x)
+    .tickValues(computeMbTicks(regionStart, regionEnd))
+    .tickFormat(function(d){ return (d/1e6).toFixed(2); });
   svg.append('g')
     .attr('class','x-axis')
     .attr('transform','translate('+margin.left+','+(height - margin.bottom)+')')
