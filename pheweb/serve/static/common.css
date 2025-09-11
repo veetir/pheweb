@@ -278,6 +278,59 @@
   outline: none;
 }
 
+/* Homepage hero layout */
+.home-hero {
+  margin: 40px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.home-title {
+  margin: 0;
+  text-align: center;
+}
+#home-searchbox {
+  width: 100%;
+  max-width: 720px;
+  padding: 0 16px;
+}
+#home-searchbox .search-field { position: relative; width: 100%; }
+
+@media (max-width: 576px) {
+  #home-searchbox { max-width: 100%; padding: 0 12px; }
+  .search-field .search-input { height: 44px; font-size: 16px; }
+  .search-field .search-icon { width: 16px; height: 16px; left: 10px; }
+}
+
+/* Navbar link hover underline (subtle) */
+.navbar .nav-link { text-decoration: none; }
+.navbar .nav-link:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/* Theme toggle button: remove filled focus/active backgrounds */
+#theme-toggle,
+#theme-toggle:hover,
+#theme-toggle:active,
+#theme-toggle:focus,
+#theme-toggle:focus-visible {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  text-decoration: none;
+  outline: 2px solid transparent; /* default: no visible outline on mouse */
+  outline-offset: 2px;
+}
+/* Provide a visible but subtle outline when keyboard focusing */
+#theme-toggle:focus-visible {
+  outline-color: currentColor;
+}
+/* Ensure the icon never inherits a background */
+#theme-toggle-icon { background: transparent !important; }
+/* Guard against accidental .active styles from Bootstrap */
+#theme-toggle.nav-link.active,
+#theme-toggle.btn.active {
+  background-color: transparent !important;
+}
+
 [data-bs-theme='dark'] table.dataTable {
   color: var(--bs-body-color);
 }

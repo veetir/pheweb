@@ -2,35 +2,28 @@
 {% block navbar_left %}{% endblock %}
 {% block contained %}
 
-<br style="margin-top:2em">
-<div class="row">
-  <div class="col-xs-12">
-    <h1 style="text-align: center; margin-bottom: 1em;">PheWeb</h1>
-  </div>
-</div>
-<div class="row">
-  <div class="col-xs-12">
-    <div id="home-searchbox" style="margin: 0 auto; width: 30%;">
-      <form action="{{ url_for('.go') }}">
-         <fieldset>
-          <div class="form-group search-field" style="position: relative; width: 100%;">
-              <img
-                src="{{ url_for('.static', filename='images/search.svg') }}"
-                alt=""
-                class="search-icon icon-invert"
-                aria-hidden="true">
-            <input
-              name="query"
-              class="form-control typeahead search-input"
-              autocomplete="off"
-              type="text"
-              placeholder="Search for a variant, gene, or phenotype"
-              aria-label="Search">
-          </div>
-         </fieldset>
-      </form>
-      {% include 'index/below-query.html' ignore missing %}
-    </div>
+<div class="home-hero">
+  <h1 class="home-title">PheWeb</h1>
+  <div id="home-searchbox">
+    <form action="{{ url_for('.go') }}">
+      <fieldset>
+        <div class="form-group search-field">
+          <img
+            src="{{ url_for('.static', filename='images/search.svg') }}"
+            alt=""
+            class="search-icon icon-invert"
+            aria-hidden="true">
+          <input
+            name="query"
+            class="form-control typeahead search-input"
+            autocomplete="off"
+            type="text"
+            placeholder="Search for a variant, gene, or phenotype"
+            aria-label="Search">
+        </div>
+      </fieldset>
+    </form>
+    {% include 'index/below-query.html' ignore missing %}
   </div>
 </div>
 {% endblock %}

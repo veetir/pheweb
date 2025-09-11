@@ -225,7 +225,9 @@ h1 {
     cursor: not-allowed;
 }
 
-.btn {
+/* Scope button styling to the FinnGen link buttons only to avoid
+   overriding the navbar theme toggle and other Bootstrap buttons */
+#finngen-buttons .btn {
     background-color: #5D33DB;
     color: #FFFFFF;
     padding: 4px 6px;
@@ -239,7 +241,7 @@ h1 {
     transition: transform 0.1s ease-in-out;
 }
 
-.btn:hover {
+#finngen-buttons .btn:hover {
     background-color: #5D33DB;
     color: #FFFFFF;
     transform: scale(1.03);
