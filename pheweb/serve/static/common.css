@@ -468,3 +468,39 @@
 [data-bs-theme='dark'] .finngen-logo {
   filter: brightness(0) invert(1);
 }
+
+/* GWAS Catalog header + controls */
+#gwas-header.gwas-flex {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* keep controls close to title */
+  gap: 12px; /* small gap between title and controls */
+  flex-wrap: wrap;
+}
+.gwas-title {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.gwas-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.gwas-year-display {
+  min-width: 3ch;
+  text-align: right;
+}
+
+.gwas-time-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.85;
+}
+[data-bs-theme='dark'] .gwas-time-icon { opacity: 1; }

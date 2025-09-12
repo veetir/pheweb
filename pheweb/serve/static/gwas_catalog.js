@@ -47,6 +47,10 @@ Promise.all([
       // Arrays for EBI trace
       var ebiX = [], ebiY = [], ebiCustom = [];
 
+      // Keep full results in memory for filtering
+      var allUkbbResults = ukbbResults.slice(0);
+      var allEbiResults = ebiResults.slice(0);
+
       function getTheme() {
         var styles = getComputedStyle(document.body);
         var bg = styles.getPropertyValue('--bs-body-bg').trim() || 'white';
@@ -74,7 +78,8 @@ Promise.all([
             risk_frq: record.risk_frq || "N/A",
             or_beta: record.or_beta || "N/A",
             risk_allele: record.risk_allele || "N/A",
-            rsid: record.rsid || "N/A"
+            rsid: record.rsid || "N/A",
+            date_added_to_catalog: record.date_added_to_catalog || "N/A"
           };
           if (extra.study === "UKBB") {
             extra.studyText = wrapText(extra.study, 60);
@@ -121,6 +126,7 @@ Promise.all([
         "<b>%{customdata.studyText}</b><br>" +
         "<b>Top trait:</b> %{customdata.trait}<br>" +
         "<b>Log p-value:</b> %{y}<br>" +
+        "<b>Date added:</b> %{customdata.date_added_to_catalog}<br>" +
         "<b>Risk freq:</b> %{customdata.risk_frq}<br>" +
         "<b>Effect size:</b> %{customdata.or_beta}<br>" +
         "<b>Risk allele:</b> %{customdata.risk_allele}<br>" +
@@ -208,6 +214,12 @@ Promise.all([
           font: { color: theme.fg }
         },
         hoverlabel: { bgcolor: theme.bg, font: { color: theme.fg } }
+      };
+
+      // Cache raw inputs and built arrays for updates
+      window._gwasCatalogData = {
+        ukbbResults: allUkbbResults,
+        ebiResults: allEbiResults
       };
 
       const EXTRA_STOPWORDS = new Set([
@@ -414,6 +426,74 @@ Promise.all([
               if (wcWrapper) {
                 wcWrapper.style.display = 'none';
               }
+            }
+
+            // --- GWAS Catalog year filter slider wiring ---
+            var yearSlider = document.getElementById('gwas-year-slider');
+            var yearDisplay = document.getElementById('gwas-year-display');
+
+            function yearsFromSliderValue(v) {
+              // Map positions: 0->1, 1->2, 2->3, 3->5, 4->10, 5->All
+              var map = { '0': 1, '1': 2, '2': 3, '3': 5, '4': 10, '5': null };
+              return map[String(v)];
+            }
+
+            function formatYearsDisplay(v) {
+              var yrs = yearsFromSliderValue(v);
+              if (yrs == null) return 'All';
+              var now = new Date();
+              var threshold = new Date(now.getTime());
+              threshold.setFullYear(threshold.getFullYear() - yrs);
+              return String(threshold.getFullYear());
+            }
+
+            function parseDate(str) {
+              if (!str) return null;
+              // Expecting YYYY-MM-DD
+              var d = new Date(str);
+              return isNaN(d.getTime()) ? null : d;
+            }
+
+            function filterEbiRecordsByYears(records, years) {
+              if (years == null) return records.slice(0);
+              var now = new Date();
+              var threshold = new Date(now.getTime());
+              threshold.setFullYear(threshold.getFullYear() - years);
+              return records.filter(function(rec) {
+                var d = parseDate(rec.date_added_to_catalog);
+                if (!d) return false; // Exclude if missing when filtering is active
+                return d >= threshold;
+              });
+            }
+
+            function rebuildSeries(records) {
+              var x = [], y = [], custom = [];
+              records.forEach(function(r) { addRecord(r, x, y, custom); });
+              return { x: x, y: y, custom: custom };
+            }
+
+            function applyYearFilter() {
+              var sliderVal = yearSlider ? yearSlider.value : '5';
+              if (yearDisplay) yearDisplay.textContent = formatYearsDisplay(sliderVal);
+              var yrs = yearsFromSliderValue(sliderVal);
+              var ebiFiltered = filterEbiRecordsByYears(window._gwasCatalogData.ebiResults || [], yrs);
+              var series = rebuildSeries(ebiFiltered);
+              // Update EBI trace (index 1)
+              Plotly.restyle('plotly-gwas-catalog', {
+                x: [series.x],
+                y: [series.y],
+                customdata: [series.custom]
+              }, [1]);
+              // Update wordcloud cache and redraw
+              window._gwasCatalogCache.ebiCustom = series.custom.slice(0);
+              renderCombinedWordCloud(window._gwasCatalogCache.ukbbCustom, window._gwasCatalogCache.ebiCustom, 'combined-wordcloud');
+            }
+
+            if (yearSlider) {
+              // Initialize display
+              yearDisplay && (yearDisplay.textContent = formatYearsDisplay(yearSlider.value));
+              yearSlider.addEventListener('input', applyYearFilter);
+              yearSlider.addEventListener('change', applyYearFilter);
             }
 
             function applyTheme() {
