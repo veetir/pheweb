@@ -439,7 +439,11 @@ Promise.all([
 
             function formatYearsDisplay(v) {
               var yrs = yearsFromSliderValue(v);
-              return yrs == null ? 'All' : (yrs + 'y');
+              if (yrs == null) return 'All';
+              var now = new Date();
+              var threshold = new Date(now.getTime());
+              threshold.setFullYear(threshold.getFullYear() - yrs);
+              return String(threshold.getFullYear());
             }
 
             function parseDate(str) {

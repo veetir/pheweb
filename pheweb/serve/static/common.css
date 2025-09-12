@@ -468,3 +468,25 @@
 [data-bs-theme='dark'] .finngen-logo {
   filter: brightness(0) invert(1);
 }
+
+/* GWAS Catalog header + controls */
+#gwas-header.gwas-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.gwas-title {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.gwas-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.gwas-year-display {
+  min-width: 3ch;
+  text-align: right;
+}
