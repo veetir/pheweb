@@ -79,7 +79,7 @@ Promise.all([
             or_beta: record.or_beta || "N/A",
             risk_allele: record.risk_allele || "N/A",
             rsid: record.rsid || "N/A",
-            date_added_to_catalog: record.date_added_to_catalog || null
+            date_added_to_catalog: record.date_added_to_catalog || "N/A"
           };
           if (extra.study === "UKBB") {
             extra.studyText = wrapText(extra.study, 60);
@@ -126,6 +126,7 @@ Promise.all([
         "<b>%{customdata.studyText}</b><br>" +
         "<b>Top trait:</b> %{customdata.trait}<br>" +
         "<b>Log p-value:</b> %{y}<br>" +
+        "<b>Date added:</b> %{customdata.date_added_to_catalog}<br>" +
         "<b>Risk freq:</b> %{customdata.risk_frq}<br>" +
         "<b>Effect size:</b> %{customdata.or_beta}<br>" +
         "<b>Risk allele:</b> %{customdata.risk_allele}<br>" +
