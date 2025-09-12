@@ -148,11 +148,12 @@
         </a>
       </p>
       <div id="gwas-controls" class="gwas-controls">
-        <span class="gwas-time-icon" title="Year filter" aria-hidden="true">⏱</span>
         <input type="range" id="gwas-year-slider" min="0" max="5" step="1" value="5" list="gwas-year-list">
         <span id="gwas-year-display" class="gwas-year-display">All</span>
-        <a href="#" class="info-link" title="Filter GWAS Catalog points by date added. Select the earliest year to include. 'All' shows all points.">
-          <img src="{{ url_for('bp.static', filename='images/info.svg') }}" alt="Info" class="info-icon info-icon-inline icon-invert">
+        <a href="#" class="info-link"
+          title="Filter GWAS Catalog points by date added. Select the earliest year to include. 'All' shows all points."
+          aria-label="Filter GWAS Catalog points by date added">
+          <span class="info-icon info-icon-inline icon-invert gwas-time-icon" aria-hidden="true">⏱</span>
         </a>
         <datalist id="gwas-year-list">
           <option value="0" label="1"></option>
