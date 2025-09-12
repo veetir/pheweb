@@ -225,7 +225,10 @@ def api_gwascatalog():
         if line.startswith("#"):
             continue
         fields = line.split("\t")
-        if len(fields) < 14:
+        # Expected header as of update:
+        # #chrom  start end rsid p neglog10p trait study pubmed_id mapped_gene context risk_allele risk_allele_frequency effect_size date_added_to_catalog
+        # Ensure we have at least up to index 14
+        if len(fields) < 15:
             continue
         try:
             chrom = fields[0]
@@ -243,6 +246,8 @@ def api_gwascatalog():
                     "or_beta": fields[13],
                     "risk_allele": fields[11],
                     "rsid": fields[3],
+                    # New field: date added to catalog (YYYY-MM-DD)
+                    "date_added_to_catalog": fields[14],
                     "id": 7,
                 }
             )
