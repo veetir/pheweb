@@ -116,6 +116,24 @@ h1 {
     margin-left: -6px;
 }
 
+.gwas-title {
+    display: inline-block;
+    margin: 0;
+    cursor: help;
+    transition: text-decoration 0.2s ease;
+}
+
+.gwas-title:hover,
+.gwas-title:focus-visible {
+    text-decoration: underline;
+}
+
+.gwas-title-updated {
+    margin-left: 6px;
+    font-size: 0.85em;
+    color: inherit;
+}
+
 #top-traits {
     flex: 1 1 auto;
     display: flex;

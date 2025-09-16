@@ -141,11 +141,9 @@
 <div class="row">
   <div class="col-xs-12">
     <div id="gwas-header" class="gwas-flex">
-      <p class="gwas-title">
-        GWAS catalog
-        <a href="#" class="info-link" title="GWAS catalog last updated {{ gwas_catalog_last_updated or 'unknown' }}">
-          <img src="{{ url_for('bp.static', filename='images/info.svg') }}" alt="Info" class="info-icon info-icon-inline icon-invert">
-        </a>
+      <p class="gwas-title" title="GWAS catalog last updated {{ gwas_catalog_last_updated or 'unknown' }}">
+        <span class="gwas-title-text">GWAS catalog</span>
+        <span class="gwas-title-updated">(last updated {{ gwas_catalog_last_updated or 'unknown' }})</span>
       </p>
       <div id="gwas-controls" class="gwas-controls">
         <input type="range" id="gwas-year-slider" min="0" max="5" step="1" value="5" list="gwas-year-list">
