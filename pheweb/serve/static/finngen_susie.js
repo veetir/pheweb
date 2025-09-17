@@ -412,30 +412,42 @@ function drawUnique() {
           trait: i.trait,
           isDrug: isDrugItem,
           fullName: isDrugItem ? displayEndpoint(i.trait, currentAtcMap, false) : endpointDisplayName(i.trait),
-          label: truncateLabel(labelRaw, 36)
+          label: truncateLabel(labelRaw, 36),
+          variantIds: new Set()
         });
       }
+      var pillEntry = pillMap.get(i.trait);
+      if (pillEntry && pillEntry.variantIds) pillEntry.variantIds.add(i.variant);
+
       if (!variantMap.has(i.variant)) {
         variantMap.set(i.variant, {
           variant: i.variant,
           vpos: i.vpos,
-          traits: [
-            isDrugItem
-              ? displayEndpoint(i.trait, currentAtcMap, currentShowCodes)
-              : (currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait))
-          ]
+          traitCodes: new Set(),
+          traitLabels: new Set()
         });
-      } else {
-        variantMap.get(i.variant).traits.push(
+      }
+      var variantEntry = variantMap.get(i.variant);
+      if (variantEntry) {
+        variantEntry.traitCodes.add(i.trait);
+        variantEntry.traitLabels.add(
           isDrugItem
             ? displayEndpoint(i.trait, currentAtcMap, currentShowCodes)
             : (currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait))
         );
       }
     });
-    c.pills = Array.from(pillMap.values());
+    c.pills = Array.from(pillMap.values()).map(function(p){
+      p.variantIds = Array.from(p.variantIds || []);
+      return p;
+    });
     c.endpoints = c.pills.map(function(p){ return p.label; });
-    c.variants = Array.from(variantMap.values());
+    c.variants = Array.from(variantMap.values()).map(function(v){
+      v.traits = Array.from(v.traitLabels || []);
+      v.traitCodes = Array.from(v.traitCodes || []);
+      delete v.traitLabels;
+      return v;
+    });
 
     // Create an offscreen measurement container to compute exact layout
     var meas = d3.select('body').append('div')
@@ -537,6 +549,86 @@ function drawUnique() {
   var g = svg.select('g.plot');
   if (g.empty()) g = svg.append('g').attr('class','plot').attr('transform','translate('+margin.left+','+margin.top+')');
 
+  var highlightState = null;
+
+  function updateHighlightClasses() {
+    var traitSet = null;
+    var variantSet = null;
+    var affectPills = true;
+    var affectVariants = true;
+    if (highlightState) {
+      if (highlightState.traits && highlightState.traits.length) {
+        traitSet = new Set(highlightState.traits);
+      }
+      if (highlightState.variants && highlightState.variants.length) {
+        variantSet = new Set(highlightState.variants);
+      }
+      if (typeof highlightState.affectPills === 'boolean') {
+        affectPills = highlightState.affectPills;
+      }
+      if (typeof highlightState.affectVariants === 'boolean') {
+        affectVariants = highlightState.affectVariants;
+      }
+    }
+    var hasTrait = traitSet && traitSet.size;
+    var hasVariant = variantSet && variantSet.size;
+    var hasHighlight = !!(hasTrait || hasVariant);
+
+    var pillSel = railsLayer.selectAll('button.pill');
+    if (!hasHighlight || !affectPills) {
+      pillSel.classed('susie-pill-highlight', false).classed('susie-pill-muted', false);
+    } else {
+      pillSel.classed('susie-pill-highlight', function(d){
+        var traitHit = hasTrait && traitSet && traitSet.has(d.trait);
+        var variantHit = hasVariant && variantSet && Array.isArray(d.variantIds) && d.variantIds.some(function(id){ return variantSet.has(id); });
+        return traitHit || variantHit;
+      });
+      pillSel.classed('susie-pill-muted', function(d){
+        var traitHit = hasTrait && traitSet && traitSet.has(d.trait);
+        var variantHit = hasVariant && variantSet && Array.isArray(d.variantIds) && d.variantIds.some(function(id){ return variantSet.has(id); });
+        return !(traitHit || variantHit);
+      });
+    }
+
+    var variantSel = g.selectAll('g.variant-ticks g.tick');
+    if (!hasHighlight || !affectVariants) {
+      variantSel.classed('susie-variant-highlight', false).classed('susie-variant-muted', false);
+    } else {
+      variantSel.classed('susie-variant-highlight', function(v){
+        var variantHit = hasVariant && variantSet && variantSet.has(v.variant);
+        var traitHit = hasTrait && traitSet && Array.isArray(v.traitCodes) && v.traitCodes.some(function(code){ return traitSet.has(code); });
+        return variantHit || traitHit;
+      });
+      variantSel.classed('susie-variant-muted', function(v){
+        var variantHit = hasVariant && variantSet && variantSet.has(v.variant);
+        var traitHit = hasTrait && traitSet && Array.isArray(v.traitCodes) && v.traitCodes.some(function(code){ return traitSet.has(code); });
+        return !(variantHit || traitHit);
+      });
+    }
+  }
+
+  function setHighlightState(state) {
+    if (state && ((state.traits && state.traits.length) || (state.variants && state.variants.length))) {
+      highlightState = {
+        traits: state.traits ? state.traits.slice() : [],
+        variants: state.variants ? state.variants.slice() : []
+      };
+      if (typeof state.affectPills === 'boolean') {
+        highlightState.affectPills = state.affectPills;
+      }
+      if (typeof state.affectVariants === 'boolean') {
+        highlightState.affectVariants = state.affectVariants;
+      }
+    } else {
+      highlightState = null;
+    }
+    updateHighlightClasses();
+  }
+
+  function clearHighlightState() {
+    setHighlightState(null);
+  }
+
   var rows = g.selectAll('g.row').data(clusters, function(d){ return d.id; });
 
   rows.exit().transition().duration(300).style('opacity',0).remove();
@@ -603,10 +695,16 @@ function drawUnique() {
   rowsMerge.each(function(d){
     var t = d3.select(this).append('g').attr('class','variant-ticks');
     var mk = t.selectAll('g.tick').data(d.variants || []).enter().append('g')
-      .attr('class','tick')
+      .attr('class','tick susie-variant-marker')
+      .attr('data-variant', function(v){ return v.variant; })
+      .attr('data-traits', function(v){ return (v.traitCodes || []).join(','); })
       .attr('transform', function(v){ return 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +')'; })
       .style('cursor','pointer')
       .on('mouseover', function(v){
+        setHighlightState({
+          traits: Array.isArray(v.traitCodes) ? v.traitCodes : [],
+          variants: v && v.variant ? [v.variant] : []
+        });
         showVarTip(v, d3.event);
         d3.select(this)
           .transition().duration(80)
@@ -615,6 +713,7 @@ function drawUnique() {
       .on('mousemove', function(){ moveVarTip(d3.event); })
       .on('mouseout', function(v){
         hideVarTip();
+        clearHighlightState();
         d3.select(this)
           .transition().duration(100)
           .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1)');
@@ -684,6 +783,8 @@ function drawUnique() {
           .style('cursor', 'pointer');
       });
 
+    const pillsMerge = enter.merge(pills);
+
     enter.filter(function(d){ return !d.isDrug; })
       .on('click', function(d){
         if (window.d3 && d3.event && typeof d3.event.stopPropagation === 'function') {
@@ -707,6 +808,28 @@ function drawUnique() {
             window.location.href = url;
           }
         }
+      });
+
+    pillsMerge
+      .attr('data-trait', function(d){ return d.trait; })
+      .attr('data-variants', function(d){ return (d.variantIds || []).join(','); })
+      .on('mouseover', function(d){
+        setHighlightState({
+          variants: Array.isArray(d.variantIds) ? d.variantIds : [],
+          affectPills: false
+        });
+      })
+      .on('focus', function(d){
+        setHighlightState({
+          variants: Array.isArray(d.variantIds) ? d.variantIds : [],
+          affectPills: false
+        });
+      })
+      .on('mouseout', function(){
+        clearHighlightState();
+      })
+      .on('blur', function(){
+        clearHighlightState();
       });
 
     // Add expand/collapse toggle if multiple rows exist
@@ -746,6 +869,8 @@ function drawUnique() {
   clusters.forEach(function(c,i){
     renderRail(c, layout.yPositions[i], width);
   });
+
+  clearHighlightState();
 
   if (summaryEl) summaryEl.innerHTML = '';
 

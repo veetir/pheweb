@@ -28,9 +28,33 @@
   color: var(--bs-body-color, #000);
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.1s ease;
+  transition: transform 0.12s ease, filter 0.12s ease, opacity 0.12s ease, box-shadow 0.12s ease;
 }
 .susie-rails .pill:hover { transform: scale(1.05); }
+.susie-rails .pill.susie-pill-highlight {
+  transform: scale(1.08);
+  filter: brightness(1.08);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 0 6px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+.susie-rails .pill.susie-pill-muted {
+  opacity: 0.35;
+  filter: saturate(60%);
+  transform: scale(0.94);
+}
+
+#finngen-susie svg .variant-ticks g.tick {
+  transition: opacity 0.12s ease;
+}
+#finngen-susie svg .variant-ticks g.tick.susie-variant-highlight {
+  opacity: 1;
+}
+#finngen-susie svg .variant-ticks g.tick.susie-variant-highlight line {
+  stroke-width: 3.5px;
+}
+#finngen-susie svg .variant-ticks g.tick.susie-variant-muted {
+  opacity: 0.35;
+}
 .row .bar { shape-rendering: crispEdges; }
 
 #endpoint-row-wrapper {
@@ -315,10 +339,8 @@ h1 {
 
 #finngen-susie-wrapper {
     width: 100%;
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
     margin: 0;
+    overflow: visible;
 }
 
 #finngen-susie {
