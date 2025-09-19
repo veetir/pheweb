@@ -115,19 +115,17 @@
     <fieldset class="susie-grouping" id="susie-grouping">
       <legend>Grouping</legend>
       <label>
-        <input type="radio" name="susie-grouping" value="zero" id="susie-grouping-zero">
-        Zero
+        <input type="radio" name="susie-grouping" value="zero" id="susie-grouping-zero"> Identical
       </label>
       <label>
-        <input type="radio" name="susie-grouping" value="all" id="susie-grouping-all" checked>
-        All
+        <input type="radio" name="susie-grouping" value="all" id="susie-grouping-all" checked> All
       </label>
-      <a href="#" class="info-link"
-        title="Choose how credible sets are grouped: Zero keeps only identical intervals together; All combines every credible set into one row.">
-        <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
-            alt="Info" class="info-icon info-icon-inline icon-invert">
-      </a>
     </fieldset>
+    <a href="#" class="info-link"
+      title="Choose how credible sets are grouped: Identical keeps only identical intervals together; All combines every credible set into one row.">
+      <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
+          alt="Info" class="info-icon info-icon-inline icon-invert">
+     </a>
   </div>
 
 <div id="finngen-susie-wrapper">

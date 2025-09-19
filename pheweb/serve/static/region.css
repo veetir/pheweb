@@ -339,6 +339,20 @@ h1 {
     cursor: not-allowed;
 }
 
+#susie-controls fieldset.susie-grouping label {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.75em;
+}
+
+#susie-controls fieldset.susie-grouping input[type="radio"] {
+    margin-right: 0.3em;
+}
+
+#susie-controls fieldset.susie-grouping .info-icon {
+    vertical-align: middle;
+}
+
 #finngen-susie-wrapper {
     width: 100%;
     max-height: 400px;
