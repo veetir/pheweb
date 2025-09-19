@@ -29,8 +29,8 @@ function updateToggleStates() {
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
   var atcToggle = document.getElementById('show-atc-codes');
-  var tolInput = document.getElementById('susie-tol');
-  var tolLabel = document.querySelector('label[for="susie-tol"]');
+  var groupingFieldset = document.getElementById('susie-grouping');
+  var groupingInputs = groupingFieldset ? groupingFieldset.querySelectorAll('input[name="susie-grouping"]') : [];
   var epCodesToggle = document.getElementById('show-endpoint-codes');
 
   if (atcToggle) {
@@ -53,11 +53,14 @@ function updateToggleStates() {
 
   // Disable Grouping slider when both Endpoints and Drugs are off
   var disableGrouping = !(dgToggle && dgToggle.checked) && !(epToggle && epToggle.checked);
-  if (tolInput) {
-    tolInput.disabled = disableGrouping;
+  if (groupingFieldset) {
+    groupingFieldset.disabled = disableGrouping;
+    groupingFieldset.classList.toggle('disabled', disableGrouping);
   }
-  if (tolLabel) {
-    tolLabel.classList.toggle('disabled', disableGrouping);
+  if (groupingInputs && groupingInputs.length) {
+    groupingInputs.forEach(function(input){
+      input.disabled = disableGrouping;
+    });
   }
 
   // Enable Endpoint codes only when Endpoints are shown
@@ -157,6 +160,14 @@ const pillToggleSpace = 18;    // px reserved at right for expand/collapse toggl
 
 // Track which clusters are expanded (by id)
 var expandedClusters = new Set();
+
+function getGroupingTolerance() {
+  var selected = document.querySelector('input[name="susie-grouping"]:checked');
+  if (selected && selected.value === 'zero') {
+    return 0;
+  }
+  return Number.POSITIVE_INFINITY;
+}
 
 function measurePillOuterHeight() {
   if (measurePillOuterHeight.cached) return measurePillOuterHeight.cached;
@@ -370,16 +381,7 @@ function drawUnique() {
     return;
   }
 
-  var tolInput = document.getElementById('susie-tol');
-  var tolScale = [0, 10000, 100000, 1000000, 1e9];
-  var tolLabels = ['0','10k','100k','1M','All'];
-  var tolIdx = tolInput ? parseInt(tolInput.value) || 0 : 0;
-  var tol = tolScale[tolIdx];
-
-  if (tolInput) {
-    var disp = document.getElementById('susie-tol-display');
-    if (disp) disp.textContent = tolLabels[tolIdx];
-  }
+  var tol = getGroupingTolerance();
 
   var clusters = clusterRows(currentRows, tol);
   if (typeof drawUnique.prevTol === 'undefined') drawUnique.prevTol = tol;
@@ -572,11 +574,7 @@ function drawUnique() {
     .attr('fill-opacity', 0.2);
 
   function showVarTip(v, event) {
-    var html = v.variant;
-    if (v.traits && v.traits.length) {
-      html += '<br>' + v.traits.join(', ');
-    }
-    tooltip.html(html).style('opacity',1);
+    tooltip.text(v.variant).style('opacity',1);
     moveVarTip(event);
   }
   function moveVarTip(event) {
@@ -780,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var dgToggle = document.getElementById('show-drugs');
   var lqToggle = document.getElementById('show-low-quality');
   var atcToggle = document.getElementById('show-atc-codes');
-  var tolInput = document.getElementById('susie-tol');
+  var groupingInputs = document.querySelectorAll('input[name="susie-grouping"]');
   var topInRegionToggle = document.getElementById('susie-filter-top-in-region');
 
   if (epToggle) epToggle.addEventListener('change', renderFinnGenSusie);
@@ -789,7 +787,11 @@ document.addEventListener('DOMContentLoaded', function(){
   if (lqToggle) lqToggle.addEventListener('change', renderFinnGenSusie);
   if (atcToggle) atcToggle.addEventListener('change', renderFinnGenSusie);
   if (topInRegionToggle) topInRegionToggle.addEventListener('change', renderFinnGenSusie);
-  if (tolInput) tolInput.addEventListener('input', drawUnique);
+  if (groupingInputs && groupingInputs.length) {
+    groupingInputs.forEach(function(input){
+      input.addEventListener('change', drawUnique);
+    });
+  }
 
   document.addEventListener('pheweb:theme', drawUnique);
 
