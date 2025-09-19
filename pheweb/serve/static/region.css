@@ -31,6 +31,27 @@
   transition: transform 0.1s ease;
 }
 .susie-rails .pill:hover { transform: scale(1.05); }
+
+.susie-rails.variant-highlight-active .pill {
+  transition: transform 0.12s ease, color 0.12s ease, filter 0.12s ease, opacity 0.12s ease;
+}
+
+.susie-rails.variant-highlight-active .pill:hover {
+  transform: scale(1);
+}
+
+.susie-rails .pill.is-variant-match {
+  transform: scale(1);
+}
+
+.susie-rails .pill.is-variant-dim {
+  transform: scale(0.9);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.susie-rails .pill.is-variant-match:hover {
+  transform: scale(1);
+}
 .row .bar { shape-rendering: crispEdges; }
 
 #endpoint-row-wrapper {
@@ -318,7 +339,7 @@ h1 {
     align-items: center;
     gap: 0.5em;
     border: none;
-    margin: 0 1em 0 0;
+    margin: 0;
     padding: 0;
 }
 
@@ -332,6 +353,10 @@ h1 {
 
 #susie-controls fieldset.susie-grouping label {
     margin-right: 0.75em;
+}
+
+#susie-controls fieldset.susie-grouping .info-link {
+    margin-left: 0;
 }
 
 #susie-controls fieldset.susie-grouping.disabled {
@@ -355,9 +380,8 @@ h1 {
 
 #finngen-susie-wrapper {
     width: 100%;
-    max-height: 400px;
-    overflow-y: auto;
     overflow-x: hidden;
+    overflow-y: visible;
     margin: 0;
 }
 

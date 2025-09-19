@@ -163,7 +163,7 @@ var expandedClusters = new Set();
 
 function getGroupingTolerance() {
   var selected = document.querySelector('input[name="susie-grouping"]:checked');
-  if (selected && selected.value === 'zero') {
+  if (selected && selected.value === 'identical') {
     return 0;
   }
   return Number.POSITIVE_INFINITY;
@@ -417,22 +417,23 @@ function drawUnique() {
           label: truncateLabel(labelRaw, 36)
         });
       }
+      var displayName = isDrugItem
+        ? displayEndpoint(i.trait, currentAtcMap, currentShowCodes)
+        : (currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait));
+
       if (!variantMap.has(i.variant)) {
         variantMap.set(i.variant, {
           variant: i.variant,
           vpos: i.vpos,
-          traits: [
-            isDrugItem
-              ? displayEndpoint(i.trait, currentAtcMap, currentShowCodes)
-              : (currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait))
-          ]
+          traits: [displayName],
+          traitIds: [i.trait]
         });
       } else {
-        variantMap.get(i.variant).traits.push(
-          isDrugItem
-            ? displayEndpoint(i.trait, currentAtcMap, currentShowCodes)
-            : (currentShowEndpointCodes ? i.trait : endpointDisplayName(i.trait))
-        );
+        var variantEntry = variantMap.get(i.variant);
+        variantEntry.traits.push(displayName);
+        if (variantEntry.traitIds.indexOf(i.trait) === -1) {
+          variantEntry.traitIds.push(i.trait);
+        }
       }
     });
     c.pills = Array.from(pillMap.values());
@@ -503,6 +504,27 @@ function drawUnique() {
     railsLayer = wrapper.append('div').attr('class','susie-rails')
       .style('position','absolute');
   }
+
+  function clearPillHighlight() {
+    railsLayer.classed('variant-highlight-active', false);
+    railsLayer.selectAll('button.pill')
+      .classed('is-variant-match', false)
+      .classed('is-variant-dim', false);
+  }
+
+  function applyPillHighlight(traitIds) {
+    if (!traitIds || !traitIds.length) {
+      clearPillHighlight();
+      return;
+    }
+    var traitSet = new Set(traitIds);
+    railsLayer.classed('variant-highlight-active', true);
+    railsLayer.selectAll('button.pill')
+      .classed('is-variant-match', function(d){ return traitSet.has(d.trait); })
+      .classed('is-variant-dim', function(d){ return !traitSet.has(d.trait); });
+  }
+
+  clearPillHighlight();
 
   var tooltip = wrapper.select('.susie-tooltip');
   if (tooltip.empty()) {
@@ -605,6 +627,7 @@ function drawUnique() {
       .attr('transform', function(v){ return 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +')'; })
       .style('cursor','pointer')
       .on('mouseover', function(v){
+        applyPillHighlight(v.traitIds || []);
         showVarTip(v, d3.event);
         d3.select(this)
           .transition().duration(80)
@@ -613,6 +636,7 @@ function drawUnique() {
       .on('mousemove', function(){ moveVarTip(d3.event); })
       .on('mouseout', function(v){
         hideVarTip();
+        clearPillHighlight();
         d3.select(this)
           .transition().duration(100)
           .attr('transform', 'translate('+x(v.vpos)+','+ (baseRowHeight/2) +') scale(1)');
@@ -744,6 +768,8 @@ function drawUnique() {
   clusters.forEach(function(c,i){
     renderRail(c, layout.yPositions[i], width);
   });
+
+  clearPillHighlight();
 
   if (summaryEl) summaryEl.innerHTML = '';
 
