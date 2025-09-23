@@ -114,20 +114,16 @@
     </label>
     <label for="susie-tol">
       Grouping
-      <input type="range" id="susie-tol" min="0" max="4" step="1" value="4" list="susie-tol-list">
+      <input type="range" id="susie-tol" min="0" max="1" step="1" value="1" list="susie-tol-list">
       <span id="susie-tol-display">All</span>
       <datalist id="susie-tol-list">
-        <option value="0" label="0"></option>
-        <option value="1" label="10k"></option>
-        <option value="2" label="100k"></option>
-        <option value="3" label="1M"></option>
-        <option value="4" label="All"></option>
+        <option value="0" label="Identical"></option>
+        <option value="1" label="All"></option>
       </datalist>
       <a href="#" class="info-link"
-        title="Controls how similar credible set intervals must be to be grouped into one row. 
-                0 = only identical intervals. 
-                10k = intervals whose start and end differ by up to 10k bp.
-                All = everything in one row.">
+        title="Grouping controls whether credible sets are combined into one row.
+              Identical: only cluster CS entries that have identical start AND end positions.
+              All: all credible sets are clumped together into a single group (same as the old 'All' setting).">
         <img src="{{ url_for('bp.static', filename='images/info.svg') }}"
             alt="Info" class="info-icon info-icon-inline icon-invert">
       </a>

@@ -371,10 +371,10 @@ function drawUnique() {
   }
 
   var tolInput = document.getElementById('susie-tol');
-  var tolScale = [0, 10000, 100000, 1000000, 1e9];
-  var tolLabels = ['0','10k','100k','1M','All'];
-  var tolIdx = tolInput ? parseInt(tolInput.value) || 0 : 0;
-  var tol = tolScale[tolIdx];
+  var tolScale = [0, 1e9];
+  var tolLabels = ['Identical', 'All'];
+  var tolIdx = tolInput ? parseInt(tolInput.value, 10) || 0 : 1;
+  var tol = tolScale[ tolIdx ];
 
   if (tolInput) {
     var disp = document.getElementById('susie-tol-display');
@@ -895,8 +895,6 @@ function drawUnique() {
 
 document.addEventListener('DOMContentLoaded', function(){
   renderFinnGenSusie();
-
-  var sel      = document.getElementById('endpoint-select');
   var epToggle = document.getElementById('show-endpoints');
   var epCodesToggle = document.getElementById('show-endpoint-codes');
   var dgToggle = document.getElementById('show-drugs');
