@@ -665,9 +665,6 @@ function drawUnique() {
 
   function showVarTip(v, event) {
     var html = v.variant;
-    if (v.traits && v.traits.length) {
-      html += '<br>' + v.traits.join(', ');
-    }
     tooltip.html(html).style('opacity',1);
     moveVarTip(event);
   }
